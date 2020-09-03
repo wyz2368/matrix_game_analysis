@@ -37,8 +37,8 @@ class PSRO_trainer(object):
         self.mode = 0
 
         if self.blocks:
-            nash_payoff = self.meta_games[init_strategy, init_strategy]
-            nashconv = np.max(self.meta_games[:, init_strategy]) + np.max(self.meta_games[init_strategy, :]) - nash_payoff
+            nash_payoff = self.meta_games[0][init_strategy, init_strategy] + self.meta_games[1][init_strategy, init_strategy]
+            nashconv = np.max(self.meta_games[0][:, init_strategy]) + np.max(self.meta_games[1][init_strategy, :]) - nash_payoff
             self.blocks_nashconv = [nashconv]
             self.selector = pure_exp(2,
                                      2,

@@ -1,0 +1,43 @@
+import numpy as np
+from meta_strategies import fictitious_play
+
+import os
+from nash_solver.gambit_tools import load_pkl
+import matplotlib
+matplotlib.use("TkAgg")
+import matplotlib.pyplot as plt
+import matplotlib as mpl
+import math
+
+meta_game = np.array([[0, -0.1, -3],
+                      [0.1, 0, 2],
+                      [3, -2, 0]])
+
+meta_games = [meta_game, -meta_game]
+
+empirical_games = [[0], [0]]
+
+deepmind_fic = []
+do = [6, 4, 0, 0, 0]
+fic = [6, 4, 4, 0, 0]
+
+for _ in range(5):
+    dev_strs, nashconv = fictitious_play(meta_games, empirical_games)
+    deepmind_fic.append(nashconv)
+    for i, str in enumerate(dev_strs):
+        empirical_games[i].append(str)
+
+print("NashConv:", deepmind_fic)
+
+x = [1,2,3,4,5]
+plt.plot(x, do, '-oC2', label= "NE-based regret of DO")
+plt.plot(x, deepmind_fic, '-oC0', label= "FP-based regret of FP")
+plt.plot(x, fic, '-oC1', label= "NE-based regret of FP")
+
+plt.xlabel("Number of Iterations")
+plt.ylabel("Regret")
+
+plt.xticks(x)
+# plt.title("")
+plt.legend(loc="best")
+plt.show()
