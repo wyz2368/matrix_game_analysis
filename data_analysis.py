@@ -54,6 +54,3 @@ plt.ylabel("Regret")
 plt.legend(loc="best")
 plt.show()
 
-
-
-
