@@ -31,7 +31,7 @@ print("NashConv:", deepmind_fic)
 
 x = [1,2,3,4,5]
 plt.plot(x, do, '-oC2', label= "NE-based regret of DO")
-plt.plot(x, deepmind_fic, '-oC0', label= "FP-based regret of FP")
+# plt.plot(x, deepmind_fic, '-oC0', label= "uniform-based regret of FP")
 plt.plot(x, fic, '-oC1', label= "NE-based regret of FP")
 
 plt.xlabel("Number of Iterations")

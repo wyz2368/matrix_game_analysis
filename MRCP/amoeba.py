@@ -100,19 +100,13 @@ def amoeba_mrcp(empirical_game, full_game, var='uni', max_iter=5000, ftolerance=
         fvalue.append(func(simplex[i]))
     
     iteration = 0
-    #print("##############################")
-    #print("##############################")
     while iteration < max_iter:
 
         # sort the simplex and the fvalue the last one is the worst
         sort_index = np.argsort(fvalue)
         fvalue = [fvalue[ele] for ele in sort_index]
         simplex = [simplex[ele] for ele in sort_index]
-        #print()
-        #print("##############################")
-        #print("start of iteration {} with empirical game".format(iteration),empirical_game)
-        #print('simplex : ',simplex)
-        #print('fvalue  : ',fvalue)
+
             
         # get the average of the the n points except from the worst
         x_a = np.average(np.array(simplex[:-1]),axis=0)
@@ -127,13 +121,10 @@ def amoeba_mrcp(empirical_game, full_game, var='uni', max_iter=5000, ftolerance=
             frange = abs(fvalue[0]-fvalue[-1])/fscale
         else:
             frange = 0.0  # all the fvalues are zero in this case
-        
-        #print('frange',frange)
-        #print('simscale',simscale)
+
         # have we converged?
         if (ftolerance <= 0.0 or frange < ftolerance) \
                 and (xtolerance <= 0.0 or simscale < xtolerance):
-            #print('amoeba finished with {} iteration'.format(iteration))
             return np.split(simplex[0],sections[:-1]),fvalue[0],iteration
 
         # perform reflection to acquire x_r,evaluate f_r
@@ -143,8 +134,7 @@ def amoeba_mrcp(empirical_game, full_game, var='uni', max_iter=5000, ftolerance=
             alpha /= 2
             x_r = x_a + alpha*(x_a-simplex[-1])
         f_r = func(x_r)
-        #print('centroid',x_a)
-        #print('reflection point',x_r,f_r)
+
         # expansion if the reflection is better
         if f_r < fvalue[0]:    # expansion if the reflection is better
             gamma = 1
@@ -156,15 +146,12 @@ def amoeba_mrcp(empirical_game, full_game, var='uni', max_iter=5000, ftolerance=
             if f_e < fvalue[0]: # accept expansion and replace the worst point
                 simplex[-1] = x_e
                 fvalue[-1] = f_e
-                #print('accept expansion, better than best')
             else:               # refuse expansion and accept reflection
                 simplex[-1] = x_r
                 fvalue[-1] = f_r
-                #print('reject expansion, accept reflection, worse than best')
         elif f_r < fvalue[-2]:  # accept reflection when better than lousy
             simplex[-1] = x_r
             fvalue[-1] = f_r
-            #print('accept reflection, better than lousy')
         else:
             if f_r > fvalue[-1]: # inside contract if reflection is worst than worst
                 x_c = x_a - 0.5*(x_a-simplex[-1]) # 0.5 being a hyperparameter
@@ -172,24 +159,17 @@ def amoeba_mrcp(empirical_game, full_game, var='uni', max_iter=5000, ftolerance=
                 if f_c < fvalue[-1]: # accept inside contraction
                     simplex[-1] = x_c
                     fvalue[-1] = f_c
-                    #print('accept inside contract, better than worse')
                 else:
                     simplex, fvalue = shrink_simplex(simplex,fvalue,func)
-                    #print('reject inside contract, shrinked the simplex')
             else:                # outside contract if reflection better than worse
                 x_c = x_a + alpha*0.5*(x_a-simplex[-1]) # 0.5 being a hyperparameter
                 f_c = func(x_c)
                 if f_c < f_r:    # accept contraction
                     simplex[-1] = x_c
                     fvalue[-1] = f_c
-                    #print('accept outside contract, better than reflection')
                 else:
                     simplex, fvalue = shrink_simplex(simplex,fvalue,func)
-                    #print('reject outside contract, shrinked the simplex')
-        #print('iteration {}:'.format(iteration),end=' ')
-        #print('new fvalue',fvalue)
-        iteration += 1            
-    #print('amoeba out of {} iteration'.format(iteration))
+        iteration += 1
     sort_index = np.argsort(fvalue)
     fvalue = [fvalue[ele] for ele in sort_index]
     simplex = [simplex[ele] for ele in sort_index]

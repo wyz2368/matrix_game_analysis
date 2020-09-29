@@ -40,22 +40,22 @@ axes.set_ylim([0,3])
 
 X = np.arange(1, 150)
 
-plt.plot(X, DO_br_mean, color="C1", label='DO w. BR')
-plt.fill_between(X, DO_br_mean+DO_br_std, DO_br_mean-DO_br_std, alpha=0.1, color="C1")
+plt.plot(X, DO_br_mean, color="blue", label='DO w. BR')
+plt.fill_between(X, DO_br_mean+DO_br_std, DO_br_mean-DO_br_std, alpha=0.1, color="blue")
 
 plt.plot(X, PRD_br_mean, color="C2", label='PRD w. BR')
 plt.fill_between(X, PRD_br_mean+PRD_br_std, PRD_br_mean-PRD_br_std, alpha=0.1, color="C2")
 
-plt.plot(X, FIC_br_mean, color="C3", label='FIC w. BR')
+plt.plot(X, FIC_br_mean, color="C3", label='FP w. BR')
 plt.fill_between(X, FIC_br_mean+FIC_br_std, FIC_br_mean-FIC_br_std, alpha=0.1, color="C3")
 
-plt.plot(X, DO_cg_mean, color="C1", label='DO w. combined game')
-plt.fill_between(X, DO_cg_mean+DO_cg_std, DO_cg_mean-DO_cg_std, alpha=0.1, color="C1")
+plt.plot(X, DO_cg_mean, color="blue", label='DO w. combined game')
+plt.fill_between(X, DO_cg_mean+DO_cg_std, DO_cg_mean-DO_cg_std, alpha=0.1, color="blue")
 #
 plt.plot(X, PRD_cg_mean, color="C2", label='PRD w. combined game')
 plt.fill_between(X, PRD_cg_mean+PRD_cg_std, PRD_cg_mean-PRD_cg_std, alpha=0.1, color="C2")
 #
-plt.plot(X, FIC_cg_mean, color="C3", label='FIC w. combined game')
+plt.plot(X, FIC_cg_mean, color="C3", label='FP w. combined game')
 plt.fill_between(X, FIC_cg_mean+FIC_cg_std, FIC_cg_mean-FIC_cg_std, alpha=0.1, color="C3")
 
 

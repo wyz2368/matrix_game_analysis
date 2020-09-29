@@ -2,7 +2,7 @@ import numpy as np
 from utils import set_random_seed
 from exploration import pure_exp
 from meta_strategies import double_oracle
-from minimum_regret_profile import minimum_regret_profile_calculator
+from MRCP.minimum_regret_profile import minimum_regret_profile_calculator
 
 class PSRO_trainer(object):
     def __init__(self, meta_games,

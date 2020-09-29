@@ -1,8 +1,7 @@
-import numpy as np
 from functools import partial
 from itertools import chain, combinations,product
 
-from amoeba import amoeba_mrcp
+from MRCP.amoeba import amoeba_mrcp
 
 class minimum_regret_profile_calculator(object):
     """

@@ -42,7 +42,7 @@ print(len(fic_zero_sum_DO_FP), len(zero_sum_DO))
 
 x = np.arange(1, len(zero_sum_DO)+1)
 plt.plot(x, zero_sum_DO, '-C2', label= "NE-based regret of DO")
-plt.plot(x, zero_sum_FP, '-C0', label= "FP-based regret of FP")
+plt.plot(x, zero_sum_FP, '-C0', label= "uniform-based regret of FP")
 plt.plot(np.arange(1, 2*len(fic_zero_sum_DO_FP)+1, 2), fic_zero_sum_DO_FP, '-C1', label= "NE-based of FP")
 # plt.plot(x, zero_sum_DO_FP, '-C1', label= "DO+FP")
 

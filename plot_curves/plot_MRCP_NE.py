@@ -43,10 +43,10 @@ plt.plot(X, FIC_NE, color="C2", label='FP w. NE-based regret')
 plt.fill_between(X, FIC_NE+FIC_NE_std, FIC_NE-FIC_NE_std, alpha=0.1, color="C2")
 
 plt.plot(X, DO_MRCP, color="C3", label='DO w. MRCP-based regret')
-plt.fill_between(X, DO_MRCP+DO_MRCP_std, DO_MRCP-DO_MRCP_std, alpha=0.1, color="C1")
+plt.fill_between(X, DO_MRCP+DO_MRCP_std, DO_MRCP-DO_MRCP_std, alpha=0.1, color="C3")
 
-plt.plot(X, FIC_MRCP, color="C4", label='FP w. MRCP-based regret')
-plt.fill_between(X, FIC_MRCP+FIC_MRCP_std, FIC_MRCP-FIC_MRCP_std, alpha=0.1, color="C1")
+plt.plot(X, FIC_MRCP, color="blue", label='FP w. MRCP-based regret')
+plt.fill_between(X, FIC_MRCP+FIC_MRCP_std, FIC_MRCP-FIC_MRCP_std, alpha=0.1, color="blue")
 
 
 

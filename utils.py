@@ -1,6 +1,5 @@
 import numpy as np
 import random
-from open_spiel.python.algorithms.psro_v2 import meta_strategies
 
 def set_random_seed(seed=None):
     seed = np.random.randint(low=0,high=1e5) if seed is None else seed
@@ -8,6 +7,20 @@ def set_random_seed(seed=None):
     random.seed(seed)
     return seed
 
+
+def general_get_joint_strategy_from_marginals(probabilities):
+    """Returns a joint strategy matrix from a list of marginals.
+    Does not require marginals to have the same lengths.
+    Args:
+      probabilities: list of probabilities.
+
+    Returns:
+      A joint strategy from a list of marginals
+    """
+    joint = np.outer(probabilities[0], probabilities[1])
+    for i in range(len(probabilities) - 2):
+        joint = joint.reshape(tuple(list(joint.shape) + [1])) * probabilities[i + 2]
+    return joint
 
 def mixed_strategy_payoff(meta_games, probs):
     """
@@ -17,7 +30,7 @@ def mixed_strategy_payoff(meta_games, probs):
     assert len(meta_games)==len(probs),'number of player not equal'
     for i in range(len(meta_games)):
         assert len(probs[i]) <= meta_games[0].shape[i],'meta game should have larger dimension than marginal probability vector'
-    prob_matrix = meta_strategies.general_get_joint_strategy_from_marginals(probs)
+    prob_matrix = general_get_joint_strategy_from_marginals(probs)
     prob_slice = tuple([slice(prob_matrix.shape[i]) for i in range(len(meta_games))])
     meta_game_copy = [ele[prob_slice] for ele in meta_games]
     payoffs = []
@@ -26,14 +39,14 @@ def mixed_strategy_payoff(meta_games, probs):
     return payoffs
 
 # This older version of function must be of two players
-#def mixed_strategy_payoff(meta_games, probs):
-#    payoffs = []
-#    prob1 = probs[0]
-#    prob1 = np.reshape(prob1, newshape=(len(prob1), 1))
-#    prob2 = probs[1]
-#    for meta_game in meta_games:
-#        payoffs.append(np.sum(prob1 * meta_game * prob2))
-#    return payoffs
+def mixed_strategy_payoff_2p(meta_games, probs):
+   payoffs = []
+   prob1 = probs[0]
+   prob1 = np.reshape(prob1, newshape=(len(prob1), 1))
+   prob2 = probs[1]
+   for meta_game in meta_games:
+       payoffs.append(np.sum(prob1 * meta_game * prob2))
+   return payoffs
 
 def regret_of_variable(prob_var, empirical_games, meta_game):
     """
