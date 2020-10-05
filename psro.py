@@ -27,9 +27,7 @@ def psro(generator,
          num_rounds,
          seed,
          checkpoint_dir,
-         meta_method_list=None,
-         num_iterations=20,
-         blocks=False):
+         num_iterations=20):
     if game_type == "zero_sum":
         meta_games = generator.zero_sum_game()
     elif game_type == "general_sum":
@@ -50,16 +48,14 @@ def psro(generator,
     # generator.num_strategies = 3
     # num_rounds = 1
     # num_iterations = 10
-    init_strategies = np.random.randint(0,meta_games[0].shape[0],num_rounds)
+    init_strategies = np.random.randint(0, meta_games[0].shape[0], num_rounds)
 
     DO_trainer = PSRO_trainer(meta_games=meta_games,
                            num_strategies=generator.num_strategies,
                            num_rounds=num_rounds,
                            meta_method=double_oracle,
                            checkpoint_dir=checkpoint_dir,
-                           meta_method_list=meta_method_list,
                            num_iterations=num_iterations,
-                           blocks=blocks,
                            seed=seed,
                            init_strategies=init_strategies)
 
@@ -68,9 +64,7 @@ def psro(generator,
                            num_rounds=num_rounds,
                            meta_method=fictitious_play,
                            checkpoint_dir=checkpoint_dir,
-                           meta_method_list=meta_method_list,
                            num_iterations=num_iterations,
-                           blocks=blocks,
                            seed=seed,
                            init_strategies=init_strategies)
 
@@ -79,9 +73,7 @@ def psro(generator,
                            num_rounds=num_rounds,
                            meta_method=mrcp_solver,
                            checkpoint_dir=checkpoint_dir,
-                           meta_method_list=meta_method_list,
                            num_iterations=num_iterations,
-                           blocks=blocks,
                            seed=seed,
                            init_strategies=init_strategies)
 
