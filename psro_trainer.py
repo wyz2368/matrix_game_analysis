@@ -84,11 +84,12 @@ class PSRO_trainer(object):
         # Tricky Detail: mrcp does not calculate NE's first empirical game's mrcp value
         # ne does not calculate mrcp's first empirical game's NE-based regret
         if self.calculate_mrconv:
-            if self.meta_method.__name__!='mrcp_solver':
+            if self.meta_method.__name__ != 'mrcp_solver':
                 mrcp_profile, mrcp_value = self.mrcp_calculator(self.empirical_games)
                 mrconv_list.append(mrcp_value)
                 mrprofile_list.append(mrcp_profile)
-        if self.meta_method.__name__!='double_oracle':
+
+        if self.meta_method.__name__ != 'double_oracle':
             _, neconv = double_oracle(self.meta_games,self.empirical_games,self.checkpoint_dir)
             neconv_list.append(neconv)
 
@@ -105,7 +106,7 @@ class PSRO_trainer(object):
                 self.meta_method = self.meta_method_list[self.mode]
 
             if self.calculate_neconv:
-                if self.meta_method.__name__!='double_oracle':
+                if self.meta_method.__name__ != 'double_oracle':
                     _, neconv = double_oracle(self.meta_games,
                                               self.empirical_games,
                                               self.checkpoint_dir)
@@ -114,7 +115,7 @@ class PSRO_trainer(object):
                     neconv_list.append(nashconv) 
 
             if self.calculate_mrconv:
-                if self.meta_method.__name__!='mrcp_solver':
+                if self.meta_method.__name__ != 'mrcp_solver':
                     mrcp_profile, mrcp_value = self.mrcp_calculator(self.empirical_games)
                     mrconv_list.append(mrcp_value)
                     mrprofile_list.append(mrcp_profile)
@@ -125,12 +126,12 @@ class PSRO_trainer(object):
         # Tricky part: Nashconv does not add the last value after update
         # mrcp does not add its last own value after its last update
         # NE does not add its last own value after its last update
-        _,nashconv = self.meta_method(self.meta_games,self.empirical_games,self.checkpoint_dir)
+        _,nashconv = self.meta_method(self.meta_games, self.empirical_games, self.checkpoint_dir)
         nashconv_list.append(nashconv)
-        if self.meta_method.__name__=='mrcp_solver':
+        if self.meta_method.__name__ == 'mrcp_solver':
             mrconv_list.append(nashconv)
             mrprofile_list.append(self.meta_method.mrcp_calculator.mrcp_profile)
-        if self.meta_method.__name__=='double_oracle':
+        if self.meta_method.__name__ == 'double_oracle':
             neconv_list.append(nashconv)
         
         self.nashconvs.append(nashconv_list)

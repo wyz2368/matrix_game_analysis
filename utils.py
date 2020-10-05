@@ -1,5 +1,6 @@
 import numpy as np
 import random
+from itertools import product
 
 def set_random_seed(seed=None):
     seed = np.random.randint(low=0,high=1e5) if seed is None else seed
@@ -71,6 +72,63 @@ def regret_of_variable(prob_var, empirical_games, meta_game):
     payoff = mixed_strategy_payoff(meta_game, probs)
     return sum(dev_payoff)-sum(payoff)
 
+def upper_bouned_regret_of_variable(prob_var, empirical_games, meta_game, threshold=1e-3):
+    """
+        Only works for two player case
+        Calculate the upper bounded function value of one data point prob_var
+        in amoeba method, Reshape and expand the probability var into full shape.
+        Input:
+            prob_var       : variable that amoeba directly search over
+            empirical_games: a list of list, indicating player's strategy sets
+            meta_game      : the full game matrix to calculate deviation from
+    """
+    probs = []
+    num_player = len(meta_game)
+    index = np.cumsum([len(ele) for ele in empirical_games])
+    pointer = 0
+    for i, idx in enumerate(empirical_games):
+        prob = np.zeros(meta_game[0].shape[i])
+        np.put(prob, idx, prob_var[pointer:index[i]])
+        pointer = index[i]
+        probs.append(prob)
+
+    support_idx = []
+    deviation_payoff = [[] for _ in range(num_player)]
+    for player in range(num_player):
+        support_idx.append(np.where(probs[player] > threshold)[0])
+
+    pure_profiles = list(product(support_idx[0], support_idx[1]))
+    for profile in pure_profiles:
+        _, payoff = deviation_pure_strategy_profile(meta_game, profile)
+        for player in range(num_player):
+            deviation_payoff[player].append(payoff[player])
+
+    upper_bound = []
+    for player in range(num_player):
+        upper_bound.append(np.sum(np.array(deviation_payoff[player]) * probs[player]))
+
+    mixed_payoff = mixed_strategy_payoff_2p(meta_game, probs)
+    return sum(upper_bound) - sum(mixed_payoff)
+
+
+
+
+def deviation_pure_strategy_profile(meta_games, strategis):
+    """
+    Find the deviation strategy and payoff for pure strategy profile.
+    For 2-player case only.
+    :param meta_games: the full game matrix.
+    :param strategis: [strategy idx for p1, strategy idx for p2]
+    :return:
+    """
+    dev_strs = []
+    dev_strs.append(np.argmax(meta_games[0][:, strategis[1]]))
+    dev_strs.append(np.argmax(meta_games[1][strategis[0], :]))
+
+    dev_payoff = [meta_games[0][dev_strs[0], strategis[1]], meta_games[1][strategis[0], dev_strs[1]]]
+
+    return dev_strs, dev_payoff
+
 
 def deviation_strategy(meta_games, probs):
     dev_strs = []
@@ -92,5 +150,29 @@ def deviation_strategy(meta_games, probs):
     dev_payoff.append(payoff_vec[idx])
 
     return dev_strs, dev_payoff
+
+def project_onto_unit_simplex(prob):
+    """
+    Project an n-dim vector prob to the simplex Dn s.t.
+    Dn = { x : x n-dim, 1 >= x >= 0, sum(x) = 1}
+    :param prob: a numpy array. Each element is a probability.
+    :return: projected probability
+    """
+    prob_length = len(prob)
+    bget = False
+    sorted_prob = -np.sort(-prob)
+    tmpsum = 0
+
+    for i in range(1, prob_length):
+        tmpsum = tmpsum + sorted_prob[i-1]
+        tmax = (tmpsum - 1) / i
+        if tmax >= sorted_prob[i]:
+            bget = True
+            break
+
+    if not bget:
+        tmax = (tmpsum + sorted_prob[prob_length-1] - 1) / prob_length
+
+    return np.maximum(0, prob - tmax)
 
 
