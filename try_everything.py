@@ -10,6 +10,7 @@ from itertools import product
 # meta_game = np.array([[1,2,3],
 #                       [4,5,6],
 #                       [7,8,9]])
+# print(np.shape(meta_game))
 #
 # meta_games = [meta_game, -meta_game]
 #
@@ -59,40 +60,22 @@ from itertools import product
 #
 #     return x
 
-# def project_onto_unit_simplex1(prob):
-#     """
-#     Project an n-dim vector prob to the simplex Dn s.t.
-#     Dn = { x : x n-dim, 1 >= x >= 0, sum(x) = 1}
-#     :param prob: a numpy array. Each element is a probability.
-#     :return: projected probability
-#     """
-#     prob_length = len(prob)
-#     bget = False
-#     sorted_prob = -np.sort(-prob)
-#     tmpsum = 0
-#
-#     for i in range(1, prob_length):
-#         print(i)
-#         tmpsum = tmpsum + sorted_prob[i-1]
-#         tmax = (tmpsum - 1) / i
-#         if tmax >= sorted_prob[i]:
-#             bget = True
-#             break
-#
-#     if not bget:
-#         tmax = (tmpsum + sorted_prob[prob_length-1] - 1) / prob_length
-#
-#     return np.maximum(0, prob - tmax)
-#
-# a = np.ones(5)
-# variables = np.array([1.5, 1.5, 2, 0.5])
-# pointer = 0
-# sections = [2, 2]
-# for ele in np.cumsum(sections):
-#     variables[pointer:ele] = project_onto_unit_simplex1(variables[pointer:ele])
-#     pointer = ele
-#
-# print(variables)
+def uniform_simplex_sampling(dim):
+    """
+    Uniform sample a unit simplex.
+    :param dim: the dimension of sampled vector.
+    :return:
+    """
+    vec = np.random.rand(dim+1)
+    vec[0] = 0
+    vec[-1] = 1
+    vec = np.sort(vec)
+    output = np.zeros(dim)
+    for i in range(dim):
+        output[i] = vec[i+1] - vec[i]
 
-print(np.linalg.norm(np.array([2,2,1])))
+    return output
+
+if 0:
+    print("fads")
 

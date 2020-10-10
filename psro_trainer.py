@@ -11,6 +11,7 @@ class PSRO_trainer(object):
                  checkpoint_dir,
                  num_iterations=20,
                  seed=None,
+                 empricial_game_record=None,
                  calculate_neconv=True,
                  calculate_mrcpconv=True,
                  init_strategies=None):
@@ -19,6 +20,7 @@ class PSRO_trainer(object):
             num_rounds      : repeat psro on matrix games from #num_rounds start points
             meta_method_list: for heuristics block switching
             blocks          : HBS
+            empricial_game_record: a list with numbers that indicate the iteration when empirical game is recorded.
             seed            : a integer. If provided, reset every round to guarantee that mrcp calculation is deterministic given an empirical game:
             calculate_neconv   : ne_conv to evaluate to evaluate the heuristics
             calculate_mrcpconv : mrcp_conv to evaluate the heuristics
@@ -47,6 +49,11 @@ class PSRO_trainer(object):
         self.neconvs = []
         self.mrconvs = []
         self.mrprofiles = []
+
+        # Record empirical game.
+        if empricial_game_record is not None:
+            self.empirical_games_dict = {}
+            self.empricial_game_record = empricial_game_record
 
     def init_round(self, init_strategy):
         #init_strategy = np.random.randint(0, self.num_strategies)
@@ -80,6 +87,9 @@ class PSRO_trainer(object):
             self.empirical_games[0] = sorted(self.empirical_games[0])
             self.empirical_games[1].append(dev_strs[1])
             self.empirical_games[1] = sorted(self.empirical_games[1])
+
+            if self.empricial_game_record is not None and it in self.empricial_game_record:
+                self.empirical_games_dict[it] = self.empirical_games.copy()
 
             if self.calculate_neconv:
                 if self.meta_method.__name__ != 'double_oracle':
@@ -126,3 +136,8 @@ class PSRO_trainer(object):
             self.iteration()
             self.mrcp_calculator.clear()
 
+    def get_empirical_game(self):
+        return self.empirical_games
+
+    def get_recorded_empirical_game(self):
+        return self.empirical_games_dict

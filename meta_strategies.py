@@ -66,13 +66,6 @@ def fictitious_play(meta_games, empirical_games, checkpoint_dir=None):
     dev_strs, dev_payoff = deviation_strategy(meta_games, meta_game_nash)
 
     nashconv = 0
-# <<<<<<< HEAD
-#     num_players = len(meta_games)
-#     for player in range(num_players):
-#         nashconv += np.maximum(dev_payoff[player] - nash_payoffs[player], 0)
-#
-#     return dev_strs, nashconv
-# =======
     for player in range(len(meta_games)):
         nashconv += np.maximum(dev_payoff[player] - nash_payoffs[player], 0)
 

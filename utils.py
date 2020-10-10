@@ -28,7 +28,7 @@ def mixed_strategy_payoff(meta_games, probs):
     A multiple player version of mixed strategy payoff writen below by yongzhao
     The lenth of probs could be smaller than that of meta_games
     """
-    assert len(meta_games)==len(probs),'number of player not equal'
+    assert len(meta_games) == len(probs),'number of player not equal'
     for i in range(len(meta_games)):
         assert len(probs[i]) <= meta_games[0].shape[i],'meta game should have larger dimension than marginal probability vector'
     prob_matrix = general_get_joint_strategy_from_marginals(probs)
@@ -84,6 +84,7 @@ def upper_bouned_regret_of_variable(prob_var, empirical_games, meta_game, thresh
     """
     probs = []
     num_player = len(meta_game)
+    caches = [Cache() for _ in range(num_player)]
     index = np.cumsum([len(ele) for ele in empirical_games])
     pointer = 0
     for i, idx in enumerate(empirical_games):
@@ -99,16 +100,36 @@ def upper_bouned_regret_of_variable(prob_var, empirical_games, meta_game, thresh
 
     pure_profiles = list(product(support_idx[0], support_idx[1]))
     for profile in pure_profiles:
-        _, payoff = deviation_pure_strategy_profile(meta_game, profile)
+        # Check if deviation payoff has already been stored.
+        dev_player1 = caches[1].check(profile[0])
+        dev_player0 = caches[0].check(profile[1])
+        if dev_player1 and dev_player0:
+            payoff = [dev_player0, dev_player1]
+        else:
+            _, payoff = deviation_pure_strategy_profile(meta_game, profile)
         for player in range(num_player):
             deviation_payoff[player].append(payoff[player])
 
+    #TODO: check if deviation payoff and probs dim match.
     upper_bound = []
     for player in range(num_player):
         upper_bound.append(np.sum(np.array(deviation_payoff[player]) * probs[player]))
 
     mixed_payoff = mixed_strategy_payoff_2p(meta_game, probs)
     return sum(upper_bound) - sum(mixed_payoff)
+
+class Cache():
+    def __init__(self):
+        self.cache = {}
+
+    def save(self, key, value):
+        self.cache[key] = value
+
+    def check(self, key):
+        if key not in self.cache:
+            return False
+        else:
+            return self.cache[key]
 
 
 

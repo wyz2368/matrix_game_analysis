@@ -13,10 +13,12 @@ from absl import app
 from absl import flags
 import datetime
 import os
+import functools
+print = functools.partial(print, flush=True)
 
 FLAGS = flags.FLAGS
 
-flags.DEFINE_integer("num_strategies", 100, "The number of strategies in full game.")
+flags.DEFINE_integer("num_strategies", 200, "The number of strategies in full game.")
 flags.DEFINE_integer("num_emp_strategies", 40, "The number of strategies in empirical game.")
 flags.DEFINE_integer("num_iter", 10, "The number of runs of this test.")
 flags.DEFINE_string("game_type", "symmetric_zero_sum", "Type of synthetic game.")
@@ -75,7 +77,7 @@ def MRCP_regret_comparison(generator,
 def main(argv):
     generator = Game_generator(FLAGS.num_strategies)
     checkpoint_dir = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-    checkpoint_dir = os.path.join(os.getcwd(), checkpoint_dir) + '/'
+    checkpoint_dir = os.path.join(os.getcwd(), checkpoint_dir) + '_upper/'
 
     data = []
     for i in range(FLAGS.num_iter):
