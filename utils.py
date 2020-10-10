@@ -115,15 +115,15 @@ def find_all_deviation_payoffs(empirical_games, meta_game, caches):
     num_strategies_p1 = len(empirical_games[1])
 
     if num_strategies_p0 != num_strategies_p1:
-        # Allow redundant strategies.
-        diagonal_profiles = list(zip(empirical_games[0], empirical_games[1]))
-        for profile in diagonal_profiles:
-            _, payoff = deviation_pure_strategy_profile(meta_game, profile)
-            caches[0].save(profile[1], payoff[0])
-            caches[1].save(profile[0], payoff[1])
+        raise ValueError("Haven't supported that 2 players have different number of strategies.")
 
-    else:
-        pass
+    # Allow redundant strategies.
+    diagonal_profiles = list(zip(empirical_games[0], empirical_games[1]))
+    for profile in diagonal_profiles:
+        _, payoff = deviation_pure_strategy_profile(meta_game, profile)
+        caches[0].save(profile[1], payoff[0])
+        caches[1].save(profile[0], payoff[1])
+
     return caches
 
 
