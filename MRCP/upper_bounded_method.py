@@ -12,6 +12,7 @@ from nash_solver.gambit_tools import save_pkl
 from absl import app
 from absl import flags
 import datetime
+import time
 import os
 import functools
 print = functools.partial(print, flush=True)
@@ -20,7 +21,7 @@ FLAGS = flags.FLAGS
 
 flags.DEFINE_integer("num_strategies", 200, "The number of strategies in full game.")
 flags.DEFINE_integer("num_emp_strategies", 40, "The number of strategies in empirical game.")
-flags.DEFINE_integer("num_iter", 10, "The number of runs of this test.")
+flags.DEFINE_integer("num_iter", 1, "The number of runs of this test. Each run has different EG.")
 flags.DEFINE_string("game_type", "symmetric_zero_sum", "Type of synthetic game.")
 
 
@@ -32,7 +33,7 @@ def MRCP_regret_comparison(generator,
     Compare the MRCP regret given by Ameoba method to the regret given by upper-bounded approach.
     The regret of the NE is listed as a benchmark.
     :param generator: a Game generator
-    :param game_type: type of game
+    :param game_type: type of the game, options: "symmetric_zero_sum", "zero_sum", "general_sum"
     :param empirical_game_size:
     :return:
     """
@@ -45,18 +46,25 @@ def MRCP_regret_comparison(generator,
     else:
         raise ValueError("Undefined game type.")
 
-    num_total_strategies = len(meta_games[0])
+    num_total_strategies = generator.num_strategies
     num_player = len(meta_games)
     empirical_game = []
+    # Generate a random empirical game within the true game.
     for player in range(num_player):
         empirical_game.append(sorted(list(np.random.choice(range(0, num_total_strategies), empirical_game_size))))
 
+    # Create different MRCP calculator with/without upper-bounded approximation.
     exact_calculator = minimum_regret_profile_calculator(full_game=meta_games)
     appro_calculator = minimum_regret_profile_calculator(full_game=meta_games, approximation=True)
-    mrcp_profile, mrcp_value = exact_calculator(empirical_game=empirical_game)
-    appro_mrcp_profile, appro_mrcp_value = appro_calculator(empirical_game=empirical_game)
 
-    # Calculate the NE of the empirical game
+    # Calculate the MRCP and the regret of MRCP with different methods.
+    time0 = time.time()
+    mrcp_profile, mrcp_value = exact_calculator(empirical_game=empirical_game)
+    time1 = time.time()
+    appro_mrcp_profile, appro_mrcp_value = appro_calculator(empirical_game=empirical_game)
+    time2 = time.time()
+
+    # Calculate the NE of the empirical game for comparison.
     _, nashconv = double_oracle(meta_games=meta_games,
                                 empirical_games=empirical_game,
                                 checkpoint_dir=checkpoint_dir)
@@ -70,6 +78,8 @@ def MRCP_regret_comparison(generator,
     print("The regret of MRCP:", mrcp_value)
     print("The regret of approximate MRCP:", appro_mrcp_value)
     print("The regret of NE:", nashconv)
+    print("Time without approxiamtion:", time1 - time0)
+    print("Time with approximation:", time2 - time1)
 
     return l2_norm, mrcp_value, appro_mrcp_value, nashconv
 

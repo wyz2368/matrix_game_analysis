@@ -72,7 +72,7 @@ def regret_of_variable(prob_var, empirical_games, meta_game):
     payoff = mixed_strategy_payoff(meta_game, probs)
     return sum(dev_payoff)-sum(payoff)
 
-def upper_bouned_regret_of_variable(prob_var, empirical_games, meta_game, threshold=1e-3):
+def upper_bouned_regret_of_variable(prob_var, empirical_games, meta_game, caches):
     """
         Only works for two player case
         Calculate the upper bounded function value of one data point prob_var
@@ -81,10 +81,10 @@ def upper_bouned_regret_of_variable(prob_var, empirical_games, meta_game, thresh
             prob_var       : variable that amoeba directly search over
             empirical_games: a list of list, indicating player's strategy sets
             meta_game      : the full game matrix to calculate deviation from
+            caches         : Store the deviation payoff for each player. [cache0, cache1]
     """
     probs = []
     num_player = len(meta_game)
-    caches = [Cache() for _ in range(num_player)]
     index = np.cumsum([len(ele) for ele in empirical_games])
     pointer = 0
     for i, idx in enumerate(empirical_games):
@@ -93,43 +93,55 @@ def upper_bouned_regret_of_variable(prob_var, empirical_games, meta_game, thresh
         pointer = index[i]
         probs.append(prob)
 
-    support_idx = []
-    deviation_payoff = [[] for _ in range(num_player)]
+    weighted_deviation_payoff = np.zeros(num_player)
     for player in range(num_player):
-        support_idx.append(np.where(probs[player] > threshold)[0])
-
-    pure_profiles = list(product(support_idx[0], support_idx[1]))
-    for profile in pure_profiles:
-        # Check if deviation payoff has already been stored.
-        dev_player1 = caches[1].check(profile[0])
-        dev_player0 = caches[0].check(profile[1])
-        if dev_player1 and dev_player0:
-            payoff = [dev_player0, dev_player1]
-        else:
-            _, payoff = deviation_pure_strategy_profile(meta_game, profile)
-        for player in range(num_player):
-            deviation_payoff[player].append(payoff[player])
-
-    #TODO: check if deviation payoff and probs dim match.
-    upper_bound = []
-    for player in range(num_player):
-        upper_bound.append(np.sum(np.array(deviation_payoff[player]) * probs[player]))
+        for str, i in enumerate(empirical_games[1-player]):
+            weighted_deviation_payoff[player] += caches[player].get(str) * probs[1-player][i]
 
     mixed_payoff = mixed_strategy_payoff_2p(meta_game, probs)
-    return sum(upper_bound) - sum(mixed_payoff)
+
+    return sum(weighted_deviation_payoff) - sum(mixed_payoff)
+
+def find_all_deviation_payoffs(empirical_games, meta_game, caches):
+    """
+    Find all deviation payoff of pure strategy profile. Only need to calculate
+    sum_i|S_i| deviations. Only for 2-player game.
+    :param empirical_games:
+    :param meta_game: the underlying true game
+    :param caches: storage of deviation payoffs.
+    :return:
+    """
+    num_strategies_p0 = len(empirical_games[0])
+    num_strategies_p1 = len(empirical_games[1])
+    if num_strategies_p0 != num_strategies_p1:
+        raise ValueError("Currently players have different number of strategies. Haven't supported.")
+
+    # Allow redundant strategies.
+    diagonal_profiles = list(zip(empirical_games[0], empirical_games[1]))
+    for profile in diagonal_profiles:
+        _, payoff = deviation_pure_strategy_profile(meta_game, profile)
+        caches[0].save(profile[1], payoff[0])
+        caches[1].save(profile[0], payoff[1])
+
+    return caches
+
 
 class Cache():
     def __init__(self):
         self.cache = {}
 
     def save(self, key, value):
-        self.cache[key] = value
+        if key not in self.cache:
+            self.cache[key] = value
 
     def check(self, key):
         if key not in self.cache:
             return False
         else:
             return self.cache[key]
+
+    def get(self, key):
+        return self.cache[key]
 
 
 

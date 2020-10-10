@@ -20,7 +20,7 @@ FLAGS = flags.FLAGS
 
 flags.DEFINE_integer("num_strategies", 200, "The number of strategies in full game.")
 flags.DEFINE_integer("num_emp_strategies", 100, "The number of strategies in empirical game.")
-flags.DEFINE_integer("num_samples", 100, "The number of sampled strategy profiles.")
+flags.DEFINE_integer("num_samples", 2000, "The number of sampled strategy profiles.")
 flags.DEFINE_string("game_type", "symmetric_zero_sum", "Type of synthetic game.")
 flags.DEFINE_string("meta_method", "DO", "Meta method for game generation")
 

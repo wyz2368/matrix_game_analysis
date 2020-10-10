@@ -76,6 +76,7 @@ def uniform_simplex_sampling(dim):
 
     return output
 
-if 0:
-    print("fads")
+a = np.array([1,2,3,4,5])
+b = np.array([1,2,3,4,5]) + 1
 
+print(list(zip(a,b)))

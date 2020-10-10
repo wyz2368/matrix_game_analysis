@@ -4,6 +4,8 @@ from functools import partial
 from utils import regret_of_variable
 from utils import upper_bouned_regret_of_variable
 from utils import project_onto_unit_simplex
+from utils import Cache
+from utils import find_all_deviation_payoffs
 
 # Amoeba uses the simplex method of Nelder and Mead to maximize a
 # function of 1 or more variables, constraints are put into place
@@ -115,9 +117,14 @@ def amoeba_mrcp(empirical_game,
     # construct function for query
     if approximation:
         # Calculate the upper-bounded regret of mixed strategy profile.
+        caches = [Cache(), Cache]
+        caches = find_all_deviation_payoffs(empirical_games=empirical_game,
+                                            meta_game=full_game,
+                                            caches=caches)
         func = partial(upper_bouned_regret_of_variable,
                        empirical_games=empirical_game,
-                       meta_game=full_game)
+                       meta_game=full_game,
+                       caches=caches)
     else:
         # Calculate the exact regret of mixed strategy profile.
         func = partial(regret_of_variable,
