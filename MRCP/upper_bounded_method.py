@@ -53,9 +53,13 @@ def MRCP_regret_comparison(generator,
     for player in range(num_player):
         empirical_game.append(sorted(list(np.random.choice(range(0, num_total_strategies), empirical_game_size, replace=False))))
 
+    # Fix same starting point
+    sections = [len(ele) for ele in empirical_game]
+    init_var = np.random.rand(sum(sections))
+
     # Create different MRCP calculator with/without upper-bounded approximation.
-    exact_calculator = minimum_regret_profile_calculator(full_game=meta_games)
-    appro_calculator = minimum_regret_profile_calculator(full_game=meta_games, approximation=True)
+    exact_calculator = minimum_regret_profile_calculator(full_game=meta_games, var=init_var.copy())
+    appro_calculator = minimum_regret_profile_calculator(full_game=meta_games, approximation=True, var=init_var.copy())
 
     # Calculate the MRCP and the regret of MRCP with different methods.
     time0 = time.time()

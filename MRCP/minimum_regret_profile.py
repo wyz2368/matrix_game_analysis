@@ -9,7 +9,7 @@ class minimum_regret_profile_calculator(object):
     Assume the mimimum_regret_profile_calculator is called every iteration of PSRO
     applicable to multiple player case.
     """
-    def __init__(self, full_game, approximation=False, recursive=False):
+    def __init__(self, full_game, approximation=False, recursive=False, var="rand"):
         """
         Input:
             full_game     : full matrix game to calculate regret
@@ -18,6 +18,8 @@ class minimum_regret_profile_calculator(object):
         self.full_game = full_game
         self.no_derivative_opt_method = partial(amoeba_mrcp, approximation=approximation, full_game=full_game)
         self.recursive = recursive
+        self.var = var
+
         # mrcp_profile and mrcp_value records the last iteration's meta game's
         # minimum regret profile and value, which corresponds to last_empirical_game.
         # Anything besides it in the past history does not need to be
@@ -61,15 +63,15 @@ class minimum_regret_profile_calculator(object):
         '''
 
         # First remove duplicate from empirical game
-        empirical_game = [sorted(list(set(ele))) for ele in empirical_game]
+        sorted_empirical_game = [sorted(list(set(ele))) for ele in empirical_game]
         
         for iters in range(repeat):
             # initiate_starting_point
-            mrcp_mixed_strategy, mrcp_value, iteration = self.no_derivative_opt_method(empirical_game, var='rand')
+            mrcp_mixed_strategy, mrcp_value, iteration = self.no_derivative_opt_method(sorted_empirical_game, var=self.var)
             if self.mrcp_value > mrcp_value:
                 self.mrcp_value = mrcp_value
                 self._mrcp_iteration = iteration
-                self.mrcp_empirical_game = empirical_game
+                self.mrcp_empirical_game = sorted_empirical_game
                 self.mrcp_profile = mrcp_mixed_strategy
         # print('iteration {} mrcp value {} profile {}'.format(self._mrcp_iteration,self.mrcp_value,self.mrcp_profile))
         return self.mrcp_profile, self.mrcp_value
