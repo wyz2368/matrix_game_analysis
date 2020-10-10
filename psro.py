@@ -78,24 +78,6 @@ def psro(generator,
                            init_strategies=init_strategies)
 
 
-#    DO_FP_trainer = PSRO_trainer(meta_games=meta_games,
-#                              num_strategies=generator.num_strategies,
-#                              num_rounds=num_rounds,
-#                              meta_method=double_oracle,
-#                              checkpoint_dir=checkpoint_dir,
-#                              meta_method_list=[double_oracle, fictitious_play],
-#                              num_iterations=num_iterations,
-#                              blocks=blocks)
-#
-#    blocks_trainer = PSRO_trainer(meta_games=meta_games,
-#                              num_strategies=generator.num_strategies,
-#                              num_rounds=num_rounds,
-#                              meta_method=double_oracle,
-#                              checkpoint_dir=checkpoint_dir,
-#                              meta_method_list=[double_oracle, fictitious_play],
-#                              num_iterations=num_iterations,
-#                              blocks=True)
-
     DO_trainer.loop()
     print("#####################################")
     print('DO looper finished looping')

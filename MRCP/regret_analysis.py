@@ -18,11 +18,12 @@ def empirical_game_generator(generator,
                              checkpoint_dir=None):
     """
     Generate an empirical game which is a subgame of the full matrix game.
-    :param generator:
-    :param game_type:
-    :param seed:
+    :param generator:  a Game generator
+    :param game_type: type of the game, options: "symmetric_zero_sum", "zero_sum", "general_sum"
+    :param meta_method: Method for generating the empirical game.
+    :param empirical_game_size:
+    :param seed: random seed
     :param checkpoint_dir:
-    :param num_iterations:
     :return:
     """
     # Generate the underlying true game.
@@ -36,9 +37,10 @@ def empirical_game_generator(generator,
         raise ValueError("Undefined game type.")
 
     # A list that records which iteration the empirical game is recorded.
-    if empirical_game_size <= 91:
+    if empirical_game_size <= 71:
         raise ValueError("The number of sampled EG is large than generated EG.")
-    empricial_game_record = list(np.arange(10, 91, 10))
+
+    empricial_game_record = [10, 30, 50, 70]
 
     # Create a meta-trainer.
     if meta_method == "DO":
@@ -174,6 +176,10 @@ def regret_analysis(meta_games, empirical_game, rule, checkpoint_dir=None):
     num_players = len(meta_games)
     dev_strs, nashconv = sampling_scheme(meta_games, empirical_game, rule, checkpoint_dir)
     _, mrcp_regret_old = sampling_scheme(meta_games, empirical_game, "MRCP", checkpoint_dir)
+    # Add a mechanism to detect repeated strategies.
+    if dev_strs[0] in empirical_game[0] and dev_strs[1] in empirical_game[1]:
+        return nashconv, 0
+
     for player in range(num_players):
         empirical_game[player].append(dev_strs[player])
 
