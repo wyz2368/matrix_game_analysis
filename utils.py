@@ -121,8 +121,8 @@ def find_all_deviation_payoffs(empirical_games, meta_game, caches):
     diagonal_profiles = list(zip(empirical_games[0], empirical_games[1]))
     for profile in diagonal_profiles:
         _, payoff = deviation_pure_strategy_profile(meta_game, profile)
-        caches[0].save(profile[1], payoff[0])
-        caches[1].save(profile[0], payoff[1])
+        caches[0].save(key=profile[1], value=payoff[0])
+        caches[1].save(key=profile[0], value=payoff[1])
 
     return caches
 

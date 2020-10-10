@@ -117,7 +117,7 @@ def amoeba_mrcp(empirical_game,
     # construct function for query
     if approximation:
         # Calculate the upper-bounded regret of mixed strategy profile.
-        caches = [Cache(), Cache]
+        caches = [Cache(), Cache()]
         caches = find_all_deviation_payoffs(empirical_games=empirical_game,
                                             meta_game=full_game,
                                             caches=caches)
