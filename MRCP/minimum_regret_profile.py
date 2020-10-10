@@ -59,7 +59,8 @@ class minimum_regret_profile_calculator(object):
             empirical_game: the strategy set players have at this iteration of p
             repeat        : number of different initial points(different trials) to start with
         '''
-        # first remove duplicate from empirical game
+
+        # First remove duplicate from empirical game
         empirical_game = [sorted(list(set(ele))) for ele in empirical_game]
         
         for iters in range(repeat):
@@ -70,7 +71,7 @@ class minimum_regret_profile_calculator(object):
                 self._mrcp_iteration = iteration
                 self.mrcp_empirical_game = empirical_game
                 self.mrcp_profile = mrcp_mixed_strategy
-        print('iteration {} mrcp value {} profile {}'.format(self._mrcp_iteration,self.mrcp_value,self.mrcp_profile))
+        # print('iteration {} mrcp value {} profile {}'.format(self._mrcp_iteration,self.mrcp_value,self.mrcp_profile))
         return self.mrcp_profile, self.mrcp_value
 
     def recursive_find_mrcp(self, empirical_game):

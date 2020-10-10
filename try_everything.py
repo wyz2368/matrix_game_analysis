@@ -60,23 +60,5 @@ from itertools import product
 #
 #     return x
 
-def uniform_simplex_sampling(dim):
-    """
-    Uniform sample a unit simplex.
-    :param dim: the dimension of sampled vector.
-    :return:
-    """
-    vec = np.random.rand(dim+1)
-    vec[0] = 0
-    vec[-1] = 1
-    vec = np.sort(vec)
-    output = np.zeros(dim)
-    for i in range(dim):
-        output[i] = vec[i+1] - vec[i]
-
-    return output
-
-a = np.array([1,2,3,4,5])
-b = np.array([1,2,3,4,5]) + 1
-
-print(list(zip(a,b)))
+for player in range(2):
+    print(sorted(list(np.random.choice(range(0, 8), 4, replace=False))))

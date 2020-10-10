@@ -51,7 +51,7 @@ def MRCP_regret_comparison(generator,
     empirical_game = []
     # Generate a random empirical game within the true game.
     for player in range(num_player):
-        empirical_game.append(sorted(list(np.random.choice(range(0, num_total_strategies), empirical_game_size))))
+        empirical_game.append(sorted(list(np.random.choice(range(0, num_total_strategies), empirical_game_size, replace=False))))
 
     # Create different MRCP calculator with/without upper-bounded approximation.
     exact_calculator = minimum_regret_profile_calculator(full_game=meta_games)
