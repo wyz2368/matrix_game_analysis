@@ -97,11 +97,8 @@ def upper_bouned_regret_of_variable(prob_var, empirical_games, meta_game, caches
     for player in range(num_player):
         sum_prob = 0
         for i, str in enumerate(empirical_games[1-player]):
-            print(player, ":", i, str)
             weighted_deviation_payoff[player] += caches[player].get(str) * prob_var[i + index[0] * (1-player)]
             sum_prob += prob_var[i + index[0] * (1-player)]
-        print("sum of probs:", sum_prob)
-        print("weighted_deviation_payoff[player]:", weighted_deviation_payoff[player])
 
     mixed_payoff = mixed_strategy_payoff_2p(meta_game, probs)
 
