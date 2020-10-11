@@ -1,6 +1,7 @@
 import numpy as np
 import random
-from itertools import product
+import functools
+print = functools.partial(print, flush=True)
 
 def set_random_seed(seed=None):
     seed = np.random.randint(low=0,high=1e5) if seed is None else seed
@@ -95,10 +96,8 @@ def upper_bouned_regret_of_variable(prob_var, empirical_games, meta_game, caches
 
     weighted_deviation_payoff = np.zeros(num_player)
     for player in range(num_player):
-        sum_prob = 0
         for i, str in enumerate(empirical_games[1-player]):
             weighted_deviation_payoff[player] += caches[player].get(str) * prob_var[i + index[0] * (1-player)]
-            sum_prob += prob_var[i + index[0] * (1-player)]
 
     mixed_payoff = mixed_strategy_payoff_2p(meta_game, probs)
 
