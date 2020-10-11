@@ -13,4 +13,5 @@
 module load python3.6-anaconda/5.2.0
 cd ${SLURM_SUBMIT_DIR}
 python upper_bounded_method.py --num_strategies=200 --num_emp_strategies=40 --num_iter=10 --game_type=symmetric_zero_sum
+# python upper_bounded_method.py --num_strategies=200 --num_emp_strategies=40 --num_iter=10 --game_type=kuhn
 

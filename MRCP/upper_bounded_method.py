@@ -7,7 +7,7 @@ import numpy as np
 from game_generator import Game_generator
 from MRCP.minimum_regret_profile import minimum_regret_profile_calculator
 from meta_strategies import double_oracle
-from nash_solver.gambit_tools import save_pkl
+from nash_solver.gambit_tools import save_pkl, load_pkl
 
 from absl import app
 from absl import flags
@@ -44,6 +44,8 @@ def MRCP_regret_comparison(generator,
         meta_games = generator.general_sum_game()
     elif game_type == "symmetric_zero_sum":
         meta_games = generator.general_sum_game()
+    elif game_type == "kuhn":
+        meta_games = load_pkl("./kuhn_meta_game.pkl")
     else:
         raise ValueError("Undefined game type.")
 

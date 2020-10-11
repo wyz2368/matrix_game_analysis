@@ -3,7 +3,7 @@ from psro_trainer import PSRO_trainer
 from utils import deviation_strategy
 from utils import mixed_strategy_payoff_2p
 from scipy.stats import pearsonr
-from nash_solver.gambit_tools import save_pkl
+from nash_solver.gambit_tools import save_pkl, load_pkl
 
 import numpy as np
 import functools
@@ -33,6 +33,8 @@ def empirical_game_generator(generator,
         meta_games = generator.general_sum_game()
     elif game_type == "symmetric_zero_sum":
         meta_games = generator.general_sum_game()
+    elif game_type == "kuhn":
+        meta_games = load_pkl("./kuhn_meta_game.pkl")
     else:
         raise ValueError("Undefined game type.")
 
