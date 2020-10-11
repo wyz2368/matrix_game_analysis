@@ -45,7 +45,8 @@ def MRCP_regret_comparison(generator,
     elif game_type == "symmetric_zero_sum":
         meta_games = generator.general_sum_game()
     elif game_type == "kuhn":
-        meta_games = load_pkl("./kuhn_meta_game.pkl")
+        kuhn_meta_games = load_pkl("./kuhn_meta_game.pkl")
+        meta_games = kuhn_meta_games[0]
     else:
         raise ValueError("Undefined game type.")
 
