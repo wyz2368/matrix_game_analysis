@@ -54,7 +54,10 @@ def empirical_game_generator(generator,
                                num_iterations=empirical_game_size,
                                empricial_game_record=empricial_game_record,
                                seed=seed,
-                               init_strategies=None)
+                               init_strategies=None,
+                               calculate_neconv=False,
+                               calculate_mrcpconv=False
+                               )
     elif meta_method == "FP":
         trainer = PSRO_trainer(meta_games=meta_games,
                                num_strategies=generator.num_strategies,
@@ -64,7 +67,10 @@ def empirical_game_generator(generator,
                                num_iterations=empirical_game_size,
                                empricial_game_record=empricial_game_record,
                                seed=seed,
-                               init_strategies=None)
+                               init_strategies=None,
+                               calculate_neconv=False,
+                               calculate_mrcpconv=False
+                               )
     elif meta_method == "MRCP":
         trainer = PSRO_trainer(meta_games=meta_games,
                                num_strategies=generator.num_strategies,
@@ -74,7 +80,10 @@ def empirical_game_generator(generator,
                                num_iterations=empirical_game_size,
                                empricial_game_record=empricial_game_record,
                                seed=seed,
-                               init_strategies=None)
+                               init_strategies=None,
+                               calculate_neconv=False,
+                               calculate_mrcpconv=False
+                               )
     else:
         raise ValueError("Undefined meta-method.")
 
