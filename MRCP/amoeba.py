@@ -81,7 +81,7 @@ def shrink_simplex(sorted_simplex, sorted_value, func):
 
 def amoeba_mrcp(empirical_game,
                 full_game,
-                approximation = False,
+                approximation=False,
                 var='uni',
                 max_iter=5000,
                 ftolerance=1.e-4,
@@ -192,7 +192,7 @@ def amoeba_mrcp(empirical_game,
         # Convergence Checking
         if (ftolerance <= 0.0 or frange < ftolerance) \
                 and (xtolerance <= 0.0 or simscale < xtolerance):
-            return np.split(simplex[0],sections[:-1]),fvalue[0],iteration
+            return np.split(simplex[0],sections[:-1]), fvalue[0], iteration, simplex[0]
 
         # perform reflection to acquire x_r,evaluate f_r
         alpha = 1
@@ -245,4 +245,5 @@ def amoeba_mrcp(empirical_game,
     sort_index = np.argsort(fvalue)
     fvalue = [fvalue[ele] for ele in sort_index]
     simplex = [simplex[ele] for ele in sort_index]
+
     return np.split(simplex[0], sections[:-1]), fvalue[0], iteration, simplex[0]
