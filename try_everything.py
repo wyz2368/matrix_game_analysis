@@ -24,6 +24,6 @@ from nash_solver.gambit_tools import load_pkl
 
 meta_game = load_pkl("./MRCP/kuhn_meta_game.pkl")
 print(type(meta_game))
-print(meta_game[0])
+print(np.shape(meta_game[0][0]))
 
 
