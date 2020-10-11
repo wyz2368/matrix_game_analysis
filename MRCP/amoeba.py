@@ -245,4 +245,4 @@ def amoeba_mrcp(empirical_game,
     sort_index = np.argsort(fvalue)
     fvalue = [fvalue[ele] for ele in sort_index]
     simplex = [simplex[ele] for ele in sort_index]
-    return np.split(simplex[0],sections[:-1]), fvalue[0], iteration
+    return np.split(simplex[0], sections[:-1]), fvalue[0], iteration, simplex[0]
