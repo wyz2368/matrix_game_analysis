@@ -50,7 +50,7 @@ def MRCP_regret_comparison(generator,
     else:
         raise ValueError("Undefined game type.")
 
-    num_total_strategies = generator.num_strategies
+    num_total_strategies = np.shape(meta_games[0])[0]
     num_player = len(meta_games)
     empirical_game = []
     # Generate a random empirical game within the true game.
