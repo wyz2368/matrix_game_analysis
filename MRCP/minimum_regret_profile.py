@@ -1,7 +1,6 @@
 from functools import partial
 from itertools import chain, combinations,product
 from utils import regret_of_variable
-from MRCP.regret_analysis import extend_prob
 
 from MRCP.amoeba import amoeba_mrcp
 
