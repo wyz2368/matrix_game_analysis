@@ -13,6 +13,8 @@ from utils import find_all_deviation_payoffs
 # ning with applications in market games" section 7.2
 #   Copyright (C) 2020  Gary Qiurui Ma, Yongzhao Wang, Strategic Reasing Group
 
+# Reference： http://stitchpanorama.sourceforge.net/Python/amoeba.py
+
 # Ameoba Parameters
 alpha = 1 # reflection
 gamma = 2 # expansion
@@ -25,7 +27,7 @@ def check_within_probability_simplex(var):
     Here we only check the scope of each single variable since mathematically
     initialization guarantees the sum of each variable equal to 1 in amoeba.
     '''
-    return np.all(var >= 0) and np.all(var <= 1)
+    return np.all(var >= 0 - 1e-4) and np.all(var <= 1 + 1e-4)
 
 def variable_projection(variables, sections):
     """

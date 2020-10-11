@@ -43,15 +43,6 @@ class minimum_regret_profile_calculator(object):
         self.unsplited_strategy = []
 
     def __call__(self, empirical_game):
-        # for comparing pjordan recursive and non-recursive ones
-        #profile_recursive, value_recursive = self.recursive_find_mrcp(empirical_game)
-        #self.clear()
-        #profile, value = self.find_mrcp(empirical_game)
-        #print('recursive {}  VS normal {}'.format(value_recursive,value))
-        #print('profile_recursive', profile_recursive)
-        #print('profile',profile)
-        #return profile_recursive, value_recursive
-
         if self.recursive:
             return self.recursive_find_mrcp(empirical_game)
         else:

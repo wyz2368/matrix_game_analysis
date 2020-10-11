@@ -67,9 +67,13 @@ def MRCP_regret_comparison(generator,
 
     # Calculate the MRCP and the regret of MRCP with different methods.
     time0 = time.time()
+    print("Begin calculating the exact MRCP.")
     mrcp_profile, mrcp_value = exact_calculator(empirical_game=empirical_game)
+    print("Finish calculating the exact MRCP.")
     time1 = time.time()
+    print("Begin calculating the approximate MRCP.")
     appro_mrcp_profile, appro_mrcp_value = appro_calculator(empirical_game=empirical_game)
+    print("Finish calculating the approximate MRCP.")
     time2 = time.time()
 
     # Calculate the NE of the empirical game for comparison.
