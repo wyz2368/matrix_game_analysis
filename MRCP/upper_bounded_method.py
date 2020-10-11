@@ -14,6 +14,7 @@ from absl import flags
 import datetime
 import time
 import os
+import sys
 import functools
 print = functools.partial(print, flush=True)
 
@@ -89,10 +90,17 @@ def MRCP_regret_comparison(generator,
 
 
 def main(argv):
+    # Create a game generator
     generator = Game_generator(FLAGS.num_strategies)
+
+    # Path operation
     checkpoint_dir = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
     checkpoint_dir = os.path.join(os.getcwd(), checkpoint_dir) + '_upper/'
+    if not os.path.exists(checkpoint_dir):
+        os.makedirs(checkpoint_dir)
+    sys.stdout = open(checkpoint_dir + '/stdout.txt', 'w+')
 
+    # Main Console
     data = []
     for i in range(FLAGS.num_iter):
         print('################## Iteration {} #################'.format(i))

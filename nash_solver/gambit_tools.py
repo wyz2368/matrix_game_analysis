@@ -189,7 +189,7 @@ def decode_gambit_file(meta_games, mode="all", max_num_nash=10, checkpoint_dir=N
         raise ValueError
 
 
-def do_gambit_analysis(meta_games, mode, timeout = 60, method="lcp", method_pure_ne="enumpure", checkpoint_dir=None):
+def do_gambit_analysis(meta_games, mode, timeout = 60, method="simpdiv", method_pure_ne="enumpure", checkpoint_dir=None):
     """
     Combine encoder and decoder.
     :param meta_games: meta-games in PSRO.
