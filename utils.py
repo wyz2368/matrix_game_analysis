@@ -78,7 +78,8 @@ def regret_of_variable(prob_var, empirical_games, meta_game):
 
     _, dev_payoff = deviation_strategy(meta_game, probs)
     payoff = mixed_strategy_payoff(meta_game, probs)
-    return sum(dev_payoff)-sum(payoff)
+    # return sum(dev_payoff)-sum(payoff)
+    return np.max(dev_payoff - np.array(payoff))
 
 def upper_bouned_regret_of_variable(prob_var, empirical_games, meta_game, caches):
     """
