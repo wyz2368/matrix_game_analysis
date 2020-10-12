@@ -123,6 +123,10 @@ def amoeba_mrcp(empirical_game,
         caches = find_all_deviation_payoffs(empirical_games=empirical_game,
                                             meta_game=full_game,
                                             caches=caches)
+
+        print("Cache0:", caches[0].cache.items())
+        print("Cache1:", caches[1].cache.items())
+
         func = partial(upper_bouned_regret_of_variable,
                        empirical_games=empirical_game,
                        meta_game=full_game,
