@@ -180,9 +180,9 @@ def amoeba_mrcp(empirical_game,
         # get the average of the the n points except from the worst
         x_a = np.average(np.array(simplex[:-1]), axis=0)
         if not check_within_probability_simplex(x_a):
-            print("The violated x_a:", x_a)
-            print("The simplex:", simplex)
-        assert check_within_probability_simplex(x_a), 'centroid not in probability simplex'
+            print("x_a violates the simplex constraint, projection onto simplex.")
+            x_a = variable_projection(x_a, sections)
+        # assert check_within_probability_simplex(x_a), 'centroid not in probability simplex'
 
         # determine the termination criteria
         # 1. distance between average and worst
