@@ -171,6 +171,7 @@ def amoeba_mrcp(empirical_game,
     # Start of the Ameoba Method.
     iteration = 0
     x_a_violation_flag = False
+
     while iteration < max_iter:
 
         # sort the simplex and the fvalue the last one is the worst
@@ -182,7 +183,7 @@ def amoeba_mrcp(empirical_game,
         x_a = np.average(np.array(simplex[:-1]), axis=0)
         if not check_within_probability_simplex(x_a):
             if not x_a_violation_flag:
-                print("x_a violates the simplex constraint, projection onto simplex.")
+                print("x_a violates the simplex constraint, projection onto simplex.", x_a_violation_flag)
                 x_a_violation_flag = True
             x_a = variable_projection(x_a, sections)
         # assert check_within_probability_simplex(x_a), 'centroid not in probability simplex'
