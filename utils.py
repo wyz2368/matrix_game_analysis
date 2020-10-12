@@ -1,6 +1,7 @@
 import numpy as np
 import random
 import functools
+from scipy.stats import entropy
 print = functools.partial(print, flush=True)
 
 def set_random_seed(seed=None):
@@ -8,6 +9,12 @@ def set_random_seed(seed=None):
     np.random.seed(seed)
     random.seed(seed)
     return seed
+
+def profile_entropy(profile):
+    ent = 0
+    for prob in profile:
+        ent += entropy(prob)
+    return ent
 
 
 def general_get_joint_strategy_from_marginals(probabilities):
@@ -108,7 +115,7 @@ def upper_bouned_regret_of_variable(prob_var, empirical_games, meta_game, caches
     # print("Sum of weighted payoff:", sum(weighted_deviation_payoff))
     # print("sum of mixed_payoff:", sum(mixed_payoff))
 
-    discount = 1.5
+    discount = 3
 
     return np.max(np.maximum(weighted_deviation_payoff - discount * np.array(mixed_payoff), 0))
 
