@@ -114,6 +114,9 @@ def main(argv):
         os.makedirs(checkpoint_dir)
     sys.stdout = open(checkpoint_dir + '/stdout.txt', 'w+')
 
+    print("The size of the empirical game is ", FLAGS.num_emp_strategies)
+    print("The game type is ", FLAGS.game_type)
+
     # Main Console
     data = []
     for i in range(FLAGS.num_iter):
@@ -124,7 +127,7 @@ def main(argv):
                                                                                  checkpoint_dir=checkpoint_dir)
         data.append([l2_norm, mrcp_value, appro_mrcp_value, nashconv])
 
-    save_pkl(obj=data, path=checkpoint_dir)
+    save_pkl(obj=data, path=checkpoint_dir + "data.pkl")
 
 
 if __name__ == "__main__":
