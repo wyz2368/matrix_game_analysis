@@ -115,7 +115,7 @@ def upper_bouned_regret_of_variable(prob_var, empirical_games, meta_game, caches
     # print("Sum of weighted payoff:", sum(weighted_deviation_payoff))
     # print("sum of mixed_payoff:", sum(mixed_payoff))
 
-    discount = 0.3
+    discount = 0.05
 
     return np.max(np.maximum(weighted_deviation_payoff - np.array(mixed_payoff) - discount * profile_entropy(probs), 0))
 
