@@ -92,10 +92,15 @@ def MRCP_regret_comparison(generator,
     print("The regret of NE:", nashconv)
     print("Time without approxiamtion:", time1 - time0)
     print("Time with approximation:", time2 - time1)
-    print("MRCP:", mrcp_profile)
-    print("Approximate MRCP:", appro_mrcp_profile)
+    print("MRCP:", profile_filter(mrcp_profile))
+    print("Approximate MRCP:", profile_filter(appro_mrcp_profile))
 
     return l2_norm, mrcp_value, appro_mrcp_value, nashconv
+
+def profile_filter(profile, threshold=1e-3):
+    for str in profile:
+        str[str < threshold] = 0
+    return profile
 
 
 def main(argv):
