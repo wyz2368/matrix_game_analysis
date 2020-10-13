@@ -127,14 +127,14 @@ def amoeba_mrcp(empirical_game,
         # print("Cache0:", caches[0].cache.items())
         # print("Cache1:", caches[1].cache.items())
 
-        # func = partial(upper_bouned_regret_of_variable,
-        #                empirical_games=empirical_game,
-        #                meta_game=full_game,
-        #                caches=caches)
-        func = partial(regret_of_variable,
+        func = partial(upper_bouned_regret_of_variable,
                        empirical_games=empirical_game,
                        meta_game=full_game,
-                       sum_regret=False)
+                       caches=caches)
+        # func = partial(regret_of_variable,
+        #                empirical_games=empirical_game,
+        #                meta_game=full_game,
+        #                sum_regret=False)
 
     else:
         # Calculate the exact regret of mixed strategy profile.
