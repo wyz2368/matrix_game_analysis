@@ -238,34 +238,36 @@ def console(generator,
     print("The full game is sample at iteration:", empirical_games_dict.keys())
     print("The number of samples is ", num_samples)
 
-    for key in empirical_games_dict:
-        print("############# Iteration {} ############".format(key))
-        empirical_games = empirical_games_dict[key]
 
-        regret_of_samples = []
-        performance_improvement = []
-        for _ in range(num_samples):
-            nashconv, improvement = regret_analysis(meta_games,
-                                                    empirical_games,
-                                                    rule='rand',
-                                                    checkpoint_dir=checkpoint_dir)
 
-            regret_of_samples.append(nashconv)
-            performance_improvement.append(improvement)
-
-        corr, p_val = correlation(regret_of_samples, performance_improvement)
-        print("Correlation coeffient:", corr, "P-value:", p_val)
-        save_pkl(obj=regret_of_samples, path=checkpoint_dir + "regret_of_samples_" + str(key))
-        save_pkl(obj=performance_improvement, path=checkpoint_dir + "performance_improvement_" + str(key))
-
-        # Compare with standard MSS.
-        MSSs = ["NE", "uniform", "MRCP"]
-        for mss in MSSs:
-            nashconv, improvement = regret_analysis(meta_games,
-                                                    empirical_games,
-                                                    rule='NE',
-                                                    checkpoint_dir=checkpoint_dir)
-            print(mss, "--", "regret:", nashconv, "improvement:", improvement)
+    # for key in empirical_games_dict:
+    #     print("############# Iteration {} ############".format(key))
+    #     empirical_games = empirical_games_dict[key]
+    #
+    #     regret_of_samples = []
+    #     performance_improvement = []
+    #     for _ in range(num_samples):
+    #         nashconv, improvement = regret_analysis(meta_games,
+    #                                                 empirical_games,
+    #                                                 rule='rand',
+    #                                                 checkpoint_dir=checkpoint_dir)
+    #
+    #         regret_of_samples.append(nashconv)
+    #         performance_improvement.append(improvement)
+    #
+    #     corr, p_val = correlation(regret_of_samples, performance_improvement)
+    #     print("Correlation coeffient:", corr, "P-value:", p_val)
+    #     save_pkl(obj=regret_of_samples, path=checkpoint_dir + "regret_of_samples_" + str(key))
+    #     save_pkl(obj=performance_improvement, path=checkpoint_dir + "performance_improvement_" + str(key))
+    #
+    #     # Compare with standard MSS.
+    #     MSSs = ["NE", "uniform", "MRCP"]
+    #     for mss in MSSs:
+    #         nashconv, improvement = regret_analysis(meta_games,
+    #                                                 empirical_games,
+    #                                                 rule='NE',
+    #                                                 checkpoint_dir=checkpoint_dir)
+    #         print(mss, "--", "regret:", nashconv, "improvement:", improvement)
 
 
 

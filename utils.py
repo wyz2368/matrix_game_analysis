@@ -57,7 +57,7 @@ def mixed_strategy_payoff_2p(meta_games, probs):
        payoffs.append(np.sum(prob1 * meta_game * prob2))
    return payoffs
 
-def regret_of_variable(prob_var, empirical_games, meta_game):
+def regret_of_variable(prob_var, empirical_games, meta_game, sum_regret=True):
     """
     Only works for two player case
     Calculate the function value of one data point prob_var
@@ -78,10 +78,12 @@ def regret_of_variable(prob_var, empirical_games, meta_game):
 
     _, dev_payoff = deviation_strategy(meta_game, probs)
     payoff = mixed_strategy_payoff(meta_game, probs)
-    # return sum(dev_payoff)-sum(payoff)
-    return np.max(dev_payoff - np.array(payoff))
+    if sum_regret:
+        return sum(dev_payoff)-sum(payoff)
+    else:
+        return np.max(dev_payoff - np.array(payoff))
 
-def upper_bouned_regret_of_variable(prob_var, empirical_games, meta_game, caches):
+def upper_bouned_regret_of_variable(prob_var, empirical_games, meta_game, caches, discount=0.05):
     """
         Only works for two player case
         Calculate the upper bounded function value of one data point prob_var
@@ -115,8 +117,6 @@ def upper_bouned_regret_of_variable(prob_var, empirical_games, meta_game, caches
     # print("Cache1:", caches[1].cache.items())
     # print("Sum of weighted payoff:", sum(weighted_deviation_payoff))
     # print("sum of mixed_payoff:", sum(mixed_payoff))
-
-    discount = 0.05
 
     return np.max(np.maximum(weighted_deviation_payoff - np.array(mixed_payoff) - discount * profile_entropy(probs), 0))
 

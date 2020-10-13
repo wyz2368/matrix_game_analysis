@@ -21,7 +21,6 @@ flags.DEFINE_string("meta_method", "DO", "Meta method for game generation")
 def main(argv):
     generator = Game_generator(FLAGS.num_strategies)
 
-
     checkpoint_dir = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
     checkpoint_dir = os.path.join(os.getcwd(), checkpoint_dir) + '_regret/'
     if not os.path.exists(checkpoint_dir):

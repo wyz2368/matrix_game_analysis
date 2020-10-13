@@ -70,14 +70,14 @@ class minimum_regret_profile_calculator(object):
                 self.mrcp_profile = mrcp_mixed_strategy
                 self.unsplited_strategy = unsplited_strategy
         # print('iteration {} mrcp value {} profile {}'.format(self._mrcp_iteration,self.mrcp_value,self.mrcp_profile))
-        # if self.approximation:
-        #     # print("Bound value:", self.mrcp_value)
-        #     self.mrcp_value = regret_of_variable(prob_var=self.unsplited_strategy,
-        #                                          empirical_games=self.mrcp_empirical_game,
-        #                                          meta_game=self.full_game)
-        self.mrcp_value = regret_of_variable(prob_var=self.unsplited_strategy,
-                                             empirical_games=self.mrcp_empirical_game,
-                                             meta_game=self.full_game)
+        if self.approximation:
+            # print("Bound value:", self.mrcp_value)
+            self.mrcp_value = regret_of_variable(prob_var=self.unsplited_strategy,
+                                                 empirical_games=self.mrcp_empirical_game,
+                                                 meta_game=self.full_game)
+        # self.mrcp_value = regret_of_variable(prob_var=self.unsplited_strategy,
+        #                                      empirical_games=self.mrcp_empirical_game,
+        #                                      meta_game=self.full_game)
         return self.mrcp_profile, self.mrcp_value
 
     def recursive_find_mrcp(self, empirical_game):
