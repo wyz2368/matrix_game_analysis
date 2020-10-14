@@ -324,7 +324,7 @@ def average_payoff_pure_profile(meta_games, profile):
     """
     aver_payoff = []
     average_start = 10
-    average_end = 1
+    average_end = 3
 
     payoff_vec = meta_games[0][:, profile[1]]
     payoff_vec = np.reshape(payoff_vec, -1)
