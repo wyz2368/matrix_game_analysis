@@ -27,9 +27,8 @@ from scipy.stats import entropy
 # print(type(meta_game))
 # print(np.shape(meta_game[0][0]))
 
-a = np.zeros(10)
-a[0] = 0.5
-a[4] = 0.5
-print(entropy(a))
+a = np.array([0.14349618, 0.        , 0.31332654, 0.00727824, 0.08954273,
+       0., 0.00219699, 0.        , 0.43805783, 0.00621898])
+print(np.sum(a))
 
 

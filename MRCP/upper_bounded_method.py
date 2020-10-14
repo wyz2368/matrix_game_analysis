@@ -120,15 +120,13 @@ def main(argv):
 
     # Main Console
     # data = []
-    for discount in np.arange(0.01, 0.1, 0.01):
-        print("*********The current discount is ", discount, "************")
-        for i in range(FLAGS.num_iter):
-            print('################## Iteration {} #################'.format(i))
-            l2_norm, mrcp_value, appro_mrcp_value, nashconv = MRCP_regret_comparison(generator=generator,
-                                                                                     discount=discount,
-                                                                                     game_type=FLAGS.game_type,
-                                                                                     empirical_game_size=FLAGS.num_emp_strategies,
-                                                                                     checkpoint_dir=checkpoint_dir)
+    print("*********The current discount is ", discount, "************")
+    for i in range(FLAGS.num_iter):
+        print('################## Iteration {} #################'.format(i))
+        l2_norm, mrcp_value, appro_mrcp_value, nashconv = MRCP_regret_comparison(generator=generator,
+                                                                                 game_type=FLAGS.game_type,
+                                                                                 empirical_game_size=FLAGS.num_emp_strategies,
+                                                                                 checkpoint_dir=checkpoint_dir)
             # data.append([l2_norm, mrcp_value, appro_mrcp_value, nashconv])
 
     # save_pkl(obj=data, path=checkpoint_dir + "data.pkl")
