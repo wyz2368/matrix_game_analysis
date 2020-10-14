@@ -120,7 +120,7 @@ def main(argv):
 
     # Main Console
     # data = []
-    for discount in np.arange(0.01, 0.1, 0.01):
+    for discount in [0]:
         print("*********The current discount is ", discount, "************")
         for i in range(FLAGS.num_iter):
             print('################## Iteration {} #################'.format(i))

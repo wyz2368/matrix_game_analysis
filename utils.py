@@ -121,13 +121,50 @@ def upper_bouned_regret_of_variable(prob_var, empirical_games, meta_game, caches
 
     # return np.sum(weighted_deviation_payoff - np.array(mixed_payoff))
 
-def find_all_deviation_payoffs(empirical_games, meta_game, caches):
+def sampled_bouned_regret_of_variable(prob_var, empirical_games, meta_game, caches=None, discount=0.05):
+    """
+        Only works for two player case
+        Calculate the upper bounded function value of one data point prob_var
+        in amoeba method, Reshape and expand the probability var into full shape.
+        Input:
+            prob_var       : variable that amoeba directly search over
+            empirical_games: a list of list, indicating player's strategy sets
+            meta_game      : the full game matrix to calculate deviation from
+            caches         : Store the deviation payoff for each player. [cache0, cache1]
+    """
+    probs = []
+    num_player = len(meta_game)
+    index = np.cumsum([len(ele) for ele in empirical_games])
+    pointer = 0
+    for i, idx in enumerate(empirical_games):
+        prob = np.zeros(meta_game[0].shape[i])
+        np.put(prob, idx, prob_var[pointer:index[i]])
+        pointer = index[i]
+        probs.append(prob)
+
+    weighted_deviation_payoff = np.zeros(num_player)
+    for player in range(num_player):
+        for i, str in enumerate(empirical_games[1-player]):
+            weighted_deviation_payoff[player] += caches[player].get(str) * prob_var[i + index[0] * (1-player)]
+
+    mixed_payoff = mixed_strategy_payoff_2p(meta_game, probs)
+
+
+    # print("Cache0:", caches[0].cache.items())
+    # print("Cache1:", caches[1].cache.items())
+    # print("Sum of weighted payoff:", sum(weighted_deviation_payoff))
+    # print("sum of mixed_payoff:", sum(mixed_payoff))
+
+    return np.max(np.maximum(weighted_deviation_payoff - np.array(mixed_payoff) - discount * profile_entropy(probs), 0))
+
+def find_all_deviation_payoffs(empirical_games, meta_game, caches, mean=True):
     """
     Find all deviation payoff of pure strategy profile. Only need to calculate
     sum_i|S_i| deviations. Only for 2-player game.
     :param empirical_games:
     :param meta_game: the underlying true game
     :param caches: storage of deviation payoffs.
+    :param mean:
     :return:
     """
     num_strategies_p0 = len(empirical_games[0])
@@ -139,7 +176,10 @@ def find_all_deviation_payoffs(empirical_games, meta_game, caches):
     # Allow redundant strategies.
     diagonal_profiles = list(zip(empirical_games[0], empirical_games[1]))
     for profile in diagonal_profiles:
-        _, payoff = deviation_pure_strategy_profile(meta_game, profile)
+        if mean:
+            payoff = average_payoff(meta_game, profile)
+        else:
+            _, payoff = deviation_pure_strategy_profile(meta_game, profile)
         caches[0].save(key=profile[1], value=payoff[0])
         caches[1].save(key=profile[0], value=payoff[1])
 
@@ -162,7 +202,6 @@ class Cache():
 
     def get(self, key):
         return self.cache[key]
-
 
 
 
@@ -228,4 +267,72 @@ def project_onto_unit_simplex(prob):
 
     return np.maximum(0, prob - tmax)
 
+def beneficial_deviation(meta_games, probs, base_value):
+    """
+    Find all beneficial deviations and corresponding payoffs.
+    Only for two-player case.
+    :param meta_games:
+    :param probs:
+    :param base_value: deviation beyond this value. [p1, p2]
+    :return:
+    """
+    dev_strs = []
+    dev_payoff = []
+    prob1 = probs[0]
+    prob1 = np.reshape(prob1, newshape=(len(prob1), 1))
+    prob2 = probs[1]
 
+    payoff_vec = np.sum(meta_games[0] * prob2, axis=1)
+    payoff_vec = np.reshape(payoff_vec, -1)
+    idx = list(np.where(payoff_vec > base_value[0])[0])
+    dev_strs.append(idx)
+    dev_payoff.append(payoff_vec[idx])
+
+    payoff_vec = np.sum(prob1 * meta_games[1], axis=0)
+    payoff_vec = np.reshape(payoff_vec, -1)
+    idx = list(np.where(payoff_vec > base_value[1])[0])
+    dev_strs.append(idx)
+    dev_payoff.append(payoff_vec[idx])
+
+    return dev_strs, dev_payoff
+
+def sample_deviation_strategy(dev_strs, dev_payoff):
+    """
+    Sample a deviation strategy and corresponding payoff.
+    :param dev_strs:
+    :param dev_payoff:
+    :return:
+    """
+    num_players = len(dev_strs)
+    num_deviations = len(dev_strs[0])
+    sampled_str = []
+    sample_payoff = []
+
+    for player in range(num_players):
+        idx = np.random.choice(np.arange(num_deviations))
+        sampled_str.append(dev_strs[player][idx])
+        sample_payoff.append(dev_payoff[player][idx])
+
+    return sampled_str, sample_payoff
+
+def average_payoff(meta_games, probs):
+    """
+    Calculate the average payoff given other players' strategies.
+    :param meta_games:
+    :param probs:
+    :return:
+    """
+    aver_payoff = []
+    prob1 = probs[0]
+    prob1 = np.reshape(prob1, newshape=(len(prob1), 1))
+    prob2 = probs[1]
+
+    payoff_vec = np.sum(meta_games[0] * prob2, axis=1)
+    payoff_vec = np.reshape(payoff_vec, -1)
+    aver_payoff.append(np.mean(payoff_vec))
+
+    payoff_vec = np.sum(prob1 * meta_games[1], axis=0)
+    payoff_vec = np.reshape(payoff_vec, -1)
+    aver_payoff.append(np.mean(payoff_vec))
+
+    return aver_payoff
