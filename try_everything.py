@@ -27,7 +27,7 @@ from scipy.stats import entropy
 # print(type(meta_game))
 # print(np.shape(meta_game[0][0]))
 
-a = np.random.choice(np.arange(5))
-print(a)
+a = np.array([1,5,3,2])
+print(np.sort(a))
 
 
