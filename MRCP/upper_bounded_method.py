@@ -28,6 +28,7 @@ flags.DEFINE_string("game_type", "symmetric_zero_sum", "Type of synthetic game."
 
 def MRCP_regret_comparison(generator,
                            game_type,
+                           discount,
                            empirical_game_size=40,
                            checkpoint_dir=None):
     """
@@ -63,7 +64,7 @@ def MRCP_regret_comparison(generator,
 
     # Create different MRCP calculator with/without upper-bounded approximation.
     exact_calculator = minimum_regret_profile_calculator(full_game=meta_games, var=init_var.copy())
-    appro_calculator = minimum_regret_profile_calculator(full_game=meta_games, approximation=True, var=init_var.copy())
+    appro_calculator = minimum_regret_profile_calculator(full_game=meta_games, approximation=True, var=init_var.copy(), discount=discount)
 
     # Calculate the MRCP and the regret of MRCP with different methods.
     time0 = time.time()
@@ -119,12 +120,15 @@ def main(argv):
 
     # Main Console
     # data = []
-    for i in range(FLAGS.num_iter):
-        print('################## Iteration {} #################'.format(i))
-        l2_norm, mrcp_value, appro_mrcp_value, nashconv = MRCP_regret_comparison(generator=generator,
-                                                                                 game_type=FLAGS.game_type,
-                                                                                 empirical_game_size=FLAGS.num_emp_strategies,
-                                                                                 checkpoint_dir=checkpoint_dir)
+    for discount in np.arange(0.01, 0.1, 0.01):
+        print("*********The current discount is ", discount, "************")
+        for i in range(FLAGS.num_iter):
+            print('################## Iteration {} #################'.format(i))
+            l2_norm, mrcp_value, appro_mrcp_value, nashconv = MRCP_regret_comparison(generator=generator,
+                                                                                     discount=discount,
+                                                                                     game_type=FLAGS.game_type,
+                                                                                     empirical_game_size=FLAGS.num_emp_strategies,
+                                                                                     checkpoint_dir=checkpoint_dir)
             # data.append([l2_norm, mrcp_value, appro_mrcp_value, nashconv])
 
     # save_pkl(obj=data, path=checkpoint_dir + "data.pkl")
