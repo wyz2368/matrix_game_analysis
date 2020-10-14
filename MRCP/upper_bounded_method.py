@@ -120,7 +120,6 @@ def main(argv):
 
     # Main Console
     # data = []
-    print("*********The current discount is ", discount, "************")
     for i in range(FLAGS.num_iter):
         print('################## Iteration {} #################'.format(i))
         l2_norm, mrcp_value, appro_mrcp_value, nashconv = MRCP_regret_comparison(generator=generator,
