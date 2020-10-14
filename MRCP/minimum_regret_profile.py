@@ -10,7 +10,7 @@ class minimum_regret_profile_calculator(object):
     Assume the mimimum_regret_profile_calculator is called every iteration of PSRO
     applicable to multiple player case.
     """
-    def __init__(self, full_game, approximation=False, recursive=False, var="rand"):
+    def __init__(self, full_game, approximation=False, recursive=False, var="rand", discount=0.05):
         """
         Input:
             full_game     : full matrix game to calculate regret
@@ -18,7 +18,7 @@ class minimum_regret_profile_calculator(object):
         """
         self.full_game = full_game
         self.approximation = approximation
-        self.no_derivative_opt_method = partial(amoeba_mrcp, approximation=approximation, full_game=full_game)
+        self.no_derivative_opt_method = partial(amoeba_mrcp, approximation=approximation, full_game=full_game, discount=discount)
         self.recursive = recursive
         self.var = var
 

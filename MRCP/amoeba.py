@@ -87,7 +87,8 @@ def amoeba_mrcp(empirical_game,
                 var='uni',
                 max_iter=5000,
                 ftolerance=1.e-4,
-                xtolerance=1.e-4):
+                xtolerance=1.e-4,
+                discount=0.05):
     """
     Note each varibale in the amoeba variable is two times the length of the strategies
     Input:
@@ -130,7 +131,8 @@ def amoeba_mrcp(empirical_game,
         func = partial(upper_bouned_regret_of_variable,
                        empirical_games=empirical_game,
                        meta_game=full_game,
-                       caches=caches)
+                       caches=caches,
+                       discount=discount)
         # func = partial(regret_of_variable,
         #                empirical_games=empirical_game,
         #                meta_game=full_game,
