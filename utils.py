@@ -177,7 +177,7 @@ def find_all_deviation_payoffs(empirical_games, meta_game, caches, mean=True):
     diagonal_profiles = list(zip(empirical_games[0], empirical_games[1]))
     for profile in diagonal_profiles:
         if mean:
-            payoff = average_payoff(meta_game, profile)
+            payoff = average_payoff_pure_profile(meta_game, profile)
         else:
             _, payoff = deviation_pure_strategy_profile(meta_game, profile)
         caches[0].save(key=profile[1], value=payoff[0])
@@ -315,7 +315,7 @@ def sample_deviation_strategy(dev_strs, dev_payoff):
 
     return sampled_str, sample_payoff
 
-def average_payoff(meta_games, probs):
+def average_payoff_pure_profile(meta_games, profile):
     """
     Calculate the average payoff given other players' strategies.
     :param meta_games:
@@ -323,15 +323,12 @@ def average_payoff(meta_games, probs):
     :return:
     """
     aver_payoff = []
-    prob1 = probs[0]
-    prob1 = np.reshape(prob1, newshape=(len(prob1), 1))
-    prob2 = probs[1]
 
-    payoff_vec = np.sum(meta_games[0] * prob2, axis=1)
+    payoff_vec = meta_games[0][:, profile[1]]
     payoff_vec = np.reshape(payoff_vec, -1)
     aver_payoff.append(np.mean(payoff_vec))
 
-    payoff_vec = np.sum(prob1 * meta_games[1], axis=0)
+    payoff_vec = meta_games[1][profile[0], :]
     payoff_vec = np.reshape(payoff_vec, -1)
     aver_payoff.append(np.mean(payoff_vec))
 
