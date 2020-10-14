@@ -323,16 +323,17 @@ def average_payoff_pure_profile(meta_games, profile):
     :return:
     """
     aver_payoff = []
-    average_over = 10
+    average_start = 10
+    average_end = 1
 
     payoff_vec = meta_games[0][:, profile[1]]
     payoff_vec = np.reshape(payoff_vec, -1)
     payoff_vec = np.sort(payoff_vec)
-    aver_payoff.append(np.mean(payoff_vec[-average_over:]))
+    aver_payoff.append(np.mean(payoff_vec[-average_start: -average_end]))
 
     payoff_vec = meta_games[1][profile[0], :]
     payoff_vec = np.reshape(payoff_vec, -1)
     payoff_vec = np.sort(payoff_vec)
-    aver_payoff.append(np.mean(payoff_vec[-average_over:]))
+    aver_payoff.append(np.mean(payoff_vec[-average_start: -average_end]))
 
     return aver_payoff
