@@ -3,7 +3,7 @@ import numpy as np
 from functools import partial
 from utils import regret_of_variable
 from utils import upper_bouned_regret_of_variable
-# from utils import sampled_bouned_regret_of_variable
+from utils import sampled_bouned_regret_of_variable
 from utils import project_onto_unit_simplex
 from utils import Cache
 from utils import find_all_deviation_payoffs
@@ -129,17 +129,17 @@ def amoeba_mrcp(empirical_game,
         # print("Cache0:", caches[0].cache.items())
         # print("Cache1:", caches[1].cache.items())
 
-        func = partial(upper_bouned_regret_of_variable,
-                       empirical_games=empirical_game,
-                       meta_game=full_game,
-                       caches=caches,
-                       discount=discount)
-
-        # func = partial(sampled_bouned_regret_of_variable,
+        # func = partial(upper_bouned_regret_of_variable,
         #                empirical_games=empirical_game,
         #                meta_game=full_game,
         #                caches=caches,
         #                discount=discount)
+
+        func = partial(sampled_bouned_regret_of_variable,
+                       empirical_games=empirical_game,
+                       meta_game=full_game,
+                       caches=caches,
+                       discount=discount)
 
         # func = partial(regret_of_variable,
         #                empirical_games=empirical_game,
