@@ -144,7 +144,7 @@ def sampled_bouned_regret_of_variable(prob_var, empirical_games, meta_game, cach
 
     deviation_payoff_in_EG = deviation_within_EG(meta_game, empirical_games, probs)
 
-    weighted_deviation_payoff = np.zeros(num_player)
+    weighted_deviation_payoff = np.zeros(num_player, dtype=np.float32)
     for player in range(num_player):
         for i, str in enumerate(empirical_games[1-player]):
             payoff_vec = benefitial_deviation_pure_strategy_profile(meta_game, opponent=1-player, strategy=str, base_value=deviation_payoff_in_EG)
