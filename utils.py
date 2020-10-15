@@ -155,8 +155,8 @@ def sampled_bouned_regret_of_variable(prob_var, empirical_games, meta_game, cach
 
     mixed_payoff = mixed_strategy_payoff_2p(meta_game, probs)
 
-    print("weighted_deviation_payoff:", weighted_deviation_payoff)
-    print("mixed_payoff:", mixed_payoff)
+    # print("weighted_deviation_payoff:", weighted_deviation_payoff)
+    # print("mixed_payoff:", mixed_payoff)
 
     return np.max(np.maximum(weighted_deviation_payoff - np.array(mixed_payoff) - discount * profile_entropy(probs), 0))
 
