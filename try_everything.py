@@ -9,15 +9,18 @@ from itertools import product
 from nash_solver.gambit_tools import load_pkl
 from scipy.stats import entropy
 
-meta_games = [np.random.rand(10, 10), np.random.rand(10, 10)]
-empirical_games = [[1,2,3,6], [3,5,7,9]]
-probs = [np.random.rand(10), np.random.rand(10)]
-for prob in probs:
-    prob /= np.sum(prob)
-deviation_payoff_in_EG = deviation_within_EG(meta_games, empirical_games, probs)
+# meta_games = [np.random.rand(10, 10), np.random.rand(10, 10)]
+# empirical_games = [[1,2,3,6], [3,5,7,9]]
+# probs = [np.random.rand(10), np.random.rand(10)]
+# for prob in probs:
+#     prob /= np.sum(prob)
+# deviation_payoff_in_EG = deviation_within_EG(meta_games, empirical_games, probs)
+#
+# print(deviation_payoff_in_EG, probs)
+#
+# payoff_vec = benefitial_deviation_pure_strategy_profile(meta_games, opponent=1, strategy=5, base_value=deviation_payoff_in_EG)
+# print(payoff_vec)
+# print(np.random.choice(payoff_vec))
 
-print(deviation_payoff_in_EG, probs)
-
-payoff_vec = benefitial_deviation_pure_strategy_profile(meta_games, opponent=1, strategy=5, base_value=deviation_payoff_in_EG)
-print(payoff_vec)
-print(np.random.choice(payoff_vec))
+a = [1, 1]
+print(np.log(a))

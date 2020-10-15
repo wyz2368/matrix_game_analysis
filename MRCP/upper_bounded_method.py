@@ -120,20 +120,20 @@ def main(argv):
 
     # Main Console
     # data = []
-    for size in range(3,40):
-        print("**********************************************")
-        print("*********The current size is ", size, "************")
-        print("**********************************************")
-        for discount in [0]:
-            print("*********The current discount is ", discount, "************")
-            for i in range(FLAGS.num_iter):
-                print('################## Iteration {} #################'.format(i))
-                l2_norm, mrcp_value, appro_mrcp_value, nashconv = MRCP_regret_comparison(generator=generator,
-                                                                                         discount=discount,
-                                                                                         game_type=FLAGS.game_type,
-                                                                                         empirical_game_size=size,
-                                                                                         checkpoint_dir=checkpoint_dir)
-                # data.append([l2_norm, mrcp_value, appro_mrcp_value, nashconv])
+    # for size in range(3,40):
+    #     print("**********************************************")
+    #     print("*********The current size is ", size, "************")
+    #     print("**********************************************")
+    for discount in [0]:
+        print("*********The current discount is ", discount, "************")
+        for i in range(FLAGS.num_iter):
+            print('################## Iteration {} #################'.format(i))
+            l2_norm, mrcp_value, appro_mrcp_value, nashconv = MRCP_regret_comparison(generator=generator,
+                                                                                     discount=discount,
+                                                                                     game_type=FLAGS.game_type,
+                                                                                     empirical_game_size=FLAGS.num_emp_strategies,
+                                                                                     checkpoint_dir=checkpoint_dir)
+            # data.append([l2_norm, mrcp_value, appro_mrcp_value, nashconv])
 
     # save_pkl(obj=data, path=checkpoint_dir + "data.pkl")
 
