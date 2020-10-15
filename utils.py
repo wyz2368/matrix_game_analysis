@@ -143,15 +143,15 @@ def sampled_bouned_regret_of_variable(prob_var, empirical_games, meta_game, cach
         probs.append(prob)
 
     deviation_payoff_in_EG = deviation_within_EG(meta_game, empirical_games, probs)
-    _, dev_payoff = beneficial_deviation(meta_game, probs, deviation_payoff_in_EG)
 
     weighted_deviation_payoff = np.zeros(num_player)
     for player in range(num_player):
         for i, str in enumerate(empirical_games[1-player]):
-            if len(dev_payoff[player]) == 0:
-                weighted_deviation_payoff[player] += deviation_payoff_in_EG[player] * prob_var[i + index[0] * (1-player)]
+            payoff_vec = benefitial_deviation_pure_strategy_profile(meta_game, opponent=1-player, strategy=str, base_value=deviation_payoff_in_EG)
+            if len(payoff_vec) == 0:
+                weighted_deviation_payoff[player] += deviation_payoff_in_EG[player] * prob_var[i + index[0] * (1 - player)]
             else:
-                weighted_deviation_payoff[player] += np.random.choice(dev_payoff[player]) * prob_var[i + index[0] * (1 - player)]
+                weighted_deviation_payoff[player] += np.random.choice(payoff_vec) * prob_var[i + index[0] * (1 - player)]
 
     mixed_payoff = mixed_strategy_payoff_2p(meta_game, probs)
 
@@ -222,6 +222,26 @@ def deviation_pure_strategy_profile(meta_games, strategis):
     dev_payoff = [meta_games[0][dev_strs[0], strategis[1]], meta_games[1][strategis[0], dev_strs[1]]]
 
     return dev_strs, dev_payoff
+
+def benefitial_deviation_pure_strategy_profile(meta_games, opponent, strategy, base_value):
+    """
+    Find the deviation strategy and payoff for pure strategy profile.
+    For 2-player case only.
+    :param meta_games: the full game matrix.
+    :param strategis: [strategy idx for p1, strategy idx for p2]
+    :return:
+    """
+    if opponent == 1:
+        payoff_vec = meta_games[0][:, strategy]
+        payoff_vec = np.reshape(payoff_vec, -1)
+        idx = list(np.where(payoff_vec > base_value[0])[0])
+
+    else:
+        payoff_vec = meta_games[1][strategy, :]
+        payoff_vec = np.reshape(payoff_vec, -1)
+        idx = list(np.where(payoff_vec > base_value[1])[0])
+
+    return payoff_vec[idx]
 
 
 def deviation_strategy(meta_games, probs):
