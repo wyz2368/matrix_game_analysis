@@ -57,7 +57,7 @@ def mixed_strategy_payoff_2p(meta_games, probs):
        payoffs.append(np.sum(prob1 * meta_game * prob2))
    return payoffs
 
-def regret_of_variable(prob_var, empirical_games, meta_game, sum_regret=True):
+def regret_of_variable(prob_var, empirical_games, meta_game, sum_regret=False):
     """
     Only works for two player case
     Calculate the function value of one data point prob_var
