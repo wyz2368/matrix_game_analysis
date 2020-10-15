@@ -142,22 +142,24 @@ def sampled_bouned_regret_of_variable(prob_var, empirical_games, meta_game, cach
         pointer = index[i]
         probs.append(prob)
 
+    deviation_payoff_in_EG = deviation_within_EG(meta_game, empirical_games, probs)
+    _, dev_payoff = beneficial_deviation(meta_game, probs, deviation_payoff_in_EG)
+
     weighted_deviation_payoff = np.zeros(num_player)
     for player in range(num_player):
         for i, str in enumerate(empirical_games[1-player]):
-            weighted_deviation_payoff[player] += caches[player].get(str) * prob_var[i + index[0] * (1-player)]
+            if len(dev_payoff[player]) == 0:
+                weighted_deviation_payoff[player] += deviation_payoff_in_EG[player] * prob_var[i + index[0] * (1-player)]
+            else:
+                weighted_deviation_payoff[player] += np.random.choice(dev_payoff[player]) * prob_var[i + index[0] * (1 - player)]
 
     mixed_payoff = mixed_strategy_payoff_2p(meta_game, probs)
 
-
-    # print("Cache0:", caches[0].cache.items())
-    # print("Cache1:", caches[1].cache.items())
-    # print("Sum of weighted payoff:", sum(weighted_deviation_payoff))
-    # print("sum of mixed_payoff:", sum(mixed_payoff))
-
     return np.max(np.maximum(weighted_deviation_payoff - np.array(mixed_payoff) - discount * profile_entropy(probs), 0))
 
-def find_all_deviation_payoffs(empirical_games, meta_game, caches, mean=True):
+    # return np.sum(weighted_deviation_payoff - np.array(mixed_payoff))
+
+def find_all_deviation_payoffs(empirical_games, meta_game, caches, mean=False):
     """
     Find all deviation payoff of pure strategy profile. Only need to calculate
     sum_i|S_i| deviations. Only for 2-player game.
@@ -337,3 +339,29 @@ def average_payoff_pure_profile(meta_games, profile):
     aver_payoff.append(np.mean(payoff_vec[-average_start: -average_end]))
 
     return aver_payoff
+
+def deviation_within_EG(meta_games, empirical_games, probs):
+    """
+    Calculate the deviation payoff of a profile within a empirical game.
+    :param meta_games:
+    :param empirical_games:
+    :param probs:
+    :return:
+    """
+
+    dev_payoff = []
+    prob1 = probs[0]
+    prob1 = np.reshape(prob1, newshape=(len(prob1), 1))
+    prob2 = probs[1]
+
+    payoff_vec = np.sum(meta_games[0] * prob2, axis=1)
+    payoff_vec = np.reshape(payoff_vec, -1)
+    payoff_vec_EG = payoff_vec[empirical_games[0]]
+    dev_payoff.append(np.max(payoff_vec_EG))
+
+    payoff_vec = np.sum(prob1 * meta_games[1], axis=0)
+    payoff_vec = np.reshape(payoff_vec, -1)
+    payoff_vec_EG = payoff_vec[empirical_games[1]]
+    dev_payoff.append(np.max(payoff_vec_EG))
+
+    return dev_payoff

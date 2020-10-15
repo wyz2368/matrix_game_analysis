@@ -28,6 +28,6 @@ from scipy.stats import entropy
 # print(np.shape(meta_game[0][0]))
 
 a = np.array([1,5,3,2])
-print(np.sort(a))
+print(np.where(a>100))
 
 
