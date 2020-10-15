@@ -9,25 +9,15 @@ from itertools import product
 from nash_solver.gambit_tools import load_pkl
 from scipy.stats import entropy
 
-# meta_games = [np.random.rand(10, 10), np.random.rand(10, 10)]
-# empirical_games = [[1,2,3,6], [3,5,7,9]]
-#
-# caches = [Cache(), Cache()]
-# caches = find_all_deviation_payoffs(empirical_games=empirical_games,
-#                                     meta_game=meta_games,
-#                                     caches=caches)
-#
-#
-# prob_var = np.array([0.1, 0.3, 0.4, 0.2, 0.1, 0.3, 0.4, 0.2])
-# regret = upper_bouned_regret_of_variable(prob_var, empirical_games, meta_games, caches)
-#
-# print(regret)
+meta_games = [np.random.rand(10, 10), np.random.rand(10, 10)]
+empirical_games = [[1,2,3,6], [3,5,7,9]]
+probs = [np.random.rand(10), np.random.rand(10)]
+for prob in probs:
+    prob /= np.sum(prob)
+deviation_payoff_in_EG = deviation_within_EG(meta_games, empirical_games, probs)
 
-# meta_game = load_pkl("./MRCP/kuhn_meta_game.pkl")
-# print(type(meta_game))
-# print(np.shape(meta_game[0][0]))
+print(deviation_payoff_in_EG, probs)
 
-a = np.array([1,5,3,2])
-print(np.where(a>100))
-
-
+payoff_vec = benefitial_deviation_pure_strategy_profile(meta_games, opponent=1, strategy=5, base_value=deviation_payoff_in_EG)
+print(payoff_vec)
+print(np.random.choice(payoff_vec))

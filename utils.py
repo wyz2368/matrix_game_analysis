@@ -142,21 +142,21 @@ def sampled_bouned_regret_of_variable(prob_var, empirical_games, meta_game, cach
         pointer = index[i]
         probs.append(prob)
 
-    # deviation_payoff_in_EG = deviation_within_EG(meta_game, empirical_games, probs)
-
-    deviation_payoff_in_EG = [1, 1]
+    deviation_payoff_in_EG = deviation_within_EG(meta_game, empirical_games, probs)
 
     weighted_deviation_payoff = np.zeros(num_player)
     for player in range(num_player):
         for i, str in enumerate(empirical_games[1-player]):
-            # payoff_vec = benefitial_deviation_pure_strategy_profile(meta_game, opponent=1-player, strategy=str, base_value=deviation_payoff_in_EG)
-            payoff_vec = [1]
+            payoff_vec = benefitial_deviation_pure_strategy_profile(meta_game, opponent=1-player, strategy=str, base_value=deviation_payoff_in_EG)
             if len(payoff_vec) == 0:
                 weighted_deviation_payoff[player] += deviation_payoff_in_EG[player] * prob_var[i + index[0] * (1 - player)]
             else:
                 weighted_deviation_payoff[player] += np.random.choice(payoff_vec) * prob_var[i + index[0] * (1 - player)]
 
     mixed_payoff = mixed_strategy_payoff_2p(meta_game, probs)
+
+    print("weighted_deviation_payoff:", weighted_deviation_payoff)
+    print("mixed_payoff:", mixed_payoff)
 
     return np.max(np.maximum(weighted_deviation_payoff - np.array(mixed_payoff) - discount * profile_entropy(probs), 0))
 
