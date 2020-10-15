@@ -122,7 +122,7 @@ def main(argv):
     # data = []
     for size in range(3,40):
         print("**********************************************")
-        print("*********The current discount is ", discount, "************")
+        print("*********The current size is ", size, "************")
         print("**********************************************")
         for discount in [0]:
             print("*********The current discount is ", discount, "************")
