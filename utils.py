@@ -159,7 +159,7 @@ def sampled_bouned_regret_of_variable(prob_var, empirical_games, meta_game, cach
 
     # return np.sum(weighted_deviation_payoff - np.array(mixed_payoff))
 
-def find_all_deviation_payoffs(empirical_games, meta_game, caches, mean=False):
+def find_all_deviation_payoffs(empirical_games, meta_game, caches):
     """
     Find all deviation payoff of pure strategy profile. Only need to calculate
     sum_i|S_i| deviations. Only for 2-player game.
@@ -178,10 +178,7 @@ def find_all_deviation_payoffs(empirical_games, meta_game, caches, mean=False):
     # Allow redundant strategies.
     diagonal_profiles = list(zip(empirical_games[0], empirical_games[1]))
     for profile in diagonal_profiles:
-        if mean:
-            payoff = average_payoff_pure_profile(meta_game, profile)
-        else:
-            _, payoff = deviation_pure_strategy_profile(meta_game, profile)
+        _, payoff = deviation_pure_strategy_profile(meta_game, profile)
         caches[0].save(key=profile[1], value=payoff[0])
         caches[1].save(key=profile[0], value=payoff[1])
 
@@ -336,29 +333,6 @@ def sample_deviation_strategy(dev_strs, dev_payoff):
         sample_payoff.append(dev_payoff[player][idx])
 
     return sampled_str, sample_payoff
-
-def average_payoff_pure_profile(meta_games, profile):
-    """
-    Calculate the average payoff given other players' strategies.
-    :param meta_games:
-    :param probs:
-    :return:
-    """
-    aver_payoff = []
-    average_start = 5
-    average_end = 1
-
-    payoff_vec = meta_games[0][:, profile[1]]
-    payoff_vec = np.reshape(payoff_vec, -1)
-    payoff_vec = np.sort(payoff_vec)
-    aver_payoff.append(np.mean(payoff_vec[-average_start: -average_end]))
-
-    payoff_vec = meta_games[1][profile[0], :]
-    payoff_vec = np.reshape(payoff_vec, -1)
-    payoff_vec = np.sort(payoff_vec)
-    aver_payoff.append(np.mean(payoff_vec[-average_start: -average_end]))
-
-    return aver_payoff
 
 def deviation_within_EG(meta_games, empirical_games, probs):
     """
