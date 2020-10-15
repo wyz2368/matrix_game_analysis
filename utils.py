@@ -151,7 +151,7 @@ def sampled_bouned_regret_of_variable(prob_var, empirical_games, meta_game, cach
             if len(payoff_vec) == 0:
                 weighted_deviation_payoff[player] += deviation_payoff_in_EG[player] * prob_var[i + index[0] * (1 - player)]
             else:
-                weighted_deviation_payoff[player] += np.mean(payoff_vec) * prob_var[i + index[0] * (1 - player)]
+                weighted_deviation_payoff[player] += np.min(payoff_vec) * prob_var[i + index[0] * (1 - player)]
 
     mixed_payoff = mixed_strategy_payoff_2p(meta_game, probs)
 
