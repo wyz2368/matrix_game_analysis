@@ -75,7 +75,8 @@ class minimum_regret_profile_calculator(object):
             # print("Bound value:", self.mrcp_value)
         self.mrcp_value = regret_of_variable(prob_var=self.unsplited_strategy,
                                              empirical_games=self.mrcp_empirical_game,
-                                             meta_game=self.full_game)
+                                             meta_game=self.full_game,
+                                             sum_regret=True)
         # self.mrcp_value = regret_of_variable(prob_var=self.unsplited_strategy,
         #                                      empirical_games=self.mrcp_empirical_game,
         #                                      meta_game=self.full_game)
