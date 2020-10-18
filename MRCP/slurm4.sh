@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --job-name=kuhn_DO
+#SBATCH --job-name=szs_FP
 #SBATCH --mail-user=wangyzhsrg@aol.com
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --nodes=1
@@ -12,5 +12,5 @@
 
 module load python3.6-anaconda/5.2.0
 cd ${SLURM_SUBMIT_DIR}
-python regret_analysis_console.py --num_strategies=200 --num_emp_strategies=100 --num_samples=200 --game_type=kuhn --meta_method=DO
+python regret_analysis_console.py --num_strategies=200 --num_emp_strategies=100 --num_samples=200 --game_type=symmetric_zero_sum --meta_method=FP
 
