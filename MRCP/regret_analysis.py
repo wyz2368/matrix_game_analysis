@@ -45,10 +45,13 @@ def empirical_game_generator(generator,
 
     empricial_game_record = [10, 30, 50]
 
+    # Assume players have the same number of strategies.
+    num_strategies = np.shape(meta_games[0])[0]
+
     # Create a meta-trainer.
     if meta_method == "DO":
         trainer = PSRO_trainer(meta_games=meta_games,
-                               num_strategies=generator.num_strategies,
+                               num_strategies=num_strategies,
                                num_rounds=1,
                                meta_method=double_oracle,
                                checkpoint_dir=checkpoint_dir,
@@ -61,7 +64,7 @@ def empirical_game_generator(generator,
                                )
     elif meta_method == "FP":
         trainer = PSRO_trainer(meta_games=meta_games,
-                               num_strategies=generator.num_strategies,
+                               num_strategies=num_strategies,
                                num_rounds=1,
                                meta_method=fictitious_play,
                                checkpoint_dir=checkpoint_dir,
@@ -74,7 +77,7 @@ def empirical_game_generator(generator,
                                )
     elif meta_method == "MRCP":
         trainer = PSRO_trainer(meta_games=meta_games,
-                               num_strategies=generator.num_strategies,
+                               num_strategies=num_strategies,
                                num_rounds=1,
                                meta_method=mrcp_solver,
                                checkpoint_dir=checkpoint_dir,

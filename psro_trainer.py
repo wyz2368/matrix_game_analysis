@@ -4,7 +4,8 @@ from meta_strategies import double_oracle
 from MRCP.minimum_regret_profile import minimum_regret_profile_calculator
 
 class PSRO_trainer(object):
-    def __init__(self, meta_games,
+    def __init__(self,
+                 meta_games,
                  num_strategies,
                  num_rounds,
                  meta_method,
