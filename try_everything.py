@@ -8,9 +8,10 @@ from itertools import product
 # from meta_strategies import double_oracle,fictitious_play
 from nash_solver.gambit_tools import load_pkl
 from scipy.stats import entropy
+from MRCP.regret_analysis import extend_prob, uniform_simplex_sampling
 
-# meta_games = [np.random.rand(10, 10), np.random.rand(10, 10)]
-# empirical_games = [[1,2,3,6], [3,5,7,9]]
+meta_games = [np.random.rand(10, 10), np.random.rand(10, 10)]
+empirical_games = [[1,2,3,6], [3,5,7,9]]
 # probs = [np.random.rand(10), np.random.rand(10)]
 # for prob in probs:
 #     prob /= np.sum(prob)
@@ -22,5 +23,12 @@ from scipy.stats import entropy
 # print(payoff_vec)
 # print(np.random.choice(payoff_vec))
 
-a = np.shape(np.random.rand(5, 5))
-print(a[0])
+
+rand_str = []
+for player in range(2):
+    num_strategies_in_EG = 4
+    rand_str.append(uniform_simplex_sampling(num_strategies_in_EG))
+
+print(rand_str)
+strategies = extend_prob(rand_str, empirical_games, meta_games)
+print(strategies)

@@ -127,7 +127,7 @@ def extend_prob(probs, empirical_game, meta_games):
     for player in range(num_players):
         strategy = np.zeros(np.shape(meta_games[0])[player])
         for i, val in enumerate(empirical_game[player]):
-            strategy[val] += probs[i]
+            strategy[val] += probs[player][i]
         strategies.append(strategy)
 
     return strategies
