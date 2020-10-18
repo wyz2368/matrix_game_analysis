@@ -36,6 +36,7 @@ def empirical_game_generator(generator,
     elif game_type == "kuhn":
         kuhn_meta_games = load_pkl("./kuhn_meta_game.pkl")
         meta_games = kuhn_meta_games[0] # The first element of kuhn_meta_game.pkl is meta_games.
+        empirical_game_size = 52
     else:
         raise ValueError("Undefined game type.")
 
