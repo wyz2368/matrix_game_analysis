@@ -45,53 +45,52 @@ def empirical_game_generator(generator,
 
     empricial_game_record = [10, 30, 50]
 
-    # # Create a meta-trainer.
-    # if meta_method == "DO":
-    #     trainer = PSRO_trainer(meta_games=meta_games,
-    #                            num_strategies=generator.num_strategies,
-    #                            num_rounds=1,
-    #                            meta_method=double_oracle,
-    #                            checkpoint_dir=checkpoint_dir,
-    #                            num_iterations=empirical_game_size,
-    #                            empricial_game_record=empricial_game_record,
-    #                            seed=seed,
-    #                            init_strategies=None,
-    #                            calculate_neconv=False,
-    #                            calculate_mrcpconv=False
-    #                            )
-    # elif meta_method == "FP":
-    #     trainer = PSRO_trainer(meta_games=meta_games,
-    #                            num_strategies=generator.num_strategies,
-    #                            num_rounds=1,
-    #                            meta_method=fictitious_play,
-    #                            checkpoint_dir=checkpoint_dir,
-    #                            num_iterations=empirical_game_size,
-    #                            empricial_game_record=empricial_game_record,
-    #                            seed=seed,
-    #                            init_strategies=None,
-    #                            calculate_neconv=False,
-    #                            calculate_mrcpconv=False
-    #                            )
-    # elif meta_method == "MRCP":
-    #     trainer = PSRO_trainer(meta_games=meta_games,
-    #                            num_strategies=generator.num_strategies,
-    #                            num_rounds=1,
-    #                            meta_method=mrcp_solver,
-    #                            checkpoint_dir=checkpoint_dir,
-    #                            num_iterations=empirical_game_size,
-    #                            empricial_game_record=empricial_game_record,
-    #                            seed=seed,
-    #                            init_strategies=None,
-    #                            calculate_neconv=False,
-    #                            calculate_mrcpconv=False
-    #                            )
-    # else:
-    #     raise ValueError("Undefined meta-method.")
+    # Create a meta-trainer.
+    if meta_method == "DO":
+        trainer = PSRO_trainer(meta_games=meta_games,
+                               num_strategies=generator.num_strategies,
+                               num_rounds=1,
+                               meta_method=double_oracle,
+                               checkpoint_dir=checkpoint_dir,
+                               num_iterations=empirical_game_size,
+                               empricial_game_record=empricial_game_record,
+                               seed=seed,
+                               init_strategies=None,
+                               calculate_neconv=False,
+                               calculate_mrcpconv=False
+                               )
+    elif meta_method == "FP":
+        trainer = PSRO_trainer(meta_games=meta_games,
+                               num_strategies=generator.num_strategies,
+                               num_rounds=1,
+                               meta_method=fictitious_play,
+                               checkpoint_dir=checkpoint_dir,
+                               num_iterations=empirical_game_size,
+                               empricial_game_record=empricial_game_record,
+                               seed=seed,
+                               init_strategies=None,
+                               calculate_neconv=False,
+                               calculate_mrcpconv=False
+                               )
+    elif meta_method == "MRCP":
+        trainer = PSRO_trainer(meta_games=meta_games,
+                               num_strategies=generator.num_strategies,
+                               num_rounds=1,
+                               meta_method=mrcp_solver,
+                               checkpoint_dir=checkpoint_dir,
+                               num_iterations=empirical_game_size,
+                               empricial_game_record=empricial_game_record,
+                               seed=seed,
+                               init_strategies=None,
+                               calculate_neconv=False,
+                               calculate_mrcpconv=False
+                               )
+    else:
+        raise ValueError("Undefined meta-method.")
 
-    # trainer.iteration()
-    print("Shape of Meta_game is:", np.shape(meta_games[0]), len(meta_games))
+    trainer.loop()
 
-    return meta_games, {} # strainer.get_recorded_empirical_game()
+    return meta_games, trainer.get_recorded_empirical_game()
 
 
 def profile_regret(meta_games, strategies):
@@ -241,34 +240,34 @@ def console(generator,
 
 
 
-    # for key in empirical_games_dict:
-    #     print("############# Iteration {} ############".format(key))
-    #     empirical_games = empirical_games_dict[key]
-    #
-    #     regret_of_samples = []
-    #     performance_improvement = []
-    #     for _ in range(num_samples):
-    #         nashconv, improvement = regret_analysis(meta_games,
-    #                                                 empirical_games,
-    #                                                 rule='rand',
-    #                                                 checkpoint_dir=checkpoint_dir)
-    #
-    #         regret_of_samples.append(nashconv)
-    #         performance_improvement.append(improvement)
-    #
-    #     corr, p_val = correlation(regret_of_samples, performance_improvement)
-    #     print("Correlation coeffient:", corr, "P-value:", p_val)
-    #     save_pkl(obj=regret_of_samples, path=checkpoint_dir + "regret_of_samples_" + str(key))
-    #     save_pkl(obj=performance_improvement, path=checkpoint_dir + "performance_improvement_" + str(key))
-    #
-    #     # Compare with standard MSS.
-    #     MSSs = ["NE", "uniform", "MRCP"]
-    #     for mss in MSSs:
-    #         nashconv, improvement = regret_analysis(meta_games,
-    #                                                 empirical_games,
-    #                                                 rule='NE',
-    #                                                 checkpoint_dir=checkpoint_dir)
-    #         print(mss, "--", "regret:", nashconv, "improvement:", improvement)
+    for key in empirical_games_dict:
+        print("############# Iteration {} ############".format(key))
+        empirical_games = empirical_games_dict[key]
+
+        regret_of_samples = []
+        performance_improvement = []
+        for _ in range(num_samples):
+            nashconv, improvement = regret_analysis(meta_games,
+                                                    empirical_games,
+                                                    rule='rand',
+                                                    checkpoint_dir=checkpoint_dir)
+
+            regret_of_samples.append(nashconv)
+            performance_improvement.append(improvement)
+
+        corr, p_val = correlation(regret_of_samples, performance_improvement)
+        print("Correlation coeffient:", corr, "P-value:", p_val)
+        save_pkl(obj=regret_of_samples, path=checkpoint_dir + "regret_of_samples_" + str(key))
+        save_pkl(obj=performance_improvement, path=checkpoint_dir + "performance_improvement_" + str(key))
+
+        # Compare with standard MSS.
+        MSSs = ["NE", "uniform", "MRCP"]
+        for mss in MSSs:
+            nashconv, improvement = regret_analysis(meta_games,
+                                                    empirical_games,
+                                                    rule='NE',
+                                                    checkpoint_dir=checkpoint_dir)
+            print(mss, "--", "regret:", nashconv, "improvement:", improvement)
 
 
 
