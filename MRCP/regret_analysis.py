@@ -40,10 +40,10 @@ def empirical_game_generator(generator,
         raise ValueError("Undefined game type.")
 
     # A list that records which iteration the empirical game is recorded.
-    if empirical_game_size <= 71:
+    if empirical_game_size <= 51:
         raise ValueError("The number of sampled EG is large than generated EG.")
 
-    empricial_game_record = [10, 30, 50, 70]
+    empricial_game_record = [10, 30, 50]
 
     # Create a meta-trainer.
     if meta_method == "DO":
@@ -89,6 +89,7 @@ def empirical_game_generator(generator,
         raise ValueError("Undefined meta-method.")
 
     trainer.iteration()
+    print("Shape of Meta_game is:", np.shape(meta_games[0]), len(meta_games))
 
     return meta_games, trainer.get_recorded_empirical_game()
 
