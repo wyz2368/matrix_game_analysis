@@ -35,18 +35,18 @@ def empirical_game_generator(generator,
         meta_games = generator.general_sum_game()
     elif game_type == "kuhn":
         kuhn_meta_games = load_pkl("./kuhn_meta_game.pkl")
-        meta_games = kuhn_meta_games[0]
+        meta_games = kuhn_meta_games[0] # The first element of kuhn_meta_game.pkl is meta_games.
     else:
         raise ValueError("Undefined game type.")
 
+    # Assume players have the same number of strategies.
+    num_strategies = np.shape(meta_games[0])[0]
+
     # A list that records which iteration the empirical game is recorded.
-    if empirical_game_size <= 51:
+    if empirical_game_size > num_strategies:
         raise ValueError("The number of sampled EG is large than generated EG.")
 
     empricial_game_record = [10, 30, 50]
-
-    # Assume players have the same number of strategies.
-    num_strategies = np.shape(meta_games[0])[0]
 
     # Create a meta-trainer.
     if meta_method == "DO":
@@ -91,6 +91,7 @@ def empirical_game_generator(generator,
     else:
         raise ValueError("Undefined meta-method.")
 
+    # Don't use trainer.iteration() since the empirical game won't be initialized.
     trainer.loop()
 
     return meta_games, trainer.get_recorded_empirical_game()
@@ -164,13 +165,14 @@ def sampling_scheme(meta_games, empirical_game, rule, checkpoint_dir=None):
         dev_strs, nashconv = mrcp_solver(meta_games, empirical_game, checkpoint_dir)
     elif rule == "rand":
         num_players = len(meta_games)
-        num_strategies_in_EG = np.shape(empirical_game[0])
         rand_str = []
         for player in range(num_players):
-            rand_str.append(uniform_simplex_sampling(num_strategies_in_EG[player]))
+            num_strategies_in_EG = len(empirical_game[player])
+            rand_str.append(uniform_simplex_sampling(num_strategies_in_EG))
         strategies = extend_prob(rand_str, empirical_game, meta_games)
         dev_strs, _, nashconv = profile_regret(meta_games, strategies)
     elif isinstance(rule, list):
+        # For inputting a strategy.
         strategies = extend_prob(rule, empirical_game, meta_games)
         dev_strs, _, nashconv = profile_regret(meta_games, strategies)
     else:
@@ -268,7 +270,7 @@ def console(generator,
         for mss in MSSs:
             nashconv, improvement = regret_analysis(meta_games,
                                                     empirical_games,
-                                                    rule='NE',
+                                                    rule=mss,
                                                     checkpoint_dir=checkpoint_dir)
             print(mss, "--", "regret:", nashconv, "improvement:", improvement)
 

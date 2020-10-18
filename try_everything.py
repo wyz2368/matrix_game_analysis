@@ -22,5 +22,5 @@ from scipy.stats import entropy
 # print(payoff_vec)
 # print(np.random.choice(payoff_vec))
 
-a = [1, 1]
-print(np.log(a))
+a = np.shape(np.random.rand(5, 5))
+print(a[0])
