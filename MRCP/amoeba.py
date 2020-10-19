@@ -145,7 +145,7 @@ def amoeba_mrcp(empirical_game,
         func = partial(regret_of_variable,
                        empirical_games=empirical_game,
                        meta_game=full_game,
-                       sum_regret=False)
+                       sum_regret=True)
 
     else:
         # Calculate the exact regret of mixed strategy profile.
