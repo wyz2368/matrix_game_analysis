@@ -111,8 +111,8 @@ def upper_bouned_regret_of_variable(prob_var, empirical_games, meta_game, caches
 
     mixed_payoff = mixed_strategy_payoff_2p(meta_game, probs)
 
-    return np.sum(np.log(np.maximum(weighted_deviation_payoff - np.array(mixed_payoff) - discount * profile_entropy(probs), 0)))
-    # return np.max(np.maximum(weighted_deviation_payoff - np.array(mixed_payoff) - discount * profile_entropy(probs), 0))
+    # return np.sum(np.log(np.maximum(weighted_deviation_payoff - np.array(mixed_payoff) - discount * profile_entropy(probs), 0)))
+    return np.max(np.maximum(weighted_deviation_payoff - np.array(mixed_payoff) - discount * profile_entropy(probs), 0))
 
     # return np.sum(weighted_deviation_payoff - np.array(mixed_payoff))
 
