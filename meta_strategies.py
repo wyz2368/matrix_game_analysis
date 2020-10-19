@@ -74,6 +74,8 @@ def fictitious_play(meta_games, empirical_games, checkpoint_dir=None):
 def mrcp_solver(meta_games, empirical_games, checkpoint_dir=None, recursive=False):
     """
     A wrapper for minimum_regret_profile_calculator, automatically test iterations and clearning remnants mrcp values
+
+    Notice how to deal with closed issue.
     """
     if not hasattr(mrcp_solver, "mrcp_calculator"):
         mrcp_solver.mrcp_calculator  = minimum_regret_profile_calculator(full_game=meta_games, recursive=recursive)

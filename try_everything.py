@@ -8,27 +8,18 @@ from itertools import product
 # from meta_strategies import double_oracle,fictitious_play
 from nash_solver.gambit_tools import load_pkl
 from scipy.stats import entropy
-from MRCP.regret_analysis import extend_prob, uniform_simplex_sampling
+from MRCP.regret_analysis import extend_prob, uniform_simplex_sampling, sampling_scheme, profile_regret
 
-meta_games = [np.random.rand(10, 10), np.random.rand(10, 10)]
-empirical_games = [[1,2,3,6], [3,5,7,9]]
-# probs = [np.random.rand(10), np.random.rand(10)]
-# for prob in probs:
-#     prob /= np.sum(prob)
-# deviation_payoff_in_EG = deviation_within_EG(meta_games, empirical_games, probs)
-#
-# print(deviation_payoff_in_EG, probs)
-#
-# payoff_vec = benefitial_deviation_pure_strategy_profile(meta_games, opponent=1, strategy=5, base_value=deviation_payoff_in_EG)
-# print(payoff_vec)
-# print(np.random.choice(payoff_vec))
+# meta_games = [np.random.rand(10, 10), np.random.rand(10, 10)]
+# empirical_games = [[1,2,3,6], [3,5,7,9]]
+meta_games = [np.array([[1,2,3],
+                        [4,5,6],
+                        [7,8,9]]), np.array([[1,2,3],
+                        [4,5,6],
+                        [7,8,9]])]
 
+empirical_games = [[1,0], [1,0]]
 
-rand_str = []
-for player in range(2):
-    num_strategies_in_EG = 4
-    rand_str.append(uniform_simplex_sampling(num_strategies_in_EG))
+dev_strs, nashconv = sampling_scheme(meta_games, empirical_games, rule="MRCP", checkpoint_dir=None)
 
-print(rand_str)
-strategies = extend_prob(rand_str, empirical_games, meta_games)
-print(strategies)
+print(dev_strs,  nashconv)

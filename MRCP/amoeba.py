@@ -43,7 +43,7 @@ def variable_projection(variables, sections):
         pointer = ele
     return variables
 
-def infeasibility_handling(var, sections, base, step_size, minus, infeasibility = "proj",):
+def infeasibility_handling(var, sections, base, step_size, minus, infeasibility = "",):
     """
     Handling situation where ameoba variables exceeds the probability simplex.
     :param var: ameoba decision variables
