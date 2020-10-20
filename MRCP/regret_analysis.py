@@ -183,7 +183,11 @@ def sampling_scheme(meta_games, empirical_game, rule, checkpoint_dir=None):
 
     return dev_strs, nashconv
 
-def regret_analysis(meta_games, empirical_game, rule, MRCP_calculator, checkpoint_dir=None):
+def regret_analysis(meta_games,
+                    empirical_game,
+                    rule,
+                    MRCP_calculator,
+                    mrcp_regret_old, checkpoint_dir=None):
     """
     Analysis on the relationship between regret of profile target and learning performance.
     This function calculates the performance improvement of an empirical game after adding
@@ -196,7 +200,7 @@ def regret_analysis(meta_games, empirical_game, rule, MRCP_calculator, checkpoin
     num_players = len(meta_games)
     dev_strs, nashconv = sampling_scheme(meta_games, empirical_game, rule, checkpoint_dir)
 
-    _, mrcp_regret_old = MRCP_calculator(empirical_game=empirical_game)
+    # _, mrcp_regret_old = MRCP_calculator(empirical_game=empirical_game)
     # _, mrcp_regret_old = sampling_scheme(meta_games, empirical_game, "MRCP", checkpoint_dir)
 
     # Add a mechanism to detect repeated strategies.
@@ -205,7 +209,7 @@ def regret_analysis(meta_games, empirical_game, rule, MRCP_calculator, checkpoin
         return nashconv, 0
 
     print("The old empirical game is ", empirical_game)
-    copied_empirical_game = copy.copy(empirical_game)
+    copied_empirical_game = copy.deepcopy(empirical_game)
     for player in range(num_players):
         copied_empirical_game[player].append(dev_strs[player])
     print("The new empirical game is ", empirical_game)
@@ -263,6 +267,9 @@ def console(generator,
         print("############# Iteration {} ############".format(key))
         empirical_games = empirical_games_dict[key]
 
+        # Calculate the MRCP regret of the empirical game.
+        _, mrcp_regret_old = exact_calculator(empirical_game=empirical_games)
+
         regret_of_samples = []
         performance_improvement = []
         cnt_zeros = 0
@@ -272,6 +279,7 @@ def console(generator,
                                                     empirical_games,
                                                     rule='rand',
                                                     MRCP_calculator=exact_calculator,
+                                                    mrcp_regret_old=mrcp_regret_old,
                                                     checkpoint_dir=checkpoint_dir)
 
             if np.abs(improvement) < 1e-5:
