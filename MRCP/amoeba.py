@@ -43,7 +43,7 @@ def variable_projection(variables, sections):
         pointer = ele
     return variables
 
-def infeasibility_handling(var, sections, base, step_size, minus, approximation, infeasibility = ""):
+def infeasibility_handling(var, sections, base, step_size, minus, infeasibility = "proj"):
     """
     Handling situation where ameoba variables exceeds the probability simplex.
     :param var: ameoba decision variables
@@ -55,8 +55,7 @@ def infeasibility_handling(var, sections, base, step_size, minus, approximation,
     :return:
     """
     if not check_within_probability_simplex(var):
-        # if infeasibility == "proj":
-        if approximation:
+        if infeasibility == "proj":
             var = variable_projection(var, sections)
         else:
             while not check_within_probability_simplex(var):
@@ -130,11 +129,11 @@ def amoeba_mrcp(empirical_game,
         # print("Cache0:", caches[0].cache.items())
         # print("Cache1:", caches[1].cache.items())
 
-        # func = partial(upper_bouned_regret_of_variable,
-        #                empirical_games=empirical_game,
-        #                meta_game=full_game,
-        #                caches=caches,
-        #                discount=discount)
+        func = partial(upper_bouned_regret_of_variable,
+                       empirical_games=empirical_game,
+                       meta_game=full_game,
+                       caches=caches,
+                       discount=discount)
 
         # func = partial(sampled_bouned_regret_of_variable,
         #                empirical_games=empirical_game,
@@ -142,10 +141,10 @@ def amoeba_mrcp(empirical_game,
         #                caches=caches,
         #                discount=discount)
 
-        func = partial(regret_of_variable,
-                       empirical_games=empirical_game,
-                       meta_game=full_game,
-                       sum_regret=True)
+        # func = partial(regret_of_variable,
+        #                empirical_games=empirical_game,
+        #                meta_game=full_game,
+        #                sum_regret=True)
 
     else:
         # Calculate the exact regret of mixed strategy profile.
@@ -226,8 +225,7 @@ def amoeba_mrcp(empirical_game,
                                      sections=sections,
                                      base=x_a,
                                      step_size=alpha,
-                                     minus=simplex[-1],
-                                     approximation=approximation)
+                                     minus=simplex[-1])
         f_r = func(x_r)
 
         # expansion if the reflection is better
@@ -238,8 +236,7 @@ def amoeba_mrcp(empirical_game,
                                          sections=sections,
                                          base=x_r,
                                          step_size=gamma,
-                                         minus=x_a,
-                                         approximation=approximation)
+                                         minus=x_a)
 
             f_e = func(x_e)
             if f_e < f_r: # accept expansion and replace the worst point

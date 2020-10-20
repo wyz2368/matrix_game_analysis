@@ -1,4 +1,5 @@
 from meta_strategies import double_oracle, fictitious_play, mrcp_solver
+from MRCP.minimum_regret_profile import minimum_regret_profile_calculator
 from psro_trainer import PSRO_trainer
 from utils import deviation_strategy
 from utils import mixed_strategy_payoff_2p
@@ -6,6 +7,7 @@ from scipy.stats import pearsonr
 from nash_solver.gambit_tools import save_pkl, load_pkl
 
 import numpy as np
+import copy
 import functools
 print = functools.partial(print, flush=True)
 
@@ -47,7 +49,7 @@ def empirical_game_generator(generator,
     if empirical_game_size > num_strategies:
         raise ValueError("The number of sampled EG is large than generated EG.")
 
-    empricial_game_record = [10, 30, 50]
+    empricial_game_record = [10]
 
     # Create a meta-trainer.
     if meta_method == "DO":
@@ -181,7 +183,7 @@ def sampling_scheme(meta_games, empirical_game, rule, checkpoint_dir=None):
 
     return dev_strs, nashconv
 
-def regret_analysis(meta_games, empirical_game, rule, checkpoint_dir=None):
+def regret_analysis(meta_games, empirical_game, rule, MRCP_calculator, checkpoint_dir=None):
     """
     Analysis on the relationship between regret of profile target and learning performance.
     This function calculates the performance improvement of an empirical game after adding
@@ -193,15 +195,26 @@ def regret_analysis(meta_games, empirical_game, rule, checkpoint_dir=None):
     """
     num_players = len(meta_games)
     dev_strs, nashconv = sampling_scheme(meta_games, empirical_game, rule, checkpoint_dir)
-    _, mrcp_regret_old = sampling_scheme(meta_games, empirical_game, "MRCP", checkpoint_dir)
+
+    _, mrcp_regret_old = MRCP_calculator(empirical_game=empirical_game)
+    # _, mrcp_regret_old = sampling_scheme(meta_games, empirical_game, "MRCP", checkpoint_dir)
+
     # Add a mechanism to detect repeated strategies.
     if dev_strs[0] in empirical_game[0] and dev_strs[1] in empirical_game[1]:
+        print("No empirical game change.")
         return nashconv, 0
 
+    print("The old empirical game is ", empirical_game)
+    copied_empirical_game = copy.copy(empirical_game)
     for player in range(num_players):
-        empirical_game[player].append(dev_strs[player])
+        copied_empirical_game[player].append(dev_strs[player])
+    print("The new empirical game is ", empirical_game)
 
-    _, mrcp_regret_new = sampling_scheme(meta_games, empirical_game, "MRCP", checkpoint_dir)
+    _, mrcp_regret_new = MRCP_calculator(empirical_game=copied_empirical_game)
+
+    # _, mrcp_regret_new = sampling_scheme(meta_games, empirical_game, "MRCP", checkpoint_dir)
+
+    print("mrcp_regret_old - mrcp_regret_new=", mrcp_regret_old - mrcp_regret_new)
 
     return nashconv, np.maximum(mrcp_regret_old - mrcp_regret_new, 0)
 
@@ -244,7 +257,7 @@ def console(generator,
     print("The full game is sample at iteration:", empirical_games_dict.keys())
     print("The number of samples is ", num_samples)
 
-
+    exact_calculator = minimum_regret_profile_calculator(full_game=meta_games)
 
     for key in empirical_games_dict:
         print("############# Iteration {} ############".format(key))
@@ -252,10 +265,12 @@ def console(generator,
 
         regret_of_samples = []
         performance_improvement = []
-        for _ in range(num_samples):
+        for i in range(num_samples):
+            print("------Sample #", i, "------")
             nashconv, improvement = regret_analysis(meta_games,
                                                     empirical_games,
                                                     rule='rand',
+                                                    MRCP_calculator=exact_calculator,
                                                     checkpoint_dir=checkpoint_dir)
 
             regret_of_samples.append(nashconv)
@@ -263,8 +278,8 @@ def console(generator,
 
         corr, p_val = correlation(regret_of_samples, performance_improvement)
         print("Correlation coeffient:", corr, "P-value:", p_val)
-        save_pkl(obj=regret_of_samples, path=checkpoint_dir + "regret_of_samples_" + str(key))
-        save_pkl(obj=performance_improvement, path=checkpoint_dir + "performance_improvement_" + str(key))
+        save_pkl(obj=regret_of_samples, path=checkpoint_dir + "regret_of_samples_" + str(key) + ".pkl")
+        save_pkl(obj=performance_improvement, path=checkpoint_dir + "performance_improvement_" + str(key) + ".pkl")
 
         # Compare with standard MSS.
         MSSs = ["NE", "uniform", "MRCP"]

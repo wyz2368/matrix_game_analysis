@@ -78,7 +78,7 @@ def mrcp_solver(meta_games, empirical_games, checkpoint_dir=None, recursive=Fals
     Notice how to deal with closed issue.
     """
     if not hasattr(mrcp_solver, "mrcp_calculator"):
-        mrcp_solver.mrcp_calculator  = minimum_regret_profile_calculator(full_game=meta_games, recursive=recursive)
+        mrcp_solver.mrcp_calculator = minimum_regret_profile_calculator(full_game=meta_games, recursive=recursive)
     else:
         # test full game the same
         full_game_different = meta_games[0].shape != mrcp_solver.mrcp_calculator.full_game[0].shape or np.sum(np.absolute(meta_games[0]-mrcp_solver.mrcp_calculator.full_game[0]),axis=None) != 0
