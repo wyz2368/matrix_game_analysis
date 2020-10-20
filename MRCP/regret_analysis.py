@@ -212,7 +212,7 @@ def regret_analysis(meta_games,
     copied_empirical_game = copy.deepcopy(empirical_game)
     for player in range(num_players):
         copied_empirical_game[player].append(dev_strs[player])
-    print("The new empirical game is ", empirical_game)
+    print("The new empirical game is ", copied_empirical_game)
 
     _, mrcp_regret_new = MRCP_calculator(empirical_game=copied_empirical_game)
 
