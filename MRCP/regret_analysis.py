@@ -266,23 +266,36 @@ def console(generator,
     for key in empirical_games_dict:
         print("############# Iteration {} ############".format(key))
         empirical_games = empirical_games_dict[key]
+        copied_EG = copy.deepcopy(empirical_games)
+
 
         # Remove repeated strategies.
         idx0 = sorted(list(set(empirical_games[0])))
         idx1 = sorted(list(set(empirical_games[1])))
         empirical_games = [idx0, idx1]
 
+        # Calculate the MRCP regret of the empirical game.
+        _, mrcp_regret_old = exact_calculator(empirical_game=empirical_games)
+
         # Compare with standard MSS.
-        MSSs = ["NE", "uniform", "MRCP"]
+        MSSs = ["NE", "MRCP"]
         for mss in MSSs:
             nashconv, improvement = regret_analysis(meta_games,
                                                     empirical_games,
                                                     rule=mss,
+                                                    MRCP_calculator=exact_calculator,
+                                                    mrcp_regret_old=mrcp_regret_old,
                                                     checkpoint_dir=checkpoint_dir)
             print(mss, "--", "regret:", nashconv, "improvement:", improvement)
 
-        # Calculate the MRCP regret of the empirical game.
-        _, mrcp_regret_old = exact_calculator(empirical_game=empirical_games)
+        # Special for fictitious play.
+        nashconv, improvement = regret_analysis(meta_games,
+                                                copied_EG,
+                                                rule="uniform",
+                                                MRCP_calculator=exact_calculator,
+                                                mrcp_regret_old=mrcp_regret_old,
+                                                checkpoint_dir=checkpoint_dir)
+        print("uniform", "--", "regret:", nashconv, "improvement:", improvement)
 
         regret_of_samples = []
         performance_improvement = []
