@@ -272,6 +272,15 @@ def console(generator,
         idx1 = sorted(list(set(empirical_games[1])))
         empirical_games = [idx0, idx1]
 
+        # Compare with standard MSS.
+        MSSs = ["NE", "uniform", "MRCP"]
+        for mss in MSSs:
+            nashconv, improvement = regret_analysis(meta_games,
+                                                    empirical_games,
+                                                    rule=mss,
+                                                    checkpoint_dir=checkpoint_dir)
+            print(mss, "--", "regret:", nashconv, "improvement:", improvement)
+
         # Calculate the MRCP regret of the empirical game.
         _, mrcp_regret_old = exact_calculator(empirical_game=empirical_games)
 
@@ -298,14 +307,7 @@ def console(generator,
         save_pkl(obj=regret_of_samples, path=checkpoint_dir + "regret_of_samples_" + str(key) + ".pkl")
         save_pkl(obj=performance_improvement, path=checkpoint_dir + "performance_improvement_" + str(key) + ".pkl")
 
-        # Compare with standard MSS.
-        MSSs = ["NE", "uniform", "MRCP"]
-        for mss in MSSs:
-            nashconv, improvement = regret_analysis(meta_games,
-                                                    empirical_games,
-                                                    rule=mss,
-                                                    checkpoint_dir=checkpoint_dir)
-            print(mss, "--", "regret:", nashconv, "improvement:", improvement)
+
 
 
 
