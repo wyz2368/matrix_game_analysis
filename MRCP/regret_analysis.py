@@ -214,7 +214,7 @@ def regret_analysis(meta_games, empirical_game, rule, MRCP_calculator, checkpoin
 
     # _, mrcp_regret_new = sampling_scheme(meta_games, empirical_game, "MRCP", checkpoint_dir)
 
-    print("mrcp_regret_old - mrcp_regret_new=", mrcp_regret_old - mrcp_regret_new)
+    print("mrcp_regret_old - mrcp_regret_new=", mrcp_regret_old - mrcp_regret_new, " : ", mrcp_regret_old, mrcp_regret_new)
 
     return nashconv, np.maximum(mrcp_regret_old - mrcp_regret_new, 0)
 
@@ -265,6 +265,7 @@ def console(generator,
 
         regret_of_samples = []
         performance_improvement = []
+        cnt_zeros = 0
         for i in range(num_samples):
             print("------Sample #", i, "------")
             nashconv, improvement = regret_analysis(meta_games,
@@ -273,11 +274,14 @@ def console(generator,
                                                     MRCP_calculator=exact_calculator,
                                                     checkpoint_dir=checkpoint_dir)
 
+            if np.abs(improvement) < 1e-5:
+                cnt_zeros += 1
             regret_of_samples.append(nashconv)
             performance_improvement.append(improvement)
 
         corr, p_val = correlation(regret_of_samples, performance_improvement)
         print("Correlation coeffient:", corr, "P-value:", p_val)
+        print("Number of zero improvement is ", cnt_zeros)
         save_pkl(obj=regret_of_samples, path=checkpoint_dir + "regret_of_samples_" + str(key) + ".pkl")
         save_pkl(obj=performance_improvement, path=checkpoint_dir + "performance_improvement_" + str(key) + ".pkl")
 
