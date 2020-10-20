@@ -267,6 +267,11 @@ def console(generator,
         print("############# Iteration {} ############".format(key))
         empirical_games = empirical_games_dict[key]
 
+        # Remove repeated strategies.
+        idx0 = sorted(list(set(empirical_games[0])))
+        idx1 = sorted(list(set(empirical_games[1])))
+        empirical_games = [idx0, idx1]
+
         # Calculate the MRCP regret of the empirical game.
         _, mrcp_regret_old = exact_calculator(empirical_game=empirical_games)
 
