@@ -4,8 +4,8 @@ class Game_generator(object):
     def __init__(self,
                  num_strategies,
                  num_players=2,
-                 payoff_ub=11,
-                 payoff_lb=-10):
+                 payoff_ub=501,
+                 payoff_lb=-500):
         self.num_strategies = num_strategies
         self.num_players = num_players
         assert num_players == 2
