@@ -187,7 +187,8 @@ def regret_analysis(meta_games,
                     empirical_game,
                     rule,
                     MRCP_calculator,
-                    mrcp_regret_old, checkpoint_dir=None):
+                    mrcp_regret_old,
+                    checkpoint_dir=None):
     """
     Analysis on the relationship between regret of profile target and learning performance.
     This function calculates the performance improvement of an empirical game after adding
@@ -217,7 +218,7 @@ def regret_analysis(meta_games,
     _, mrcp_regret_new = MRCP_calculator(empirical_game=copied_empirical_game)
 
     # _, mrcp_regret_new = sampling_scheme(meta_games, empirical_game, "MRCP", checkpoint_dir)
-
+    print("The nashconv of the sample is ", nashconv)
     print("mrcp_regret_old - mrcp_regret_new=", mrcp_regret_old - mrcp_regret_new, " : ", mrcp_regret_old, mrcp_regret_new)
 
     return nashconv, np.maximum(mrcp_regret_old - mrcp_regret_new, 0)
@@ -260,6 +261,7 @@ def console(generator,
     print("Obtain the empirical_games_dict with ", meta_method)
     print("The full game is sample at iteration:", empirical_games_dict.keys())
     print("The number of samples is ", num_samples)
+    save_pkl(obj=meta_games, path=checkpoint_dir + "meta_games.pkl")
 
     exact_calculator = minimum_regret_profile_calculator(full_game=meta_games)
 
@@ -297,6 +299,8 @@ def console(generator,
                                                 checkpoint_dir=checkpoint_dir)
         print("uniform", "--", "regret:", nashconv, "improvement:", improvement)
 
+        print("----------- Start Sampling ----------")
+
         regret_of_samples = []
         performance_improvement = []
         cnt_zeros = 0
@@ -319,7 +323,7 @@ def console(generator,
         print("Number of zero improvement is ", cnt_zeros)
         save_pkl(obj=regret_of_samples, path=checkpoint_dir + "regret_of_samples_" + str(key) + ".pkl")
         save_pkl(obj=performance_improvement, path=checkpoint_dir + "performance_improvement_" + str(key) + ".pkl")
-
+        save_pkl(obj=empirical_games, path=checkpoint_dir + "empirical_games_" + str(key) + ".pkl")
 
 
 
