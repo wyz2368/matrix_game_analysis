@@ -57,6 +57,8 @@ class PSRO_trainer(object):
         if empricial_game_record is not None:
             self.empirical_games_dict = {}
 
+        self.closed_method = closed_method
+
 
     def init_round(self, init_strategy):
         #init_strategy = np.random.randint(0, self.num_strategies)
@@ -116,7 +118,7 @@ class PSRO_trainer(object):
         # mrcp does not add its last own value after its last update
         # NE does not add its last own value after its last update
         if self.meta_method.__name__ == 'mrcp_solver':
-            _, nashconv = self.meta_method(self.meta_games, self.empirical_games, self.checkpoint_dir, method=closed_method)
+            _, nashconv = self.meta_method(self.meta_games, self.empirical_games, self.checkpoint_dir, method=self.closed_method)
         else:
             _, nashconv = self.meta_method(self.meta_games, self.empirical_games, self.checkpoint_dir)
         nashconv_list.append(nashconv)
