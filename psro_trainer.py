@@ -15,7 +15,8 @@ class PSRO_trainer(object):
                  empricial_game_record=None,
                  calculate_neconv=True,
                  calculate_mrcpconv=True,
-                 init_strategies=None):
+                 init_strategies=None,
+                 closed_method="alter"):
         """
         Inputs:
             num_rounds      : repeat psro on matrix games from #num_rounds start points
@@ -113,7 +114,10 @@ class PSRO_trainer(object):
         # Tricky part: Nashconv does not add the last value after update
         # mrcp does not add its last own value after its last update
         # NE does not add its last own value after its last update
-        _, nashconv = self.meta_method(self.meta_games, self.empirical_games, self.checkpoint_dir)
+        if self.meta_method.__name__ == 'mrcp_solver':
+            _, nashconv = self.meta_method(self.meta_games, self.empirical_games, self.checkpoint_dir, method=closed_method)
+        else:
+            _, nashconv = self.meta_method(self.meta_games, self.empirical_games, self.checkpoint_dir)
         nashconv_list.append(nashconv)
         if self.meta_method.__name__ == 'mrcp_solver':
             mrconv_list.append(nashconv)

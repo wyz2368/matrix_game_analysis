@@ -20,12 +20,11 @@ from MRCP.minimum_regret_profile import minimum_regret_profile_calculator
 #                         [4,5,6],
 #                         [7,8,9]])]
 
-root_path = './MRCP/data/'
-meta_games = load_pkl(root_path + "meta_games.pkl")
-
-exact_calculator = minimum_regret_profile_calculator(full_game=meta_games)
-
-empirical_games = [[26, 44, 66, 67, 126], [0, 16, 44, 110, 151, 199]]
-mrcp, regret = exact_calculator(empirical_games)
-print(regret)
-
+# root_path = './MRCP/data/'
+# meta_games = load_pkl(root_path + "meta_games.pkl")
+#
+# exact_calculator = minimum_regret_profile_calculator(full_game=meta_games)
+#
+# empirical_games = [[26, 44, 66, 67, 126], [0, 16, 44, 110, 151, 199]]
+# mrcp, regret = exact_calculator(empirical_games)
+# print(regret)

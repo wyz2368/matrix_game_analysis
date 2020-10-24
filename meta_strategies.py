@@ -71,7 +71,7 @@ def fictitious_play(meta_games, empirical_games, checkpoint_dir=None):
 
     return dev_strs, nashconv
 
-def mrcp_solver(meta_games, empirical_games, checkpoint_dir=None, recursive=False):
+def mrcp_solver(meta_games, empirical_games, checkpoint_dir=None, method="alter", recursive=False):
     """
     A wrapper for minimum_regret_profile_calculator, automatically test iterations and clearning remnants mrcp values
 
@@ -83,12 +83,12 @@ def mrcp_solver(meta_games, empirical_games, checkpoint_dir=None, recursive=Fals
         # test full game the same
         full_game_different = meta_games[0].shape != mrcp_solver.mrcp_calculator.full_game[0].shape or np.sum(np.absolute(meta_games[0]-mrcp_solver.mrcp_calculator.full_game[0]),axis=None) != 0
         if full_game_different: # change mrcp_calculator
-            print('changing mrcp calculator!!!')
+            print('Changing mrcp calculator!!!')
             mrcp_solver.mrcp_calculator = minimum_regret_profile_calculator(full_game=meta_games, recursive=recursive)
-        elif mrcp_solver.mrcp_calculator.mrcp_empirical_game is not None and len(empirical_games[0])<=len(mrcp_solver.mrcp_calculator.mrcp_empirical_game[0]):
+        elif mrcp_solver.mrcp_calculator.mrcp_empirical_game is not None and len(empirical_games[0]) <= len(mrcp_solver.mrcp_calculator.mrcp_empirical_game[0]):
             # another round of random start from full game, might exsit potential bugs
             # as I changed _last_empirical_game to mrcp_empirical_game
-            print('clearing the past data from mrcp calculator, should be at the start of a new round')
+            print('Clearing the past data from mrcp calculator, should be at the start of a new round')
             mrcp_solver.mrcp_calculator.clear()
         else:
             pass
@@ -105,22 +105,84 @@ def mrcp_solver(meta_games, empirical_games, checkpoint_dir=None, recursive=Fals
         np.put(ne, idx, mrcp_solver.mrcp_calculator.mrcp_profile[i])
         meta_game_nash.append(ne)
 
-    # find deviation that is not in the empirical game
-    dev_strs = []
+    # Closeness flag
+    closeness = False
+
     prob1 = meta_game_nash[0]
     prob1 = np.reshape(prob1, newshape=(len(prob1), 1))
     prob2 = meta_game_nash[1]
 
-    payoff_vec = np.sum(meta_games[0] * prob2, axis=1)
-    payoff_vec = np.reshape(payoff_vec, -1)
-    # mask elements inside empirical game
-    payoff_vec[list(set(empirical_games[0]))] = -1e5
-    dev_strs.append(np.argmax(payoff_vec))
+    payoff_vec0 = np.sum(meta_games[0] * prob2, axis=1)
+    payoff_vec0 = np.reshape(payoff_vec0, -1)
+    dev_str0 = np.argmax(payoff_vec0)
 
-    payoff_vec = np.sum(prob1 * meta_games[1], axis=0)
-    payoff_vec = np.reshape(payoff_vec, -1)
-    payoff_vec[list(set(empirical_games[1]))] = -1e5
-    dev_strs.append(np.argmax(payoff_vec))
+    payoff_vec1 = np.sum(prob1 * meta_games[1], axis=0)
+    payoff_vec1 = np.reshape(payoff_vec1, -1)
+    dev_str1 = np.argmax(payoff_vec1)
+
+    if dev_str0 in empirical_games[0] and dev_str1 in empirical_games[1]:
+        print("^^^^ Closeness is triggered ^^^^")
+        closeness = True
+
+    if closeness:
+        payoff_vecs = [payoff_vec0, payoff_vec1]
+        dev_strs = closeness_handling(meta_games, empirical_games, payoff_vecs, method, checkpoint_dir)
+    else:
+        dev_strs = [dev_str0, dev_str1]
 
     return dev_strs, mrcp_solver.mrcp_calculator.mrcp_value
-#
+
+
+def closeness_handling(meta_games, empirical_games, payoff_vecs, method, checkpoint_dir):
+    """
+    Handling the closeness of the MRCP as a MSS.
+    :param meta_games:
+    :param empirical_games:
+    :param method:
+    :return:
+    """
+
+    if method == "alter":
+        return closeness_alter(empirical_games, payoff_vecs)
+    elif method == "dev":
+        return closeness_dev(meta_games, empirical_games, checkpoint_dir)
+    else:
+        raise ValueError("Undefined closeness handling method.")
+
+
+def closeness_alter(empirical_games, payoff_vecs):
+    """
+    Handling closeness issue by only considering deviation strategies outside
+    the empirical game.
+    :param meta_games:
+    :param empirical_games:
+    :param payoff_vecs:
+    :return:
+    """
+    dev_strs = []
+    for payoff_vec in payoff_vecs:
+        payoff_vec[list(set(empirical_games[0]))] = -1e5 # mask elements inside empirical game
+        dev_strs.append(np.argmax(payoff_vec))
+
+    return dev_strs
+
+def closeness_dev(meta_games, empirical_games, checkpoint_dir):
+    """
+    Handling closeness issue by only considering deviation strategies outside
+    the empirical game.
+    :param meta_games:
+    :param empirical_games:
+    :param checkpoint_dir:
+    :return:
+    """
+    dev_strs, _ = double_oracle(meta_games, empirical_games, checkpoint_dir)
+    return dev_strs
+
+
+
+
+
+
+
+
+

@@ -2,6 +2,7 @@ from meta_strategies import double_oracle, fictitious_play, mrcp_solver
 from game_generator import Game_generator
 from psro_trainer import PSRO_trainer
 from utils import set_random_seed
+from nash_solver.gambit_tools import load_pkl
 
 from absl import app
 from absl import flags
@@ -15,25 +16,31 @@ print = functools.partial(print, flush=True)
 
 FLAGS = flags.FLAGS
 
-flags.DEFINE_integer("num_rounds", 1, "The number of rounds starting with different.")
+flags.DEFINE_integer("num_rounds", 10, "The number of rounds starting with different.")
 flags.DEFINE_integer("num_strategies", 100, "The number of rounds starting with different.")
 flags.DEFINE_integer("num_iterations", 40, "The number of rounds starting with different.")
 flags.DEFINE_string("game_type", "zero_sum", "Type of synthetic game.")
 flags.DEFINE_integer("seed",None,"The seed to control randomness.")
-flags.DEFINE_boolean("MRCP_deterministic",True,"mrcp should return a same value given the same empirical game")
+flags.DEFINE_boolean("MRCP_deterministic", True, "mrcp should return a same value given the same empirical game")
+flags.DEFINE_string("closed_method", "alter", "Method for handling closeness of the MRCP")
 
 def psro(generator,
          game_type,
          num_rounds,
          seed,
          checkpoint_dir,
-         num_iterations=20):
+         num_iterations=20,
+         closed_method="alter"):
     if game_type == "zero_sum":
         meta_games = generator.zero_sum_game()
     elif game_type == "general_sum":
         meta_games = generator.general_sum_game()
     elif game_type == "symmetric_zero_sum":
         meta_games = generator.general_sum_game()
+    elif game_type == "kuhn":
+        kuhn_meta_games = load_pkl("./kuhn_meta_game.pkl")
+        meta_games = kuhn_meta_games[0] # The first element of kuhn_meta_game.pkl is meta_games.
+        generator.num_strategies = 64
     else:
         for pkl in os.listdir('efg_game'):
             print(pkl)
@@ -75,7 +82,8 @@ def psro(generator,
                            checkpoint_dir=checkpoint_dir,
                            num_iterations=num_iterations,
                            seed=seed,
-                           init_strategies=init_strategies)
+                           init_strategies=init_strategies,
+                           closed_method=closed_method)
 
 
     DO_trainer.loop()
@@ -114,9 +122,6 @@ def psro(generator,
     with open(checkpoint_dir + game_type + '_mrprofile_MRCP.pkl','wb') as f:
         pickle.dump(DO_trainer.mrprofiles, f)
 
-#    DO_FP_trainer.loop()
-#    blocks_trainer.loop()
-
     print("The current game type is ", game_type)
     print("DO neco av:", np.mean(DO_trainer.neconvs, axis=0))
     print("DO mrcp av:", np.mean(DO_trainer.mrconvs, axis=0))
@@ -126,8 +131,6 @@ def psro(generator,
     print("MR neco av:", np.mean(MRCP_trainer.neconvs, axis=0))
     print("MR mrcp av:", np.mean(MRCP_trainer.mrconvs, axis=0))
 
-#    print("DO+FP average:", np.mean(DO_FP_trainer.nashconvs, axis=0))
-#    print("blocks average:", np.mean(blocks_trainer.nashconvs, axis=0))
     print("====================================================")
     
 
@@ -150,7 +153,8 @@ def main(argv):
          num_rounds=FLAGS.num_rounds,
          seed=seed,
          checkpoint_dir=checkpoint_dir,
-         num_iterations=FLAGS.num_iterations)
+         num_iterations=FLAGS.num_iterations,
+         closed_method=FLAGS.closed_method)
 
 
 if __name__ == "__main__":
