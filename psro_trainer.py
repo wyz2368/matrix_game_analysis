@@ -53,9 +53,10 @@ class PSRO_trainer(object):
         self.mrprofiles = []
 
         # Record empirical game.
+        self.empricial_game_record = empricial_game_record
         if empricial_game_record is not None:
             self.empirical_games_dict = {}
-            self.empricial_game_record = empricial_game_record
+
 
     def init_round(self, init_strategy):
         #init_strategy = np.random.randint(0, self.num_strategies)
