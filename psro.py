@@ -143,7 +143,7 @@ def main(argv):
         seed = None # invalidate the seed so it does not get passed into psro_trainer
 
     generator = Game_generator(FLAGS.num_strategies)
-    checkpoint_dir = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')+'_se_'+str(seed)
+    checkpoint_dir = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')+'_se_'+ FLAGS.game_type + "_" +str(seed)
     checkpoint_dir = os.path.join(os.getcwd(), checkpoint_dir) + '/'
 
     # game_list = ["zero_sum", "general_sum"]
