@@ -85,7 +85,11 @@ class PSRO_trainer(object):
 
         for it in range(self.num_iterations):
             print('################## Iteration {} ###################'.format(it))
-            dev_strs, nashconv = self.meta_method(self.meta_games, self.empirical_games, self.checkpoint_dir)
+            if self.meta_method.__name__ == 'mrcp_solver':
+                dev_strs, nashconv = self.meta_method(self.meta_games, self.empirical_games, self.checkpoint_dir, method=self.closed_method)
+            else:
+                dev_strs, nashconv = self.meta_method(self.meta_games, self.empirical_games, self.checkpoint_dir)
+
             nashconv_list.append(nashconv)
 
             self.empirical_games[0].append(dev_strs[0])

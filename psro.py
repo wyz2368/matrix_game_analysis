@@ -11,6 +11,7 @@ import pickle
 import datetime
 import numpy as np
 import pandas as pd
+import sys
 import functools
 print = functools.partial(print, flush=True)
 
@@ -145,6 +146,8 @@ def main(argv):
     generator = Game_generator(FLAGS.num_strategies)
     checkpoint_dir = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')+'_se_'+ FLAGS.game_type + "_" +str(seed)
     checkpoint_dir = os.path.join(os.getcwd(), checkpoint_dir) + '/'
+
+    sys.stdout = open(checkpoint_dir + '/stdout.txt', 'w+')
 
     # game_list = ["zero_sum", "general_sum"]
 
