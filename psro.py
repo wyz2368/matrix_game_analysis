@@ -21,7 +21,7 @@ flags.DEFINE_integer("num_rounds", 10, "The number of rounds starting with diffe
 flags.DEFINE_integer("num_strategies", 100, "The number of rounds starting with different.")
 flags.DEFINE_integer("num_iterations", 40, "The number of rounds starting with different.")
 flags.DEFINE_string("game_type", "zero_sum", "Type of synthetic game.")
-flags.DEFINE_integer("seed",None,"The seed to control randomness.")
+flags.DEFINE_integer("seed", None, "The seed to control randomness.")
 flags.DEFINE_boolean("MRCP_deterministic", True, "mrcp should return a same value given the same empirical game")
 flags.DEFINE_string("closed_method", "alter", "Method for handling closeness of the MRCP")
 
