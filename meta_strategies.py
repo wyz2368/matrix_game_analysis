@@ -143,14 +143,14 @@ def closeness_handling(meta_games, empirical_games, payoff_vecs, method, checkpo
     """
 
     if method == "alter":
-        return closeness_alter(empirical_games, payoff_vecs)
+        return closeness_alter(meta_games, empirical_games, checkpoint_dir)
     elif method == "dev":
-        return closeness_dev(meta_games, empirical_games, checkpoint_dir)
+        return closeness_dev(empirical_games, payoff_vecs)
     else:
         raise ValueError("Undefined closeness handling method.")
 
 
-def closeness_alter(empirical_games, payoff_vecs):
+def closeness_dev(empirical_games, payoff_vecs):
     """
     Handling closeness issue by only considering deviation strategies outside
     the empirical game.
@@ -166,10 +166,9 @@ def closeness_alter(empirical_games, payoff_vecs):
 
     return dev_strs
 
-def closeness_dev(meta_games, empirical_games, checkpoint_dir):
+def closeness_alter(meta_games, empirical_games, checkpoint_dir):
     """
-    Handling closeness issue by only considering deviation strategies outside
-    the empirical game.
+    Handling closeness issue by only alternating DO and MRCP.
     :param meta_games:
     :param empirical_games:
     :param checkpoint_dir:
