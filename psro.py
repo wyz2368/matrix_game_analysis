@@ -37,7 +37,7 @@ def psro(generator,
     elif game_type == "general_sum":
         meta_games = generator.general_sum_game()
     elif game_type == "symmetric_zero_sum":
-        meta_games = generator.general_sum_game()
+        meta_games = generator.symmetric_zero_sum_game()
     elif game_type == "kuhn":
         kuhn_meta_games = load_pkl("./MRCP/kuhn_meta_game.pkl")
         meta_games = kuhn_meta_games[0] # The first element of kuhn_meta_game.pkl is meta_games.
@@ -138,7 +138,7 @@ def psro(generator,
 def main(argv):
     if len(argv) > 1:
         raise app.UsageError("Too many command-line arguments.")
-    
+
     seed = set_random_seed(FLAGS.seed)
     if not FLAGS.MRCP_deterministic:
         seed = None # invalidate the seed so it does not get passed into psro_trainer
@@ -149,7 +149,7 @@ def main(argv):
         os.makedirs(root_path)
 
     generator = Game_generator(FLAGS.num_strategies)
-    checkpoint_dir = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')+'_se_'+ FLAGS.game_type + "_" +str(seed)
+    checkpoint_dir = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')+'_se_'+ FLAGS.game_type + "_" + str(seed)
     checkpoint_dir = os.path.join(os.getcwd(), checkpoint_dir) + '/'
 
     if not os.path.exists(checkpoint_dir):
