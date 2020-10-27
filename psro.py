@@ -143,10 +143,10 @@ def main(argv):
     if not FLAGS.MRCP_deterministic:
         seed = None # invalidate the seed so it does not get passed into psro_trainer
 
-    root_path = './' + FLAGS.game_type + "_se_" + '/'
-
-    if not os.path.exists(root_path):
-        os.makedirs(root_path)
+    # root_path = './' + FLAGS.game_type + "_se_" + '/'
+    #
+    # if not os.path.exists(root_path):
+    #     os.makedirs(root_path)
 
     generator = Game_generator(FLAGS.num_strategies)
     checkpoint_dir = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')+'_se_'+ FLAGS.game_type + "_" + str(seed)
