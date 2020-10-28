@@ -34,7 +34,7 @@ def empirical_game_generator(generator,
     elif game_type == "general_sum":
         meta_games = generator.general_sum_game()
     elif game_type == "symmetric_zero_sum":
-        meta_games = generator.general_sum_game()
+        meta_games = generator.symmetric_zero_sum_game()
     elif game_type == "kuhn":
         kuhn_meta_games = load_pkl("./kuhn_meta_game.pkl")
         meta_games = kuhn_meta_games[0] # The first element of kuhn_meta_game.pkl is meta_games.
@@ -49,7 +49,7 @@ def empirical_game_generator(generator,
     if empirical_game_size > num_strategies:
         raise ValueError("The number of sampled EG is large than generated EG.")
 
-    empricial_game_record = [10]
+    empricial_game_record = [10, 30]
 
     # Create a meta-trainer.
     if meta_method == "DO":
@@ -215,6 +215,7 @@ def regret_analysis(meta_games,
         copied_empirical_game[player].append(dev_strs[player])
     print("The new empirical game is ", copied_empirical_game)
 
+    MRCP_calculator.clear()
     _, mrcp_regret_new = MRCP_calculator(empirical_game=copied_empirical_game)
 
     # _, mrcp_regret_new = sampling_scheme(meta_games, empirical_game, "MRCP", checkpoint_dir)

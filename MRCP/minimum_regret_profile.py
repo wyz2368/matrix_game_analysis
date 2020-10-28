@@ -4,6 +4,7 @@ from utils import regret_of_variable
 
 from MRCP.amoeba import amoeba_mrcp
 
+# REMEBER TO CLEAR MRCP calculator if repeatedly calling.
 class minimum_regret_profile_calculator(object):
     """
     Implement MRCP in Pjordan's thesis Algorithm 8 FIND-MRCP

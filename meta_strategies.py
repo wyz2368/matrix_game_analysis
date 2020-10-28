@@ -5,7 +5,16 @@ from nash_solver.lp_solver import lp_solve
 from MRCP.minimum_regret_profile import minimum_regret_profile_calculator
 from utils import *
 
-def double_oracle(meta_games, empirical_games, checkpoint_dir):
+def double_oracle(meta_games, empirical_games, checkpoint_dir, gambit=True, sample_dev=False):
+    """
+    Double oracle method.
+    :param meta_games:
+    :param empirical_games:
+    :param checkpoint_dir:
+    :param gambit: Whether using gambit as a Nash solver. False： lp solver
+    :param sample_dev: Whether sample a beneficial deviation or sample a argmax deviation
+    :return:
+    """
     num_players = len(meta_games)
     num_strategies, _ = np.shape(meta_games[0])
     subgames = []
@@ -16,10 +25,12 @@ def double_oracle(meta_games, empirical_games, checkpoint_dir):
     for meta_game in meta_games:
         subgames.append(meta_game[idx])
 
-    # Gambit solver
-    # nash = gambit_solve(subgames, mode="one", checkpoint_dir=checkpoint_dir[:-1])
-    # LP solver
-    nash = lp_solve(subgames)
+    if gambit:
+        # Gambit solver
+        nash = gambit_solve(subgames, mode="one", checkpoint_dir=checkpoint_dir[:-1])
+    else:
+        # LP solver
+        nash = lp_solve(subgames)
 
     nash_payoffs = mixed_strategy_payoff(subgames, nash)
 
@@ -29,7 +40,12 @@ def double_oracle(meta_games, empirical_games, checkpoint_dir):
         np.put(ne, idx, nash[i])
         meta_game_nash.append(ne)
 
-    dev_strs, dev_payoff = deviation_strategy(meta_games, meta_game_nash)
+    if sample_dev:
+        dev_strs, dev_payoff = beneficial_deviation(meta_games, meta_game_nash, nash_payoffs)
+        dev_strs, dev_payoff = sample_deviation_strategy(dev_strs, dev_payoff)
+    else:
+        dev_strs, dev_payoff = deviation_strategy(meta_games, meta_game_nash)
+
     nashconv = 0
     for player in range(num_players):
         nashconv += np.maximum(dev_payoff[player] - nash_payoffs[player], 0)
@@ -38,7 +54,7 @@ def double_oracle(meta_games, empirical_games, checkpoint_dir):
 
 
 
-def fictitious_play(meta_games, empirical_games, checkpoint_dir=None):
+def fictitious_play(meta_games, empirical_games, checkpoint_dir=None, sample_dev=False):
     num_strategies, _ = np.shape(meta_games[0])
     subgames = []
     counter0 = collections.Counter(empirical_games[0])
@@ -69,7 +85,12 @@ def fictitious_play(meta_games, empirical_games, checkpoint_dir=None):
         np.put(ne, idx, nash[i])
         meta_game_nash.append(ne)
 
-    dev_strs, dev_payoff = deviation_strategy(meta_games, meta_game_nash)
+    # dev_strs, dev_payoff = deviation_strategy(meta_games, meta_game_nash)
+    if sample_dev:
+        dev_strs, dev_payoff = beneficial_deviation(meta_games, meta_game_nash, nash_payoffs)
+        dev_strs, dev_payoff = sample_deviation_strategy(dev_strs, dev_payoff)
+    else:
+        dev_strs, dev_payoff = deviation_strategy(meta_games, meta_game_nash)
 
     nashconv = 0
     for player in range(len(meta_games)):
@@ -92,7 +113,7 @@ def mrcp_solver(meta_games, empirical_games, checkpoint_dir=None, method="alter"
             print('Changing mrcp calculator!!!')
             mrcp_solver.mrcp_calculator = minimum_regret_profile_calculator(full_game=meta_games, recursive=recursive)
         elif mrcp_solver.mrcp_calculator.mrcp_empirical_game is not None and len(empirical_games[0]) <= len(mrcp_solver.mrcp_calculator.mrcp_empirical_game[0]):
-            # another round of random start from full game, might exsit potential bugs
+            # another round of random start from full game, might exist potential bugs
             # as I changed _last_empirical_game to mrcp_empirical_game
             print('Clearing the past data from mrcp calculator, should be at the start of a new round')
             mrcp_solver.mrcp_calculator.clear()
