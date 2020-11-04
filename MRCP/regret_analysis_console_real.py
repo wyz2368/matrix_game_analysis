@@ -27,7 +27,7 @@ def main(argv):
     if not os.path.exists(root_path):
         os.makedirs(root_path)
 
-    real_world_meta_games = load_pkl('./real_world_games/real_world_meta_games.pkl')
+    real_world_meta_games = load_pkl('../real_world_games/real_world_meta_games.pkl')
 
     game_types = ['10,4-Blotto', 'AlphaStar', 'Kuhn-poker', 'Random game of skill', 'Transitive game',
                   'connect_four', 'quoridor(board_size=4)', ' misere(game=tic_tac_toe())', 'hex(board_size=3)',
