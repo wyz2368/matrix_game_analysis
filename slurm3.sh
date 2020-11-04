@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --job-name=matrix_ana
+#SBATCH --job-name=real_world
 #SBATCH --mail-user=wangyzhsrg@aol.com
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --nodes=1
