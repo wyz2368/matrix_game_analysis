@@ -124,7 +124,11 @@ def main(argv):
 
     real_world_meta_games = load_pkl('./real_world_games/real_world_meta_games.pkl')
 
-    for game_type in real_world_meta_games:
+    game_types = ['10,4-Blotto', 'AlphaStar', 'Kuhn-poker', 'Random game of skill', 'Transitive game',
+                  'connect_four', 'quoridor(board_size=4)', ' misere(game=tic_tac_toe())', 'hex(board_size=3)',
+                  'go(board_size=4,komi=6.5)']
+
+    for game_type in game_types:
         print("================================================")
         print("======The current game is ", game_type, "=========")
         print("================================================")

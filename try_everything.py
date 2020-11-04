@@ -32,9 +32,4 @@ from MRCP.minimum_regret_profile import minimum_regret_profile_calculator
 #     mrcp, regret = exact_calculator(empirical_games)
 #     print(regret)
 
-a = [[-1], [-2]]
-for i, item in enumerate(a):
-    print(item)
-    item[0] = 1
 
-print(a)
