@@ -14,11 +14,11 @@ from MRCP.minimum_regret_profile import minimum_regret_profile_calculator
 
 # meta_games = [np.random.rand(10, 10), np.random.rand(10, 10)]
 # empirical_games = [[1,2,3,6], [3,5,7,9]]
-meta_games = [np.array([[1,2,3],
-                        [4,5,6],
-                        [7,8,9]]), np.array([[1,2,3],
-                        [4,5,6],
-                        [7,8,9]])]
+# meta_games = [np.array([[1,2,3],
+#                         [4,5,6],
+#                         [7,8,9]]), np.array([[1,2,3],
+#                         [4,5,6],
+#                         [7,8,9]])]
 
 # root_path = './MRCP/data/'
 # meta_games = load_pkl(root_path + "meta_games.pkl")
@@ -32,4 +32,9 @@ meta_games = [np.array([[1,2,3],
 #     mrcp, regret = exact_calculator(empirical_games)
 #     print(regret)
 
-print(meta_games[0][-1])
+a = [[-1], [-2]]
+for i, item in enumerate(a):
+    print(item)
+    item[0] = 1
+
+print(a)

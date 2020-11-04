@@ -80,7 +80,7 @@ class PSRO_trainer(object):
                 mrprofile_list.append(mrcp_profile)
 
         if self.meta_method.__name__ != 'double_oracle':
-            _, neconv = double_oracle(self.meta_games,self.empirical_games,self.checkpoint_dir)
+            _, neconv = double_oracle(self.meta_games, self.empirical_games, self.checkpoint_dir)
             neconv_list.append(neconv)
 
         for it in range(self.num_iterations):
@@ -126,6 +126,7 @@ class PSRO_trainer(object):
         else:
             _, nashconv = self.meta_method(self.meta_games, self.empirical_games, self.checkpoint_dir)
         nashconv_list.append(nashconv)
+
         if self.meta_method.__name__ == 'mrcp_solver':
             mrconv_list.append(nashconv)
             mrprofile_list.append(self.meta_method.mrcp_calculator.mrcp_profile)

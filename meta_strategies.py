@@ -122,6 +122,8 @@ def mrcp_solver(meta_games, empirical_games, checkpoint_dir=None, method="alter"
         else:
             pass
 
+    # refresh mrcp cache every time calculating MRCP.
+    mrcp_solver.mrcp_calculator.clear()
     mrcp_solver.mrcp_calculator(empirical_games)
 
     num_strategies = meta_games[0].shape[0]
@@ -129,7 +131,7 @@ def mrcp_solver(meta_games, empirical_games, checkpoint_dir=None, method="alter"
     idx1 = sorted(list(set(mrcp_solver.mrcp_calculator.mrcp_empirical_game[1])))
 
     meta_game_nash = []
-    for i,idx in enumerate([idx0,idx1]):
+    for i, idx in enumerate([idx0,idx1]):
         ne = np.zeros(num_strategies)
         np.put(ne, idx, mrcp_solver.mrcp_calculator.mrcp_profile[i])
         meta_game_nash.append(ne)
@@ -189,8 +191,8 @@ def closeness_dev(empirical_games, payoff_vecs):
     :return:
     """
     dev_strs = []
-    for payoff_vec in payoff_vecs:
-        payoff_vec[list(set(empirical_games[0]))] = -1e5 # mask elements inside empirical game
+    for player, payoff_vec in enumerate(payoff_vecs):
+        payoff_vec[list(set(empirical_games[player]))] = -1e5 # mask elements inside empirical game
         dev_strs.append(np.argmax(payoff_vec))
 
     return dev_strs
