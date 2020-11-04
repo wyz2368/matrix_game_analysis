@@ -136,12 +136,17 @@ def main(argv):
             os.makedirs(checkpoint_dir)
         sys.stdout = open(checkpoint_dir + '/stdout.txt', 'w+')
 
+        if FLAGS.num_iterations > real_world_meta_games[game_type][0].shape[0]:
+            num_iterations = real_world_meta_games[game_type][0].shape[0]
+        else:
+            num_iterations = FLAGS.num_iterations
+
         psro(meta_games=real_world_meta_games[game_type],
              game_type=game_type,
              num_rounds=1,
              seed=seed,
              checkpoint_dir=checkpoint_dir,
-             num_iterations=FLAGS.num_iterations,
+             num_iterations=num_iterations,
              closed_method=FLAGS.closed_method)
 
 
