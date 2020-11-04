@@ -51,7 +51,7 @@ def empirical_game_generator(generator,
 
     empricial_game_record = list(range(10, 101, 10))
 
-    if empirical_game_size < max(empirical_game_size):
+    if empirical_game_size < max(empricial_game_record):
         raise ValueError("The number of sampled EG is large than generated EG.")
 
     # Create a meta-trainer.
