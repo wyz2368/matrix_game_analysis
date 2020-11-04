@@ -28,12 +28,7 @@ def psro(meta_games,
          checkpoint_dir,
          num_iterations=20,
          closed_method="alter"):
-    
-    # for example 1 in paper
-    # meta_games = [np.array([[0,-0.1,-3],[0.1,0,2],[3,-2,0]]),np.array([[0,0.1,3],[-0.1,0,-2],[-3,2,0]])]
-    # generator.num_strategies = 3
-    # num_rounds = 1
-    # num_iterations = 10
+
     num_strategies = meta_games[0].shape[0]
     init_strategies = 0
 

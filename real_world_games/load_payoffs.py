@@ -3,14 +3,15 @@ from nash_solver.gambit_tools import load_pkl, save_pkl
 import numpy as np
 import copy
 
-# # Load payoffs
+# Load payoffs
 # with open("./spinning_top_payoffs.pkl", "rb") as fh:
 #   payoffs = pickle.load(fh)
-#
+
+# real_world_meta_games = copy.copy(payoffs)
 # # Iterate over games
 # print("======================================================")
 # for game_name in payoffs:
-#     # real_world_meta_games[game_name] = [payoffs[game_name], -payoffs[game_name]]
+#     real_world_meta_games[game_name] = [payoffs[game_name], -payoffs[game_name]]
 #
 #   print(f"Game name: {game_name}")
 #   print(f"Number of strategies: {payoffs[game_name].shape[0]}")
@@ -32,4 +33,4 @@ import copy
 # print([payoffs["RPS"], -payoffs["RPS"]])
 # save_pkl(obj=real_world_meta_games, path="./real_world_meta_games.pkl")
 meta_games = load_pkl("./real_world_meta_games.pkl")
-print(meta_games["AlphaStar"][0][-1])
+print(meta_games["RPS"][0])
