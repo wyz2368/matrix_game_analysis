@@ -129,16 +129,16 @@ def main(argv):
                   'go(board_size=4,komi=6.5)']
 
     for game_type in game_types:
-        print("================================================")
-        print("======The current game is ", game_type, "=========")
-        print("================================================")
-
         checkpoint_dir = game_type + "_" + str(seed)
         checkpoint_dir = os.path.join(os.getcwd(), root_path, checkpoint_dir) + '/'
 
         if not os.path.exists(checkpoint_dir):
             os.makedirs(checkpoint_dir)
         sys.stdout = open(checkpoint_dir + '/stdout.txt', 'w+')
+
+        print("================================================")
+        print("======The current game is ", game_type, "=========")
+        print("================================================")
 
         if FLAGS.num_iterations > real_world_meta_games[game_type][0].shape[0]:
             num_iterations = real_world_meta_games[game_type][0].shape[0]
