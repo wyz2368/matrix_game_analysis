@@ -212,7 +212,7 @@ def regret_analysis(meta_games,
     # Add a mechanism to detect repeated strategies.
     if dev_strs[0] in empirical_game[0] and dev_strs[1] in empirical_game[1]:
         print("No empirical game change.")
-        return nashconv, 0
+        return nashconv, 0, None
 
     print("The old empirical game is ", empirical_game)
     copied_empirical_game = copy.deepcopy(empirical_game)
