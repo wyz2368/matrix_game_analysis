@@ -5,7 +5,7 @@ from nash_solver.lp_solver import lp_solve
 from MRCP.minimum_regret_profile import minimum_regret_profile_calculator
 from utils import *
 
-def double_oracle(meta_games, empirical_games, checkpoint_dir, gambit=True, sample_dev=False):
+def double_oracle(meta_games, empirical_games, checkpoint_dir, gambit=False, sample_dev=False):
     """
     Double oracle method.
     :param meta_games:
