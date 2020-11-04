@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --job-name=szs_DO
+#SBATCH --job-name=matrix_ana
 #SBATCH --mail-user=wangyzhsrg@aol.com
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --nodes=1
@@ -12,5 +12,5 @@
 
 module load python3.6-anaconda/5.2.0
 cd ${SLURM_SUBMIT_DIR}
-python regret_analysis_console.py --num_strategies=200 --num_emp_strategies=110 --num_samples=2000 --game_type=zero_sum --meta_method=DO
+python psro_real_world.py --num_iterations=110 --closed_method=alter
 

@@ -47,9 +47,12 @@ def empirical_game_generator(generator,
 
     # A list that records which iteration the empirical game is recorded.
     if empirical_game_size > num_strategies:
-        raise ValueError("The number of sampled EG is large than generated EG.")
+        raise ValueError("The size of EG is large than the full game.")
 
-    empricial_game_record = [10, 30]
+    empricial_game_record = list(range(10, 101, 10))
+
+    if empirical_game_size < max(empirical_game_size):
+        raise ValueError("The number of sampled EG is large than generated EG.")
 
     # Create a meta-trainer.
     if meta_method == "DO":
@@ -160,6 +163,7 @@ def sampling_scheme(meta_games, empirical_game, rule, checkpoint_dir=None):
     :param rule
     :return:
     """
+    sampled_profile = None
     if rule == "NE":
         dev_strs, nashconv = double_oracle(meta_games, empirical_game, checkpoint_dir)
     elif rule == "uniform":
@@ -172,6 +176,7 @@ def sampling_scheme(meta_games, empirical_game, rule, checkpoint_dir=None):
         for player in range(num_players):
             num_strategies_in_EG = len(empirical_game[player])
             rand_str.append(uniform_simplex_sampling(num_strategies_in_EG))
+        sampled_profile = rand_str
         strategies = extend_prob(rand_str, empirical_game, meta_games)
         dev_strs, _, nashconv = profile_regret(meta_games, strategies)
     elif isinstance(rule, list):
@@ -181,7 +186,7 @@ def sampling_scheme(meta_games, empirical_game, rule, checkpoint_dir=None):
     else:
         raise ValueError("Undefined Sampling Scheme.")
 
-    return dev_strs, nashconv
+    return dev_strs, nashconv, sampled_profile
 
 def regret_analysis(meta_games,
                     empirical_game,
@@ -199,7 +204,7 @@ def regret_analysis(meta_games,
     :return:
     """
     num_players = len(meta_games)
-    dev_strs, nashconv = sampling_scheme(meta_games, empirical_game, rule, checkpoint_dir)
+    dev_strs, nashconv, sampled_profile = sampling_scheme(meta_games, empirical_game, rule, checkpoint_dir)
 
     # _, mrcp_regret_old = MRCP_calculator(empirical_game=empirical_game)
     # _, mrcp_regret_old = sampling_scheme(meta_games, empirical_game, "MRCP", checkpoint_dir)
@@ -222,7 +227,7 @@ def regret_analysis(meta_games,
     print("The nashconv of the sample is ", nashconv)
     print("mrcp_regret_old - mrcp_regret_new=", mrcp_regret_old - mrcp_regret_new, " : ", mrcp_regret_old, mrcp_regret_new)
 
-    return nashconv, np.maximum(mrcp_regret_old - mrcp_regret_new, 0)
+    return nashconv, np.maximum(mrcp_regret_old - mrcp_regret_new, 0), sampled_profile
 
 def correlation(a, b):
     """
@@ -281,43 +286,58 @@ def console(generator,
         _, mrcp_regret_old = exact_calculator(empirical_game=empirical_games)
 
         # Compare with standard MSS.
+        MSS_regret_of_samples = []
+        MSS_performance_improvement = []
         MSSs = ["NE", "MRCP"]
         for mss in MSSs:
-            nashconv, improvement = regret_analysis(meta_games,
+            nashconv, improvement, _ = regret_analysis(meta_games,
                                                     empirical_games,
                                                     rule=mss,
                                                     MRCP_calculator=exact_calculator,
                                                     mrcp_regret_old=mrcp_regret_old,
                                                     checkpoint_dir=checkpoint_dir)
             print(mss, "--", "regret:", nashconv, "improvement:", improvement)
+            MSS_regret_of_samples.append(nashconv)
+            MSS_performance_improvement.append(improvement)
 
         # Special for fictitious play.
-        nashconv, improvement = regret_analysis(meta_games,
+        nashconv, improvement, _ = regret_analysis(meta_games,
                                                 copied_EG,
                                                 rule="uniform",
                                                 MRCP_calculator=exact_calculator,
                                                 mrcp_regret_old=mrcp_regret_old,
                                                 checkpoint_dir=checkpoint_dir)
         print("uniform", "--", "regret:", nashconv, "improvement:", improvement)
+        MSS_regret_of_samples.append(nashconv)
+        MSS_performance_improvement.append(improvement)
 
+        print("----------- -------------- ----------")
         print("----------- Start Sampling ----------")
+        print("----------- -------------- ----------")
 
         regret_of_samples = []
         performance_improvement = []
+        sampled_profiles = []
+        better_than_NE_idx = []
         cnt_zeros = 0
         for i in range(num_samples):
             print("------Sample #", i, "------")
-            nashconv, improvement = regret_analysis(meta_games,
-                                                    empirical_games,
-                                                    rule='rand',
-                                                    MRCP_calculator=exact_calculator,
-                                                    mrcp_regret_old=mrcp_regret_old,
-                                                    checkpoint_dir=checkpoint_dir)
+            nashconv, improvement, sampled_profile = regret_analysis(meta_games,
+                                                                    empirical_games,
+                                                                    rule='rand',
+                                                                    MRCP_calculator=exact_calculator,
+                                                                    mrcp_regret_old=mrcp_regret_old,
+                                                                    checkpoint_dir=checkpoint_dir)
 
             if np.abs(improvement) < 1e-5:
                 cnt_zeros += 1
             regret_of_samples.append(nashconv)
             performance_improvement.append(improvement)
+            sampled_profiles.append(sampled_profile)
+
+            if improvement > MSS_performance_improvement[0]:
+                better_than_NE_idx.append(i)
+
 
         corr, p_val = correlation(regret_of_samples, performance_improvement)
         print("Correlation coeffient:", corr, "P-value:", p_val)
@@ -325,6 +345,13 @@ def console(generator,
         save_pkl(obj=regret_of_samples, path=checkpoint_dir + "regret_of_samples_" + str(key) + ".pkl")
         save_pkl(obj=performance_improvement, path=checkpoint_dir + "performance_improvement_" + str(key) + ".pkl")
         save_pkl(obj=empirical_games, path=checkpoint_dir + "empirical_games_" + str(key) + ".pkl")
+        save_pkl(obj=MSS_regret_of_samples, path=checkpoint_dir + "MSS_regret_of_samples_" + str(key) + ".pkl")
+        save_pkl(obj=MSS_performance_improvement, path=checkpoint_dir + "MSS_performance_improvement_" + str(key) + ".pkl")
+
+        save_pkl(obj=sampled_profiles, path=checkpoint_dir + "sampled_profiles_" + str(key) + ".pkl")
+        save_pkl(obj=better_than_NE_idx, path=checkpoint_dir + "better_than_NE_idx_" + str(key) + ".pkl")
+
+
 
 
 

@@ -1,7 +1,7 @@
 import numpy as np
 import collections
 from nash_solver.general_nash_solver import gambit_solve
-# from nash_solver.lp_solver import lp_solve
+from nash_solver.lp_solver import lp_solve
 from MRCP.minimum_regret_profile import minimum_regret_profile_calculator
 from utils import *
 
@@ -25,14 +25,14 @@ def double_oracle(meta_games, empirical_games, checkpoint_dir, gambit=True, samp
     for meta_game in meta_games:
         subgames.append(meta_game[idx])
 
-    # if gambit:
-    #     # Gambit solver
-    #     nash = gambit_solve(subgames, mode="one", checkpoint_dir=checkpoint_dir[:-1])
-    # else:
-    #     # LP solver
-    #     nash = lp_solve(subgames)
+    if gambit:
+        # Gambit solver
+        nash = gambit_solve(subgames, mode="one", checkpoint_dir=checkpoint_dir[:-1])
+    else:
+        # LP solver
+        nash = lp_solve(subgames)
 
-    nash = gambit_solve(subgames, mode="one", checkpoint_dir=checkpoint_dir[:-1])
+    # nash = gambit_solve(subgames, mode="one", checkpoint_dir=checkpoint_dir[:-1])
 
     nash_payoffs = mixed_strategy_payoff(subgames, nash)
 

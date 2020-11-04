@@ -1,4 +1,5 @@
 import numpy as np
+from nash_solver.gambit_tools import load_pkl
 
 class Game_generator(object):
     def __init__(self,
@@ -33,6 +34,10 @@ class Game_generator(object):
                                       size=(self.num_strategies, self.num_strategies))
         meta_game += meta_game.T
         return [meta_game, -meta_game]
+
+    def real_world_game(self, game_name):
+        meta_games = load_pkl("./real_world_games/real_world_meta_games.pkl")
+        return meta_games[game_name]
 
     def transitive_game(self):
         raise NotImplementedError

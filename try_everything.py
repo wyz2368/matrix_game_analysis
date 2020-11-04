@@ -14,11 +14,11 @@ from MRCP.minimum_regret_profile import minimum_regret_profile_calculator
 
 # meta_games = [np.random.rand(10, 10), np.random.rand(10, 10)]
 # empirical_games = [[1,2,3,6], [3,5,7,9]]
-# meta_games = [np.array([[1,2,3],
-#                         [4,5,6],
-#                         [7,8,9]]), np.array([[1,2,3],
-#                         [4,5,6],
-#                         [7,8,9]])]
+meta_games = [np.array([[1,2,3],
+                        [4,5,6],
+                        [7,8,9]]), np.array([[1,2,3],
+                        [4,5,6],
+                        [7,8,9]])]
 
 # root_path = './MRCP/data/'
 # meta_games = load_pkl(root_path + "meta_games.pkl")
@@ -32,28 +32,4 @@ from MRCP.minimum_regret_profile import minimum_regret_profile_calculator
 #     mrcp, regret = exact_calculator(empirical_games)
 #     print(regret)
 
-# 107.66919482976294
-# 101.12650494735385
-# 101.12650494735385
-# 101.12650494735385
-# 101.12650494735385
-# 101.12650494735385
-
-# 108.32564177829221
-# 109.54700761993774
-# 107.49603286288453
-# 107.32420467113008
-# 107.44317320809876
-# 108.62267581541806
-
-
-# Function Attributes
-# def foo(a):
-#     if not hasattr(foo, "dict"):
-#         foo.dict = {}
-#     foo.dict[a] = a
-#     print(foo.dict)
-#     print("hello")
-#
-# foo(1)
-# foo(2)
+print(meta_games[0][-1])
