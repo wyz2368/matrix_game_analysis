@@ -1,4 +1,4 @@
-from meta_strategies import double_oracle, fictitious_play, mrcp_solver
+from meta_strategies import double_oracle, fictitious_play, mrcp_solver, prd_solver
 from game_generator import Game_generator
 from psro_trainer import PSRO_trainer
 from utils import set_random_seed
@@ -76,6 +76,15 @@ def psro(generator,
                            seed=seed,
                            init_strategies=init_strategies)
 
+    PRD_trainer = PSRO_trainer(meta_games=meta_games,
+                               num_strategies=generator.num_strategies,
+                               num_rounds=num_rounds,
+                               meta_method=prd_solver,
+                               checkpoint_dir=checkpoint_dir,
+                               num_iterations=num_iterations,
+                               seed=seed,
+                               init_strategies=init_strategies)
+
     MRCP_trainer = PSRO_trainer(meta_games=meta_games,
                            num_strategies=generator.num_strategies,
                            num_rounds=num_rounds,
@@ -113,6 +122,16 @@ def psro(generator,
     with open(checkpoint_dir + game_type + '_mrprofile_FP.pkl','wb') as f:
         pickle.dump(FP_trainer.mrprofiles, f)
 
+    PRD_trainer.loop()
+    print("#####################################")
+    print('PRD looper finished looping')
+    print("#####################################")
+    df = pd.DataFrame(np.transpose(PRD_trainer.neconvs + PRD_trainer.mrconvs), \
+                        columns=nashconv_names + mrconv_names)
+    df.to_csv(checkpoint_dir + game_type + '_PRD.csv', index=False)
+    with open(checkpoint_dir + game_type + '_mrprofile_PRD.pkl', 'wb') as f:
+        pickle.dump(PRD_trainer.mrprofiles, f)
+
     MRCP_trainer.loop()
     print("#####################################")
     print('MRCP looper finished looping')
@@ -129,6 +148,9 @@ def psro(generator,
     print("FP fpco av:", np.mean(FP_trainer.nashconvs, axis=0))
     print("FP neco av:", np.mean(FP_trainer.neconvs, axis=0))
     print("FP mrcp av:", np.mean(FP_trainer.mrconvs, axis=0))
+    print("PRD prdco av:", np.mean(PRD_trainer.nashconvs, axis=0))
+    print("PRD neco av:", np.mean(PRD_trainer.neconvs, axis=0))
+    print("PRD mrcp av:", np.mean(PRD_trainer.mrconvs, axis=0))
     print("MR neco av:", np.mean(MRCP_trainer.neconvs, axis=0))
     print("MR mrcp av:", np.mean(MRCP_trainer.mrconvs, axis=0))
 
