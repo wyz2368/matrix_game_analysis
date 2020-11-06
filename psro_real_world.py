@@ -16,7 +16,7 @@ print = functools.partial(print, flush=True)
 FLAGS = flags.FLAGS
 
 flags.DEFINE_integer("num_iterations", 100, "The number of rounds starting with different.")
-flags.DEFINE_string("game_type", "real_world", "Type of synthetic game.")
+flags.DEFINE_string("game_type", "RPS", "Type of synthetic game.")
 flags.DEFINE_integer("seed", None, "The seed to control randomness.")
 flags.DEFINE_boolean("MRCP_deterministic", True, "mrcp should return a same value given the same empirical game")
 flags.DEFINE_string("closed_method", "alter", "Method for handling closeness of the MRCP")
@@ -117,41 +117,40 @@ def main(argv):
     if not FLAGS.MRCP_deterministic:
         seed = None # invalidate the seed so it does not get passed into psro_trainer
 
-    root_path = './' + FLAGS.game_type + "_se_" + FLAGS.closed_method + '/'
+    root_path = './' + "real_world" + "_se_" + FLAGS.closed_method + '/'
 
     if not os.path.exists(root_path):
         os.makedirs(root_path)
 
     real_world_meta_games = load_pkl('./real_world_games/real_world_meta_games.pkl')
 
-    game_types = ['10,4-Blotto', 'AlphaStar', 'Kuhn-poker', 'Random game of skill', 'Transitive game',
-                  'connect_four', 'quoridor(board_size=4)', ' misere(game=tic_tac_toe())', 'hex(board_size=3)',
-                  'go(board_size=4,komi=6.5)']
+    # game_types = ['10,4-Blotto', 'AlphaStar', 'Kuhn-poker', 'Random game of skill', 'Transitive game',
+    #               'connect_four', 'quoridor(board_size=4)', ' misere(game=tic_tac_toe())', 'hex(board_size=3)',
+    #               'go(board_size=4,komi=6.5)']
 
-    for game_type in game_types:
-        checkpoint_dir = game_type + "_" + str(seed)
-        checkpoint_dir = os.path.join(os.getcwd(), root_path, checkpoint_dir) + '/'
+    checkpoint_dir = FLAGS.game_type + "_" + str(seed)
+    checkpoint_dir = os.path.join(os.getcwd(), root_path, checkpoint_dir) + '/'
 
-        if not os.path.exists(checkpoint_dir):
-            os.makedirs(checkpoint_dir)
-        sys.stdout = open(checkpoint_dir + '/stdout.txt', 'w+')
+    if not os.path.exists(checkpoint_dir):
+        os.makedirs(checkpoint_dir)
+    sys.stdout = open(checkpoint_dir + '/stdout.txt', 'w+')
 
-        print("================================================")
-        print("======The current game is ", game_type, "=========")
-        print("================================================")
+    print("================================================")
+    print("======The current game is ", FLAGS.game_type, "=========")
+    print("================================================")
 
-        if FLAGS.num_iterations > real_world_meta_games[game_type][0].shape[0]:
-            num_iterations = real_world_meta_games[game_type][0].shape[0]
-        else:
-            num_iterations = FLAGS.num_iterations
+    if FLAGS.num_iterations > real_world_meta_games[FLAGS.game_type][0].shape[0]:
+        num_iterations = real_world_meta_games[FLAGS.game_type][0].shape[0]
+    else:
+        num_iterations = FLAGS.num_iterations
 
-        psro(meta_games=real_world_meta_games[game_type],
-             game_type=game_type,
-             num_rounds=1,
-             seed=seed,
-             checkpoint_dir=checkpoint_dir,
-             num_iterations=num_iterations,
-             closed_method=FLAGS.closed_method)
+    psro(meta_games=real_world_meta_games[FLAGS.game_type],
+         game_type=FLAGS.game_type,
+         num_rounds=1,
+         seed=seed,
+         checkpoint_dir=checkpoint_dir,
+         num_iterations=num_iterations,
+         closed_method=FLAGS.closed_method)
 
 
 if __name__ == "__main__":

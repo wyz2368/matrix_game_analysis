@@ -1,4 +1,5 @@
 #!/bin/bash
+## A template to generate all slurm files
 
 #SBATCH --job-name=real_world
 #SBATCH --mail-user=wangyzhsrg@aol.com
@@ -9,8 +10,4 @@
 #SBATCH --time=10-00:00:00
 #SBATCH --account=wellman1
 #SBATCH --partition=standard
-
-module load python3.6-anaconda/5.2.0
-cd ${SLURM_SUBMIT_DIR}
-python psro_real_world.py --num_iterations=110 --closed_method=dev --game_type=--game_type=10,4-Blotto
 
