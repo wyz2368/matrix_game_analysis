@@ -1,4 +1,4 @@
-from meta_strategies import double_oracle, fictitious_play, mrcp_solver
+from meta_strategies import double_oracle, fictitious_play, mrcp_solver, prd_solver
 from MRCP.minimum_regret_profile import minimum_regret_profile_calculator
 from psro_trainer import PSRO_trainer
 from utils import deviation_strategy
@@ -170,6 +170,8 @@ def sampling_scheme(meta_games, empirical_game, rule, checkpoint_dir=None):
         dev_strs, nashconv = fictitious_play(meta_games, empirical_game, checkpoint_dir)
     elif rule == "MRCP":
         dev_strs, nashconv = mrcp_solver(meta_games, empirical_game, checkpoint_dir)
+    elif rule == "PRD":
+        dev_strs, nashconv = prd_solver(meta_games, empirical_game, checkpoint_dir)
     elif rule == "rand":
         num_players = len(meta_games)
         rand_str = []
@@ -179,6 +181,8 @@ def sampling_scheme(meta_games, empirical_game, rule, checkpoint_dir=None):
         sampled_profile = rand_str
         strategies = extend_prob(rand_str, empirical_game, meta_games)
         dev_strs, _, nashconv = profile_regret(meta_games, strategies)
+    elif rule == "aroundNE":
+        pass
     elif isinstance(rule, list):
         # For inputting a strategy.
         strategies = extend_prob(rule, empirical_game, meta_games)
@@ -288,7 +292,7 @@ def console(generator,
         # Compare with standard MSS.
         MSS_regret_of_samples = []
         MSS_performance_improvement = []
-        MSSs = ["NE", "MRCP"]
+        MSSs = ["NE", "MRCP", "PRD"]
         for mss in MSSs:
             nashconv, improvement, _ = regret_analysis(meta_games,
                                                     empirical_games,

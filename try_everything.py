@@ -35,15 +35,18 @@ from real_world_games.nash_clustering import nash_clustering
 #     mrcp, regret = exact_calculator(empirical_games)
 #     print(regret)
 
-meta_games = [np.array([[1,2,3],
-                        [4,5,6],
-                        [7,8,9]]), -np.array([[1,2,3],
-                        [4,5,6],
-                        [7,8,9]])]
+print(np.linalg.norm([1, 1]))
 
-ne = nash_clustering(meta_games)
-print(ne)
 
-# a = [1,2,3,4,5,6]
-# b = [1,2]
-# print(a[b])
+
+
+
+
+
+
+
+
+
+
+
+

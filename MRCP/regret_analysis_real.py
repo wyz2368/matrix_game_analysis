@@ -1,4 +1,4 @@
-from meta_strategies import double_oracle, fictitious_play, mrcp_solver
+from meta_strategies import double_oracle, fictitious_play, mrcp_solver, prd_solver
 from MRCP.minimum_regret_profile import minimum_regret_profile_calculator
 from psro_trainer import PSRO_trainer
 from utils import deviation_strategy
@@ -35,7 +35,7 @@ def empirical_game_generator(meta_games,
     if empirical_game_size > num_strategies:
         raise ValueError("The size of EG is large than the full game.")
 
-    empricial_game_record = list(range(10, 101, 10))
+    empricial_game_record = list(range(2, 15, 3))
 
     if empirical_game_size < max(empricial_game_record):
         empricial_game_record = list(range(10, empirical_game_size, 10))
@@ -156,6 +156,8 @@ def sampling_scheme(meta_games, empirical_game, rule, checkpoint_dir=None):
         dev_strs, nashconv = fictitious_play(meta_games, empirical_game, checkpoint_dir)
     elif rule == "MRCP":
         dev_strs, nashconv = mrcp_solver(meta_games, empirical_game, checkpoint_dir)
+    elif rule == "PRD":
+        dev_strs, nashconv = prd_solver(meta_games, empirical_game, checkpoint_dir)
     elif rule == "rand":
         num_players = len(meta_games)
         rand_str = []
@@ -271,7 +273,7 @@ def console(meta_games,
         # Compare with standard MSS.
         MSS_regret_of_samples = []
         MSS_performance_improvement = []
-        MSSs = ["NE", "MRCP"]
+        MSSs = ["NE", "MRCP", "PRD"]
         for mss in MSSs:
             nashconv, improvement, _ = regret_analysis(meta_games,
                                                     empirical_games,
@@ -325,14 +327,14 @@ def console(meta_games,
         corr, p_val = correlation(regret_of_samples, performance_improvement)
         print("Correlation coeffient:", corr, "P-value:", p_val)
         print("Number of zero improvement is ", cnt_zeros)
-        save_pkl(obj=regret_of_samples, path=checkpoint_dir + "regret_of_samples_" + str(key) + ".pkl")
-        save_pkl(obj=performance_improvement, path=checkpoint_dir + "performance_improvement_" + str(key) + ".pkl")
-        save_pkl(obj=empirical_games, path=checkpoint_dir + "empirical_games_" + str(key) + ".pkl")
-        save_pkl(obj=MSS_regret_of_samples, path=checkpoint_dir + "MSS_regret_of_samples_" + str(key) + ".pkl")
-        save_pkl(obj=MSS_performance_improvement, path=checkpoint_dir + "MSS_performance_improvement_" + str(key) + ".pkl")
+        save_pkl(obj=regret_of_samples, path=checkpoint_dir + '/' + "regret_of_samples_" + str(key) + ".pkl")
+        save_pkl(obj=performance_improvement, path=checkpoint_dir + '/' + "performance_improvement_" + str(key) + ".pkl")
+        save_pkl(obj=empirical_games, path=checkpoint_dir + '/' + "empirical_games_" + str(key) + ".pkl")
+        save_pkl(obj=MSS_regret_of_samples, path=checkpoint_dir + '/' + "MSS_regret_of_samples_" + str(key) + ".pkl")
+        save_pkl(obj=MSS_performance_improvement, path=checkpoint_dir + '/' + "MSS_performance_improvement_" + str(key) + ".pkl")
 
-        save_pkl(obj=sampled_profiles, path=checkpoint_dir + "sampled_profiles_" + str(key) + ".pkl")
-        save_pkl(obj=better_than_NE_idx, path=checkpoint_dir + "better_than_NE_idx_" + str(key) + ".pkl")
+        save_pkl(obj=sampled_profiles, path=checkpoint_dir + '/' + "sampled_profiles_" + str(key) + ".pkl")
+        save_pkl(obj=better_than_NE_idx, path=checkpoint_dir + '/' + "better_than_NE_idx_" + str(key) + ".pkl")
 
 
 

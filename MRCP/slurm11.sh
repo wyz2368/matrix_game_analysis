@@ -12,5 +12,5 @@
 
 module load python3.6-anaconda/5.2.0
 cd ${SLURM_SUBMIT_DIR}
-python regret_analysis_console_real.py --num_emp_strategies=110 --num_samples=200 --game_type='AlphaStar' --meta_method=DO
+python regret_analysis_console_real.py --num_emp_strategies=20 --num_samples=200 --game_type='AlphaStar' --meta_method=DO
 

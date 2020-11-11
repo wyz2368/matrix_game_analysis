@@ -1,4 +1,4 @@
-import numpy as np
+import copy
 import collections
 from nash_solver.projected_replicator_dynamics import projected_replicator_dynamics
 from nash_solver.general_nash_solver import gambit_solve
@@ -238,8 +238,22 @@ def prd_solver(meta_games, empirical_games, checkpoint_dir=None):
 
     return dev_strs, nashconv
 
+def iterative_double_oracle(meta_games, empirical_games, checkpoint_dir, gambit=False):
+    """
+    At each iteration, only training one player's strategy.
+    :param meta_games:
+    :param empirical_games:
+    :param checkpoint_dir:
+    :param gambit:
+    :return:
+    """
+    dev_strs0, _ = double_oracle(meta_games, empirical_games, checkpoint_dir, gambit)
+    new_empirical_games = copy.copy(empirical_games)
+    new_empirical_games[0].append(dev_strs0[0])
+    dev_strs1, nashconv = double_oracle(meta_games, new_empirical_games, checkpoint_dir, gambit)
+    dev_strs = [dev_strs0[0], dev_strs1[1]]
 
-
+    return dev_strs, nashconv
 
 
 

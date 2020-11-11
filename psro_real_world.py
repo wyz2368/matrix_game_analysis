@@ -1,4 +1,4 @@
-from meta_strategies import double_oracle, fictitious_play, mrcp_solver, prd_solver
+from meta_strategies import double_oracle, fictitious_play, mrcp_solver, prd_solver, iterative_double_oracle
 from psro_trainer import PSRO_trainer
 from utils import set_random_seed
 from nash_solver.gambit_tools import load_pkl
@@ -59,6 +59,16 @@ def psro(meta_games,
                               seed=seed,
                               init_strategies=init_strategies)
 
+    IDO_trainer = PSRO_trainer(meta_games=meta_games,
+                               num_strategies=num_strategies,
+                               num_rounds=num_rounds,
+                               meta_method=iterative_double_oracle,
+                               checkpoint_dir=checkpoint_dir,
+                               num_iterations=num_iterations,
+                               seed=seed,
+                               init_strategies=init_strategies)
+
+
     MRCP_trainer = PSRO_trainer(meta_games=meta_games,
                            num_strategies=num_strategies,
                            num_rounds=num_rounds,
@@ -106,6 +116,16 @@ def psro(meta_games,
     with open(checkpoint_dir + game_type + '_mrprofile_PRD.pkl', 'wb') as f:
         pickle.dump(PRD_trainer.mrprofiles, f)
 
+    IDO_trainer.loop()
+    print("#####################################")
+    print('IDO looper finished looping')
+    print("#####################################")
+    df = pd.DataFrame(np.transpose(IDO_trainer.neconvs + IDO_trainer.mrconvs), \
+                      columns=nashconv_names + mrconv_names)
+    df.to_csv(checkpoint_dir + game_type + '_IDO.csv', index=False)
+    with open(checkpoint_dir + game_type + '_mrprofile_IDO.pkl', 'wb') as f:
+        pickle.dump(IDO_trainer.mrprofiles, f)
+
     MRCP_trainer.loop()
     print("#####################################")
     print('MRCP looper finished looping')
@@ -125,6 +145,9 @@ def psro(meta_games,
     print("PRD prdco av:", np.mean(PRD_trainer.nashconvs, axis=0))
     print("PRD neco av:", np.mean(PRD_trainer.neconvs, axis=0))
     print("PRD mrcp av:", np.mean(PRD_trainer.mrconvs, axis=0))
+    print("IDO IDOco av:", np.mean(IDO_trainer.nashconvs, axis=0))
+    print("IDO neco av:", np.mean(IDO_trainer.neconvs, axis=0))
+    print("IDO mrcp av:", np.mean(IDO_trainer.mrconvs, axis=0))
     print("MR neco av:", np.mean(MRCP_trainer.neconvs, axis=0))
     print("MR mrcp av:", np.mean(MRCP_trainer.mrconvs, axis=0))
 

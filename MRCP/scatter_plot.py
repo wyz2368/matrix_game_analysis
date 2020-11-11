@@ -9,21 +9,23 @@ import matplotlib as mpl
 import math
 
 idx = 3
-round = '30'
+round = '10'
 game_type = "szs"
 MSS = "FP"
-root_path = './data/' + game_type + '_' + MSS + '/' + game_type + '_' + MSS + str(idx) + '/'
+# root_path = './data/' + game_type + '_' + MSS + '/' + game_type + '_' + MSS + str(idx) + '/'
 
-regret_path = root_path + 'regret_of_samples_' + round + '.pkl'
-improvement_path = root_path + 'performance_improvement_' + round + '.pkl'
+root_path = './data/10,4Blotto/'
+
+regret_path = root_path + '10,4-Blotto_90335regret_of_samples_' + round + '.pkl'
+improvement_path = root_path + '10,4-Blotto_90335performance_improvement_' + round + '.pkl'
 
 regret = load_pkl(regret_path)
 improvement = load_pkl(improvement_path)
 
-NE_regret = 496
-NE_improvement = 4.4
-MRCP_regret = 252
-MRCP_improvement = 18
+NE_regret = 0.13
+NE_improvement = 0.0048
+MRCP_regret = 0.055
+MRCP_improvement = 0.00013
 
 
 plt.scatter(regret, improvement)
