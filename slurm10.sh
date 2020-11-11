@@ -12,4 +12,4 @@
 
 module load python3.6-anaconda/5.2.0
 cd ${SLURM_SUBMIT_DIR}
-python psro_real_world.py --num_iterations=30 --closed_method=alter --game_type="go(board_size=4,komi=6.5)"
+python psro_real_world.py --num_iterations=30 --closed_method=dev --game_type="go(board_size=4,komi=6.5)"
