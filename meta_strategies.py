@@ -238,6 +238,15 @@ def prd_solver(meta_games, empirical_games, checkpoint_dir=None):
 
     return dev_strs, nashconv
 
+def iterated_prd(meta_games, empirical_games, checkpoint_dir=None):
+    dev_strs0, _ = prd_solver(meta_games, empirical_games)
+    new_empirical_games = copy.copy(empirical_games)
+    new_empirical_games[0].append(dev_strs0[0])
+    dev_strs1, nashconv = prd_solver(meta_games, new_empirical_games)
+    dev_strs = [dev_strs0[0], dev_strs1[1]]
+
+    return dev_strs, nashconv
+
 def iterative_double_oracle(meta_games, empirical_games, checkpoint_dir, gambit=False):
     """
     At each iteration, only training one player's strategy.
@@ -252,6 +261,62 @@ def iterative_double_oracle(meta_games, empirical_games, checkpoint_dir, gambit=
     new_empirical_games[0].append(dev_strs0[0])
     dev_strs1, nashconv = double_oracle(meta_games, new_empirical_games, checkpoint_dir, gambit)
     dev_strs = [dev_strs0[0], dev_strs1[1]]
+
+    return dev_strs, nashconv
+
+def iterative_double_oracle_player_selection(meta_games, empirical_games, checkpoint_dir, game_value=0, gambit=False):
+    """
+    At each iteration, only training one player's strategy.
+    Remember to adjust game value before running. Default for games with value 0.
+    :param meta_games:
+    :param empirical_games:
+    :param checkpoint_dir:
+    :param gambit:
+    :param game_value: game value of zero-sum game.
+    :return:
+    """
+    num_players = len(meta_games)
+    num_strategies, _ = np.shape(meta_games[0])
+    subgames = []
+
+    idx0 = sorted(list(set(empirical_games[0])))
+    idx1 = sorted(list(set(empirical_games[1])))
+    idx = np.ix_(idx0, idx1)
+    for meta_game in meta_games:
+        subgames.append(meta_game[idx])
+
+    if gambit:
+        # Gambit solver
+        nash = gambit_solve(subgames, mode="one", checkpoint_dir=checkpoint_dir[:-1])
+    else:
+        # LP solver
+        nash = lp_solve(subgames)
+
+    # nash = gambit_solve(subgames, mode="one", checkpoint_dir=checkpoint_dir[:-1])
+
+    nash_payoffs = mixed_strategy_payoff(subgames, nash)
+    if game_value is None:
+        raise ValueError("Game value is None")
+    selected_player = np.where(nash_payoffs < game_value)[0]
+    if len(selected_player) != 1:
+        print("Get more than one selected players.")
+    selected_player = selected_player[0]
+
+    meta_game_nash = []
+    for i, idx in enumerate([idx0, idx1]):
+        ne = np.zeros(num_strategies)
+        np.put(ne, idx, nash[i])
+        meta_game_nash.append(ne)
+
+    dev_strs0, dev_payoff = deviation_strategy(meta_games, meta_game_nash)
+
+    dev_strs = [None, None]
+    dev_strs[selected_player] = dev_strs0[selected_player]
+
+    new_empirical_games = copy.copy(empirical_games)
+    new_empirical_games[selected_player].append(dev_strs[selected_player])
+    dev_strs1, nashconv = double_oracle(meta_games, new_empirical_games, checkpoint_dir, gambit)
+    dev_strs[1-selected_player] = dev_strs1[1-selected_player]
 
     return dev_strs, nashconv
 
