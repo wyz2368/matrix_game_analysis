@@ -104,14 +104,14 @@ def psro(generator,
                                 seed=seed,
                                 init_strategies=init_strategies)
 
-    IDOS_trainer = PSRO_trainer(meta_games=meta_games,
-                                num_strategies=generator.num_strategies,
-                                num_rounds=num_rounds,
-                                meta_method=iterative_double_oracle_player_selection,
-                                checkpoint_dir=checkpoint_dir,
-                                num_iterations=num_iterations,
-                                seed=seed,
-                                init_strategies=init_strategies)
+    # IDOS_trainer = PSRO_trainer(meta_games=meta_games,
+    #                             num_strategies=generator.num_strategies,
+    #                             num_rounds=num_rounds,
+    #                             meta_method=iterative_double_oracle_player_selection,
+    #                             checkpoint_dir=checkpoint_dir,
+    #                             num_iterations=num_iterations,
+    #                             seed=seed,
+    #                             init_strategies=init_strategies)
 
     MRCP_trainer = PSRO_trainer(meta_games=meta_games,
                            num_strategies=generator.num_strategies,
@@ -180,15 +180,15 @@ def psro(generator,
     with open(checkpoint_dir + game_type + '_mrprofile_IPRD.pkl', 'wb') as f:
         pickle.dump(IPRD_trainer.mrprofiles, f)
 
-    IDOS_trainer.loop()
-    print("#####################################")
-    print('IDOS looper finished looping')
-    print("#####################################")
-    df = pd.DataFrame(np.transpose(IDOS_trainer.neconvs + IDOS_trainer.mrconvs), \
-                        columns=nashconv_names + mrconv_names)
-    df.to_csv(checkpoint_dir + game_type + '_IDOS.csv', index=False)
-    with open(checkpoint_dir + game_type + '_mrprofile_IDOS.pkl', 'wb') as f:
-        pickle.dump(IDOS_trainer.mrprofiles, f)
+    # IDOS_trainer.loop()
+    # print("#####################################")
+    # print('IDOS looper finished looping')
+    # print("#####################################")
+    # df = pd.DataFrame(np.transpose(IDOS_trainer.neconvs + IDOS_trainer.mrconvs), \
+    #                     columns=nashconv_names + mrconv_names)
+    # df.to_csv(checkpoint_dir + game_type + '_IDOS.csv', index=False)
+    # with open(checkpoint_dir + game_type + '_mrprofile_IDOS.pkl', 'wb') as f:
+    #     pickle.dump(IDOS_trainer.mrprofiles, f)
 
     MRCP_trainer.loop()
     print("#####################################")
@@ -215,9 +215,9 @@ def psro(generator,
     print("IPRD IDOco av:", np.mean(IDO_trainer.nashconvs, axis=0))
     print("IDO neco av:", np.mean(IDO_trainer.neconvs, axis=0))
     print("IDO mrcp av:", np.mean(IDO_trainer.mrconvs, axis=0))
-    print("IDOS IDOSco av:", np.mean(IDOS_trainer.nashconvs, axis=0))
-    print("IDOS neco av:", np.mean(IDOS_trainer.neconvs, axis=0))
-    print("IDOS mrcp av:", np.mean(IDOS_trainer.mrconvs, axis=0))
+    # print("IDOS IDOSco av:", np.mean(IDOS_trainer.nashconvs, axis=0))
+    # print("IDOS neco av:", np.mean(IDOS_trainer.neconvs, axis=0))
+    # print("IDOS mrcp av:", np.mean(IDOS_trainer.mrconvs, axis=0))
     print("MR neco av:", np.mean(MRCP_trainer.neconvs, axis=0))
     print("MR mrcp av:", np.mean(MRCP_trainer.mrconvs, axis=0))
 
