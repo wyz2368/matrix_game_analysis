@@ -126,15 +126,15 @@ def psro(meta_games,
     # with open(checkpoint_dir + game_type + '_mrprofile_FP.pkl','wb') as f:
     #     pickle.dump(FP_trainer.mrprofiles, f)
     #
-    # PRD_trainer.loop()
-    # print("#####################################")
-    # print('PRD looper finished looping')
-    # print("#####################################")
-    # df = pd.DataFrame(np.transpose(PRD_trainer.neconvs + PRD_trainer.mrconvs), \
-    #                   columns=nashconv_names + mrconv_names)
-    # df.to_csv(checkpoint_dir + game_type + '_PRD.csv', index=False)
-    # with open(checkpoint_dir + game_type + '_mrprofile_PRD.pkl', 'wb') as f:
-    #     pickle.dump(PRD_trainer.mrprofiles, f)
+    PRD_trainer.loop()
+    print("#####################################")
+    print('PRD looper finished looping')
+    print("#####################################")
+    df = pd.DataFrame(np.transpose(PRD_trainer.neconvs + PRD_trainer.mrconvs), \
+                      columns=nashconv_names + mrconv_names)
+    df.to_csv(checkpoint_dir + game_type + '_PRD0gamma.csv', index=False)
+    with open(checkpoint_dir + game_type + '_mrprofile_PRD0gamma.pkl', 'wb') as f:
+        pickle.dump(PRD_trainer.mrprofiles, f)
     #
     # IDO_trainer.loop()
     # print("#####################################")
@@ -146,25 +146,25 @@ def psro(meta_games,
     # with open(checkpoint_dir + game_type + '_mrprofile_IDO.pkl', 'wb') as f:
     #     pickle.dump(IDO_trainer.mrprofiles, f)
 
-    IPRD_trainer.loop()
-    print("#####################################")
-    print('IPRD looper finished looping')
-    print("#####################################")
-    df = pd.DataFrame(np.transpose(IPRD_trainer.neconvs + IPRD_trainer.mrconvs), \
-                      columns=nashconv_names + mrconv_names)
-    df.to_csv(checkpoint_dir + game_type + '_IPRD.csv', index=False)
-    with open(checkpoint_dir + game_type + '_mrprofile_IPRD.pkl', 'wb') as f:
-        pickle.dump(IPRD_trainer.mrprofiles, f)
-
-    IDOS_trainer.loop()
-    print("#####################################")
-    print('IDOS looper finished looping')
-    print("#####################################")
-    df = pd.DataFrame(np.transpose(IDOS_trainer.neconvs + IDOS_trainer.mrconvs), \
-                      columns=nashconv_names + mrconv_names)
-    df.to_csv(checkpoint_dir + game_type + '_IDOS.csv', index=False)
-    with open(checkpoint_dir + game_type + '_mrprofile_IDOS.pkl', 'wb') as f:
-        pickle.dump(IDOS_trainer.mrprofiles, f)
+    # IPRD_trainer.loop()
+    # print("#####################################")
+    # print('IPRD looper finished looping')
+    # print("#####################################")
+    # df = pd.DataFrame(np.transpose(IPRD_trainer.neconvs + IPRD_trainer.mrconvs), \
+    #                   columns=nashconv_names + mrconv_names)
+    # df.to_csv(checkpoint_dir + game_type + '_IPRD.csv', index=False)
+    # with open(checkpoint_dir + game_type + '_mrprofile_IPRD.pkl', 'wb') as f:
+    #     pickle.dump(IPRD_trainer.mrprofiles, f)
+    #
+    # IDOS_trainer.loop()
+    # print("#####################################")
+    # print('IDOS looper finished looping')
+    # print("#####################################")
+    # df = pd.DataFrame(np.transpose(IDOS_trainer.neconvs + IDOS_trainer.mrconvs), \
+    #                   columns=nashconv_names + mrconv_names)
+    # df.to_csv(checkpoint_dir + game_type + '_IDOS.csv', index=False)
+    # with open(checkpoint_dir + game_type + '_mrprofile_IDOS.pkl', 'wb') as f:
+    #     pickle.dump(IDOS_trainer.mrprofiles, f)
 
     # MRCP_trainer.loop()
     # print("#####################################")
