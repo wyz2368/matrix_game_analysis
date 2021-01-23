@@ -150,7 +150,7 @@ def dev_regret(meta_games, probs):
 def controled_replicator_dynamics(payoff_tensors,
                                   regret_threshold,
                                   prd_initial_strategies=None,
-                                  prd_iterations=int(1e5),
+                                  prd_iterations=int(5e6),
                                   prd_dt=1e-3,
                                   average_over_last_n_strategies=None,
                                   **unused_kwargs):
@@ -189,6 +189,7 @@ def controled_replicator_dynamics(payoff_tensors,
   for i in range(prd_iterations):
     new_strategies = _replicator_dynamics_step(
         payoff_tensors, new_strategies, prd_dt)
+
     if i >= prd_iterations - average_over_last_n_strategies:
       meta_strategy_window.append(new_strategies)
 
