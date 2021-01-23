@@ -4,6 +4,7 @@ import datetime
 import game_generator
 # from psro_trainer import PSRO_trainer
 from utils import *
+import mpmath
 import copy
 from itertools import product
 # from meta_strategies import double_oracle,fictitious_play
@@ -35,7 +36,17 @@ from real_world_games.nash_clustering import nash_clustering
 #     mrcp, regret = exact_calculator(empirical_games)
 #     print(regret)
 
-print(np.linalg.norm([1, 1]))
+# a = mpmath.iv.exp([1, 1])
+# b = mpmath.nsum(np.array(mpmath.iv.exp([1, 1])))
+
+aa = [mpmath.exp(100), mpmath.exp(100)]
+a = mpmath.fsum([mpmath.exp(100), mpmath.exp(100)])
+for i in aa:
+    t = i / a
+    print(t)
+    print(type(t))
+    h = np.array([np.float(t)])
+    print(h, type(h))
 
 
 

@@ -1,10 +1,12 @@
 import copy
 import collections
 from nash_solver.projected_replicator_dynamics import projected_replicator_dynamics
+from nash_solver.replicator_dynamics_solver import controled_replicator_dynamics
 from nash_solver.general_nash_solver import gambit_solve
 from nash_solver.lp_solver import lp_solve
 from MRCP.minimum_regret_profile import minimum_regret_profile_calculator
 from utils import *
+import mpmath as mp
 
 def double_oracle(meta_games, empirical_games, checkpoint_dir, gambit=False, sample_dev=False):
     """
@@ -238,6 +240,36 @@ def prd_solver(meta_games, empirical_games, checkpoint_dir=None):
 
     return dev_strs, nashconv
 
+
+def regret_controled_RD(meta_games, empirical_games, checkpoint_dir=None, regret_threshold=0.35):
+    num_players = len(meta_games)
+    num_strategies, _ = np.shape(meta_games[0])
+    subgames = []
+
+    idx0 = sorted(list(set(empirical_games[0])))
+    idx1 = sorted(list(set(empirical_games[1])))
+    idx = np.ix_(idx0, idx1)
+    for meta_game in meta_games:
+        subgames.append(meta_game[idx])
+
+    nash = controled_replicator_dynamics(subgames, regret_threshold)
+
+    nash_payoffs = mixed_strategy_payoff(subgames, nash)
+
+    meta_game_nash = []
+    for i, idx in enumerate([idx0, idx1]):
+        ne = np.zeros(num_strategies)
+        np.put(ne, idx, nash[i])
+        meta_game_nash.append(ne)
+
+    dev_strs, dev_payoff = deviation_strategy(meta_games, meta_game_nash)
+
+    nashconv = 0
+    for player in range(num_players):
+        nashconv += np.maximum(dev_payoff[player] - nash_payoffs[player], 0)
+
+    return dev_strs, nashconv
+
 def iterated_prd(meta_games, empirical_games, checkpoint_dir=None):
     dev_strs0, _ = prd_solver(meta_games, empirical_games)
     new_empirical_games = copy.copy(empirical_games)
@@ -320,6 +352,88 @@ def iterative_double_oracle_player_selection(meta_games, empirical_games, checkp
 
     return dev_strs, nashconv
 
+# Iterated quantal best repsonse
+def iterated_quantal_response_solver(meta_games, empirical_games, num_iterations=1000, beta=20):
+  """
+  Iteratively applying logistic quantal repsonse.
+  :param solver:
+  :param return_joint:
+  :param checkpoint_dir:
+  :param num_iterations:
+  :return:
+  """
+  if len(meta_games) != 2:
+    raise NotImplementedError(
+      "nash_strategy solver works only for 2p zero-sum"
+      "games, but was invoked for a {} player game".format(len(meta_games)))
+
+  num_players = len(meta_games)
+  # Number of actions available to each player.
+  action_space_shapes = np.shape(meta_games[0])
+
+  subgames = []
+
+  idx0 = sorted(list(set(empirical_games[0])))
+  idx1 = sorted(list(set(empirical_games[1])))
+  idx = np.ix_(idx0, idx1)
+  for meta_game in meta_games:
+      subgames.append(meta_game[idx])
+
+  # Start with uniform probabilities.
+  strategies = [
+    np.ones(action_space_shapes[k]) / action_space_shapes[k]
+    for k in range(num_players)
+  ]
+
+  for _ in range(int(num_iterations)):
+    strategies = logistic_quantal_response(subgames, strategies, beta)
+
+  nash_payoffs = mixed_strategy_payoff(subgames, strategies)
+
+  meta_game_nash = []
+  for i, idx in enumerate([idx0, idx1]):
+      ne = np.zeros(action_space_shapes[i])
+      np.put(ne, idx, strategies[i])
+      meta_game_nash.append(ne)
+
+  dev_strs, dev_payoff = deviation_strategy(meta_games, meta_game_nash)
+
+  nashconv = 0
+  for player in range(num_players):
+      nashconv += np.maximum(dev_payoff[player] - nash_payoffs[player], 0)
+
+  return strategies, nashconv
+
+
+
+def logistic_quantal_response(meta_games, strategies, beta):
+  """
+  Calculate one-step logistic quantal response.
+  :param meta_games:
+  :param strategies:
+  :return:
+  """
+  def qr_to_vector(vec, beta):
+
+    return qr
+
+  dev_strs = []
+
+  prob1 = strategies[0]
+  prob1 = np.reshape(prob1, newshape=(len(prob1), 1))
+  prob2 = strategies[1]
+
+  payoff_vec = np.sum(meta_games[0] * prob2, axis=1)
+  payoff_vec = np.reshape(payoff_vec, -1)
+  qr = qr_to_vector(payoff_vec, beta)
+  dev_strs.append(qr)
+
+  payoff_vec = np.sum(prob1 * meta_games[1], axis=0)
+  payoff_vec = np.reshape(payoff_vec, -1)
+  qr = qr_to_vector(payoff_vec, beta)
+  dev_strs.append(qr)
+
+  return dev_strs
 
 
 

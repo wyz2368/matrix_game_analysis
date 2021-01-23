@@ -1,5 +1,5 @@
 from meta_strategies import double_oracle, fictitious_play, mrcp_solver, prd_solver, iterative_double_oracle
-from meta_strategies import iterated_prd, iterative_double_oracle_player_selection
+from meta_strategies import iterated_prd, iterative_double_oracle_player_selection, regret_controled_RD
 from psro_trainer import PSRO_trainer
 from utils import set_random_seed
 from nash_solver.gambit_tools import load_pkl
@@ -33,70 +33,79 @@ def psro(meta_games,
     num_strategies = meta_games[0].shape[0]
     init_strategies = 0
 
-    DO_trainer = PSRO_trainer(meta_games=meta_games,
-                           num_strategies=num_strategies,
-                           num_rounds=num_rounds,
-                           meta_method=double_oracle,
-                           checkpoint_dir=checkpoint_dir,
-                           num_iterations=num_iterations,
-                           seed=seed,
-                           init_strategies=init_strategies)
+    # DO_trainer = PSRO_trainer(meta_games=meta_games,
+    #                        num_strategies=num_strategies,
+    #                        num_rounds=num_rounds,
+    #                        meta_method=double_oracle,
+    #                        checkpoint_dir=checkpoint_dir,
+    #                        num_iterations=num_iterations,
+    #                        seed=seed,
+    #                        init_strategies=init_strategies)
+    # 
+    # FP_trainer = PSRO_trainer(meta_games=meta_games,
+    #                        num_strategies=num_strategies,
+    #                        num_rounds=num_rounds,
+    #                        meta_method=fictitious_play,
+    #                        checkpoint_dir=checkpoint_dir,
+    #                        num_iterations=num_iterations,
+    #                        seed=seed,
+    #                        init_strategies=init_strategies)
+    # 
+    # PRD_trainer = PSRO_trainer(meta_games=meta_games,
+    #                           num_strategies=num_strategies,
+    #                           num_rounds=num_rounds,
+    #                           meta_method=prd_solver,
+    #                           checkpoint_dir=checkpoint_dir,
+    #                           num_iterations=num_iterations,
+    #                           seed=seed,
+    #                           init_strategies=init_strategies)
 
-    FP_trainer = PSRO_trainer(meta_games=meta_games,
-                           num_strategies=num_strategies,
-                           num_rounds=num_rounds,
-                           meta_method=fictitious_play,
-                           checkpoint_dir=checkpoint_dir,
-                           num_iterations=num_iterations,
-                           seed=seed,
-                           init_strategies=init_strategies)
-
-    PRD_trainer = PSRO_trainer(meta_games=meta_games,
-                              num_strategies=num_strategies,
-                              num_rounds=num_rounds,
-                              meta_method=prd_solver,
-                              checkpoint_dir=checkpoint_dir,
-                              num_iterations=num_iterations,
-                              seed=seed,
-                              init_strategies=init_strategies)
-
-    IDO_trainer = PSRO_trainer(meta_games=meta_games,
+    CRD_trainer = PSRO_trainer(meta_games=meta_games,
                                num_strategies=num_strategies,
                                num_rounds=num_rounds,
-                               meta_method=iterative_double_oracle,
+                               meta_method=regret_controled_RD,
                                checkpoint_dir=checkpoint_dir,
                                num_iterations=num_iterations,
                                seed=seed,
                                init_strategies=init_strategies)
 
-    IPRD_trainer = PSRO_trainer(meta_games=meta_games,
-                               num_strategies=num_strategies,
-                               num_rounds=num_rounds,
-                               meta_method=iterated_prd,
-                               checkpoint_dir=checkpoint_dir,
-                               num_iterations=num_iterations,
-                               seed=seed,
-                               init_strategies=init_strategies)
-
-    IDOS_trainer = PSRO_trainer(meta_games=meta_games,
-                                num_strategies=num_strategies,
-                                num_rounds=num_rounds,
-                                meta_method=iterative_double_oracle_player_selection,
-                                checkpoint_dir=checkpoint_dir,
-                                num_iterations=num_iterations,
-                                seed=seed,
-                                init_strategies=init_strategies)
-
-
-    MRCP_trainer = PSRO_trainer(meta_games=meta_games,
-                           num_strategies=num_strategies,
-                           num_rounds=num_rounds,
-                           meta_method=mrcp_solver,
-                           checkpoint_dir=checkpoint_dir,
-                           num_iterations=num_iterations,
-                           seed=seed,
-                           init_strategies=init_strategies,
-                           closed_method=closed_method)
+    # IDO_trainer = PSRO_trainer(meta_games=meta_games,
+    #                            num_strategies=num_strategies,
+    #                            num_rounds=num_rounds,
+    #                            meta_method=iterative_double_oracle,
+    #                            checkpoint_dir=checkpoint_dir,
+    #                            num_iterations=num_iterations,
+    #                            seed=seed,
+    #                            init_strategies=init_strategies)
+    # 
+    # IPRD_trainer = PSRO_trainer(meta_games=meta_games,
+    #                            num_strategies=num_strategies,
+    #                            num_rounds=num_rounds,
+    #                            meta_method=iterated_prd,
+    #                            checkpoint_dir=checkpoint_dir,
+    #                            num_iterations=num_iterations,
+    #                            seed=seed,
+    #                            init_strategies=init_strategies)
+    # 
+    # IDOS_trainer = PSRO_trainer(meta_games=meta_games,
+    #                             num_strategies=num_strategies,
+    #                             num_rounds=num_rounds,
+    #                             meta_method=iterative_double_oracle_player_selection,
+    #                             checkpoint_dir=checkpoint_dir,
+    #                             num_iterations=num_iterations,
+    #                             seed=seed,
+    #                             init_strategies=init_strategies)
+    # 
+    # 
+    # MRCP_trainer = PSRO_trainer(meta_games=meta_games,
+    #                        num_strategies=num_strategies,
+    #                        num_rounds=num_rounds,
+    #                        meta_method=mrcp_solver,
+    #                        checkpoint_dir=checkpoint_dir,
+    #                        num_iterations=num_iterations,
+    #                        seed=seed,
+    #                        init_strategies=init_strategies,
+    #                        closed_method=closed_method)
 
 
     if not os.path.exists(checkpoint_dir):
@@ -126,15 +135,25 @@ def psro(meta_games,
     # with open(checkpoint_dir + game_type + '_mrprofile_FP.pkl','wb') as f:
     #     pickle.dump(FP_trainer.mrprofiles, f)
     #
-    PRD_trainer.loop()
+    # PRD_trainer.loop()
+    # print("#####################################")
+    # print('PRD looper finished looping')
+    # print("#####################################")
+    # df = pd.DataFrame(np.transpose(PRD_trainer.neconvs + PRD_trainer.mrconvs), \
+    #                   columns=nashconv_names + mrconv_names)
+    # df.to_csv(checkpoint_dir + game_type + '_PRD0gamma.csv', index=False)
+    # with open(checkpoint_dir + game_type + '_mrprofile_PRD0gamma.pkl', 'wb') as f:
+    #     pickle.dump(PRD_trainer.mrprofiles, f)
+
+    CRD_trainer.loop()
     print("#####################################")
-    print('PRD looper finished looping')
+    print('CRD looper finished looping')
     print("#####################################")
-    df = pd.DataFrame(np.transpose(PRD_trainer.neconvs + PRD_trainer.mrconvs), \
+    df = pd.DataFrame(np.transpose(CRD_trainer.neconvs + CRD_trainer.mrconvs), \
                       columns=nashconv_names + mrconv_names)
-    df.to_csv(checkpoint_dir + game_type + '_PRD0gamma.csv', index=False)
-    with open(checkpoint_dir + game_type + '_mrprofile_PRD0gamma.pkl', 'wb') as f:
-        pickle.dump(PRD_trainer.mrprofiles, f)
+    df.to_csv(checkpoint_dir + game_type + '_CRD.csv', index=False)
+    with open(checkpoint_dir + game_type + '_mrprofile_CRD.pkl', 'wb') as f:
+        pickle.dump(CRD_trainer.mrprofiles, f)
     #
     # IDO_trainer.loop()
     # print("#####################################")
@@ -185,6 +204,9 @@ def psro(meta_games,
     # print("PRD prdco av:", np.mean(PRD_trainer.nashconvs, axis=0))
     # print("PRD neco av:", np.mean(PRD_trainer.neconvs, axis=0))
     # print("PRD mrcp av:", np.mean(PRD_trainer.mrconvs, axis=0))
+    print("CRD CRDco av:", np.mean(CRD_trainer.nashconvs, axis=0))
+    print("CRD neco av:", np.mean(CRD_trainer.neconvs, axis=0))
+    print("CRD mrcp av:", np.mean(CRD_trainer.mrconvs, axis=0))
     # print("IDO IDOco av:", np.mean(IDO_trainer.nashconvs, axis=0))
     # print("IDO neco av:", np.mean(IDO_trainer.neconvs, axis=0))
     # print("IDO mrcp av:", np.mean(IDO_trainer.mrconvs, axis=0))
