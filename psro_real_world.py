@@ -224,7 +224,8 @@ def main(argv):
     if not FLAGS.MRCP_deterministic:
         seed = None # invalidate the seed so it does not get passed into psro_trainer
 
-    root_path = './' + "real_world" + "_supplement_" + FLAGS.closed_method + '/'
+    # root_path = './' + "real_world" + "_supplement_" + FLAGS.closed_method + '/'
+    root_path = './' + "real_world" + "_CRD_" + FLAGS.closed_method + '/'
 
     if not os.path.exists(root_path):
         os.makedirs(root_path)
