@@ -5,9 +5,10 @@ from nash_solver.replicator_dynamics_solver import replicator_dynamics
 
 meta_games = load_pkl("./data/meta_game.pkl")
 num_strs = np.shape(meta_games[0])[0]
+print("Num of strs:", num_strs)
 
-# dev_strs, nashconv = prd_solver(meta_games, [list(range(num_strs)), list(range(num_strs))])
-dev_strs, nashconv = iterated_quantal_response_solver(meta_games, [list(range(num_strs)), list(range(num_strs))])
+dev_strs, nashconv = prd_solver(meta_games, [list(range(num_strs)), list(range(num_strs))])
+# dev_strs, nashconv = iterated_quantal_response_solver(meta_games, [list(range(num_strs)), list(range(num_strs))])
 
 print(nashconv)
 
