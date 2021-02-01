@@ -159,7 +159,7 @@ def _projected_replicator_dynamics_step(payoff_tensors, strategies, dt, gamma,
 
 def projected_replicator_dynamics(payoff_tensors,
                                   prd_initial_strategies=None,
-                                  prd_iterations=int(5e6),
+                                  prd_iterations=int(5e4),
                                   prd_dt=1e-3,
                                   prd_gamma=0, #1e-6,
                                   average_over_last_n_strategies=None,
@@ -204,20 +204,20 @@ def projected_replicator_dynamics(payoff_tensors,
     if i >= prd_iterations - average_over_last_n_strategies:
       meta_strategy_window.append(new_strategies)
 
-  # average_new_strategies = np.mean(meta_strategy_window, axis=0)
+  average_new_strategies = np.mean(meta_strategy_window, axis=0)
+
+  return average_new_strategies
+
+  #   if i > 1e6 and i % 2e5 == 0:
+  #     # return average_new_strategies
+  #     average_new_strategies = np.mean(meta_strategy_window, axis=0)
+  #     nash_list = [average_new_strategies[i] for i in range(number_players)]
   #
-  # return average_new_strategies
+  #     # Regret Control
+  #     current_regret = dev_regret(payoff_tensors, nash_list)
+  #     if current_regret < 1e-3:
+  #       break
+  #
+  # print("Inner Iter#:", i)
 
-    if i > 1e6 and i % 2e5 == 0:
-      # return average_new_strategies
-      average_new_strategies = np.mean(meta_strategy_window, axis=0)
-      nash_list = [average_new_strategies[i] for i in range(number_players)]
-
-      # Regret Control
-      current_regret = dev_regret(payoff_tensors, nash_list)
-      if current_regret < 1e-3:
-        break
-
-  print("Inner Iter#:", i)
-
-  return nash_list
+  # return nash_list

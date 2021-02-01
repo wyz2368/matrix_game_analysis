@@ -40,9 +40,9 @@ class PSRO_trainer(object):
         if init_strategies is not None:
             assert isinstance(init_strategies, int) or len(init_strategies) == num_rounds, \
                     "provide initial strategies with right length"
-            self.init_strategies = np.array([init_strategies for _ in range(num_rounds)],dtype=int) if isinstance(init_strategies,int) else np.array(init_strategies,dtype=int)
+            self.init_strategies = np.array([init_strategies for _ in range(num_rounds)],dtype=int) if isinstance(init_strategies, int) else np.array(init_strategies, dtype=int)
         else:
-            self.init_strategies = np.random.randint(0, num_strategies, num_rounds)
+            self.init_strategies = np.random.randint(0, num_strategies, num_rounds) # Notice that different trainers may give different init_strs.
 
         self.empirical_games = [[], []]
         self.num_iterations = num_iterations
