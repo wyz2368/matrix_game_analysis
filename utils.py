@@ -260,6 +260,45 @@ def deviation_strategy(meta_games, probs):
 
     return dev_strs, dev_payoff
 
+# Functions for 3-player games.
+def dev_regret_general(meta_games, probs):
+    """
+        Calculate the regret of a profile in an empirical game with any number of players.
+        :param meta_games:
+        :param probs: a strategy profile
+        :return:
+        """
+    num_players = len(meta_games)
+    num_strategies = np.shape(meta_games[0])
+
+    prob_matrix = general_get_joint_strategy_from_marginals(probs)
+    deviation_payoffs = []
+
+    for i in range(num_players):
+        profile_payoff = np.sum(meta_games[i] * prob_matrix)
+        # iterate through player's new policy
+        dev_payoff = []
+        for j in range(num_strategies[i]):
+            dev_prob = probs.copy()
+            dev_prob[i] = np.zeros(num_strategies[i])
+            dev_prob[i][j] = 1
+            new_prob_matrix = general_get_joint_strategy_from_marginals(dev_prob)
+            dev_payoff.append(np.sum(meta_games[i] * new_prob_matrix))
+        deviation_payoffs.append(dev_payoff - profile_payoff)
+
+    dev_strs = [np.argmax(ele) for ele in deviation_payoffs]
+    dev_payoff = []
+    for idx, str in enumerate(dev_strs):
+        dev_payoff.append(deviation_payoffs[idx][str])
+
+    nashconv = np.sum([np.max(ele) for ele in deviation_payoffs])
+
+    return dev_strs, dev_payoff, nashconv
+
+    # nashconv = np.sum([np.max(ele) for ele in deviation_payoffs])
+    # return nashconv
+
+
 def project_onto_unit_simplex(prob):
     """
     Project an n-dim vector prob to the simplex Dn s.t.

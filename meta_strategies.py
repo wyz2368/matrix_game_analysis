@@ -213,30 +213,35 @@ def closeness_alter(meta_games, empirical_games, checkpoint_dir):
 
 def prd_solver(meta_games, empirical_games, checkpoint_dir=None):
     num_players = len(meta_games)
-    num_strategies, _ = np.shape(meta_games[0])
+    num_strategies = np.shape(meta_games[0])[0]
     subgames = []
 
-    idx0 = sorted(list(set(empirical_games[0])))
-    idx1 = sorted(list(set(empirical_games[1])))
-    idx = np.ix_(idx0, idx1)
+    sub_idx = []
+    for player in range(num_players):
+        sub_idx.append(sorted(list(set(empirical_games[player]))))
+    # idx0 = sorted(list(set(empirical_games[0])))
+    # idx1 = sorted(list(set(empirical_games[1])))
+    # idx = np.ix_(idx0, idx1)
+    idx = np.ix_(*sub_idx)
     for meta_game in meta_games:
         subgames.append(meta_game[idx])
 
     nash = projected_replicator_dynamics(subgames)
 
-    nash_payoffs = mixed_strategy_payoff(subgames, nash)
+    # nash_payoffs = mixed_strategy_payoff(subgames, nash)
 
     meta_game_nash = []
-    for i, idx in enumerate([idx0, idx1]):
+    for i, idx in enumerate(sub_idx):
         ne = np.zeros(num_strategies)
         np.put(ne, idx, nash[i])
         meta_game_nash.append(ne)
 
-    dev_strs, dev_payoff = deviation_strategy(meta_games, meta_game_nash)
+    # dev_strs, dev_payoff = deviation_strategy(meta_games, meta_game_nash)
+    dev_strs, dev_payoff, nashconv = dev_regret_general(meta_games, meta_game_nash)
 
-    nashconv = 0
-    for player in range(num_players):
-        nashconv += np.maximum(dev_payoff[player] - nash_payoffs[player], 0)
+    # nashconv = 0
+    # for player in range(num_players):
+    #     nashconv += np.maximum(dev_payoff[player] - nash_payoffs[player], 0)
 
     return dev_strs, nashconv
 
