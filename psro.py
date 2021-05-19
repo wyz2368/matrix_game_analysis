@@ -87,7 +87,7 @@ def psro(generator,
                                init_strategies=init_strategies)
 
     CRD_trainer = PSRO_trainer(meta_games=meta_games,
-                               num_strategies=num_strategies,
+                               num_strategies=generator.num_strategies,
                                num_rounds=num_rounds,
                                meta_method=regret_controled_RD,
                                checkpoint_dir=checkpoint_dir,
