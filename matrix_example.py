@@ -18,6 +18,7 @@ meta_games = [meta_game, -meta_game]
 empirical_games = [[0], [0]]
 
 deepmind_fic = []
+do_fic = [6., 3., 1.4, 1.4, 1.4]
 do = [6, 4, 0, 0, 0]
 fic = [6, 4, 4, 0, 0]
 
@@ -29,10 +30,15 @@ for _ in range(5):
 
 print("NashConv:", deepmind_fic)
 
+
+
 x = [1,2,3,4,5]
-plt.plot(x, do, '-oC2', label= "NE-based regret of DO")
-# plt.plot(x, deepmind_fic, '-oC0', label= "uniform-based regret of FP")
+
+
 plt.plot(x, fic, '-oC1', label= "NE-based regret of FP")
+plt.plot(x, do, '-oC2', label= "NE-based regret of DO")
+plt.plot(x, deepmind_fic, '-oC0', label= "uniform-based regret of FP")
+plt.plot(x, do_fic, '-oC3', label= "uniform-based regret of DO")
 
 plt.xlabel("Number of Iterations")
 plt.ylabel("Regret")

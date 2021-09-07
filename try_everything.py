@@ -39,14 +39,19 @@ from real_world_games.nash_clustering import nash_clustering
 # a = mpmath.iv.exp([1, 1])
 # b = mpmath.nsum(np.array(mpmath.iv.exp([1, 1])))
 
-aa = [mpmath.exp(100), mpmath.exp(100)]
-a = mpmath.fsum([mpmath.exp(100), mpmath.exp(100)])
-for i in aa:
-    t = i / a
-    print(t)
-    print(type(t))
-    h = np.array([np.float(t)])
-    print(h, type(h))
+# aa = [mpmath.exp(100), mpmath.exp(100)]
+# a = mpmath.fsum([mpmath.exp(100), mpmath.exp(100)])
+# for i in aa:
+#     t = i / a
+#     print(t)
+#     print(type(t))
+#     h = np.array([np.float(t)])
+#     print(h, type(h))
+
+a = np.array([27.586487898445515, 27.655829697611992, 24.41443100567962, 27.65316836315581, 25.765739985212146])
+b = np.array([0.66666667, 0.11111111, 0.11111111, 0.11111111, 0.        ])
+print(np.sum(a * b))
+print(np.max(a) - np.sum(a * b))
 
 
 
