@@ -246,7 +246,7 @@ def prd_solver(meta_games, empirical_games, checkpoint_dir=None):
     return dev_strs, nashconv
 
 
-def regret_controled_RD(meta_games, empirical_games, checkpoint_dir=None, regret_threshold=0.2):
+def regret_controled_RD(meta_games, empirical_games, checkpoint_dir=None, regret_threshold=0.3):
     num_players = len(meta_games)
     num_strategies, _ = np.shape(meta_games[0])
     subgames = []
