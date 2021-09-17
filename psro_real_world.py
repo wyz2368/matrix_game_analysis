@@ -239,7 +239,7 @@ def main(argv):
     #               'connect_four', 'quoridor(board_size=4)', 'misere(game=tic_tac_toe())', 'hex(board_size=3)',
     #               'go(board_size=4,komi=6.5)']
 
-    checkpoint_dir = FLAGS.game_type + "_CRD0.3_" + str(seed)
+    checkpoint_dir = FLAGS.game_type + "_CRD0.4_" + str(seed)
     checkpoint_dir = os.path.join(os.getcwd(), root_path, checkpoint_dir) + '/'
 
     if not os.path.exists(checkpoint_dir):
