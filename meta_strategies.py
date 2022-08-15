@@ -3,7 +3,7 @@ import collections
 from nash_solver.projected_replicator_dynamics import projected_replicator_dynamics
 from nash_solver.replicator_dynamics_solver import controled_replicator_dynamics
 from nash_solver.general_nash_solver import gambit_solve
-from nash_solver.lp_solver import lp_solve
+# from nash_solver.lp_solver import lp_solve # Temperally mute for greatlakes
 from MRCP.minimum_regret_profile import minimum_regret_profile_calculator
 from utils import *
 import mpmath as mp
@@ -33,7 +33,8 @@ def double_oracle(meta_games, empirical_games, checkpoint_dir, gambit=True, samp
         nash = gambit_solve(subgames, mode="one", checkpoint_dir=checkpoint_dir[:-1])
     else:
         # LP solver
-        nash = lp_solve(subgames)
+        # nash = lp_solve(subgames)
+        pass
 
     # nash = gambit_solve(subgames, mode="one", checkpoint_dir=checkpoint_dir[:-1])
 
@@ -327,7 +328,8 @@ def iterative_double_oracle_player_selection(meta_games, empirical_games, checkp
         nash = gambit_solve(subgames, mode="one", checkpoint_dir=checkpoint_dir[:-1])
     else:
         # LP solver
-        nash = lp_solve(subgames)
+        # nash = lp_solve(subgames)
+        pass
 
     # nash = gambit_solve(subgames, mode="one", checkpoint_dir=checkpoint_dir[:-1])
 
