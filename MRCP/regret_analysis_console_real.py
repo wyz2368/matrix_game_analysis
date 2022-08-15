@@ -29,7 +29,7 @@ def main(argv):
 
     real_world_meta_games = load_pkl('../real_world_games/real_world_meta_games.pkl')
 
-    # game_types = ['10,4-Blotto', 'AlphaStar', 'Kuhn-poker', 'Random game of skill', 'Transitive game',
+    # game_types = ['10,4-Blotto', 'AlphaStar', 'Kuhn-poker', 'Random_game_of_skill', 'Transitive game',
     #               'connect_four', 'quoridor(board_size=4)', 'misere(game=tic_tac_toe())', 'hex(board_size=3)',
     #               'go(board_size=4,komi=6.5)']
 

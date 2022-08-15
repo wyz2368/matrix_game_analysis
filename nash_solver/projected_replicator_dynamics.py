@@ -159,7 +159,7 @@ def _projected_replicator_dynamics_step(payoff_tensors, strategies, dt, gamma,
 
 def projected_replicator_dynamics(payoff_tensors,
                                   prd_initial_strategies=None,
-                                  prd_iterations=int(5e5),
+                                  prd_iterations=int(2e5),
                                   prd_dt=1e-2,
                                   prd_gamma=0, #1e-6,
                                   average_over_last_n_strategies=None,

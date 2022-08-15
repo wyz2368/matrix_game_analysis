@@ -22,8 +22,28 @@ from __future__ import division
 from __future__ import print_function
 
 import numpy as np
+import functools
+print = functools.partial(print, flush=True)
 
 from utils import deviation_strategy, mixed_strategy_payoff_2p
+
+def _approx_simplex_projection(updated_strategy, gamma=0.0):
+  """Approximately projects the distribution in updated_x to have minimal probabilities.
+
+  Minimal probabilities are set as gamma, and the probabilities are then
+  renormalized to sum to 1.
+
+  Args:
+    updated_strategy: New distribution value after being updated by update rule.
+    gamma: minimal probability value when divided by number of actions.
+
+  Returns:
+    Projected distribution.
+  """
+  # Epsilon approximation of L2-norm projection onto the Delta_gamma space.
+  updated_strategy[updated_strategy < gamma] = gamma
+  updated_strategy = updated_strategy / np.sum(updated_strategy)
+  return updated_strategy
 
 
 def _partial_multi_dot(player_payoff_tensor, strategies, index_avoided):
@@ -77,9 +97,13 @@ def _replicator_dynamics_step(payoff_tensors, strategies, dt):
     values_per_strategy = _partial_multi_dot(current_payoff_tensor, strategies,
                                              player)
     average_return = np.dot(values_per_strategy, current_strategy)
-    delta = current_strategy * (values_per_strategy - average_return)
 
+    # print(values_per_strategy - average_return, values_per_strategy, average_return, current_strategy)
+
+    delta = current_strategy * (values_per_strategy - average_return)
     updated_strategy = current_strategy + dt * delta
+    updated_strategy = _approx_simplex_projection(updated_strategy, 0)
+
     new_strategies.append(updated_strategy)
   return new_strategies
 
@@ -150,7 +174,7 @@ def dev_regret(meta_games, probs):
 def controled_replicator_dynamics(payoff_tensors,
                                   regret_threshold,
                                   prd_initial_strategies=None,
-                                  prd_iterations=int(5e6),
+                                  prd_iterations=int(2e5),
                                   prd_dt=1e-3,
                                   average_over_last_n_strategies=None,
                                   **unused_kwargs):

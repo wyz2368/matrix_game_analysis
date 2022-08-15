@@ -33,4 +33,7 @@ import copy
 # print([payoffs["RPS"], -payoffs["RPS"]])
 # save_pkl(obj=real_world_meta_games, path="./real_world_meta_games.pkl")
 meta_games = load_pkl("./real_world_meta_games.pkl")
-print(list(meta_games.keys()))
+game = meta_games['Kuhn-poker']
+print(np.shape(game))
+print(game[0])
+# print(list(meta_games.keys()))

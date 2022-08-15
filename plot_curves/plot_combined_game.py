@@ -15,6 +15,8 @@ order = 2
 
 ########### Plot alpha rank filter ############
 
+# This file plots the combined game for Leduc poker in the evaluation strategy exploration paper.
+
 plt.figure()
 # plt.title("NashConv Curves ", fontsize = 22)
 
@@ -49,14 +51,14 @@ plt.fill_between(X, PRD_br_mean+PRD_br_std, PRD_br_mean-PRD_br_std, alpha=0.1, c
 plt.plot(X, FIC_br_mean, color="C3", label='FP w. BR')
 plt.fill_between(X, FIC_br_mean+FIC_br_std, FIC_br_mean-FIC_br_std, alpha=0.1, color="C3")
 
-plt.plot(X, DO_cg_mean, color="blue", label='DO w. combined game')
-plt.fill_between(X, DO_cg_mean+DO_cg_std, DO_cg_mean-DO_cg_std, alpha=0.1, color="blue")
+plt.plot(X, DO_cg_mean, color="C4", label='DO w. combined game')
+plt.fill_between(X, DO_cg_mean+DO_cg_std, DO_cg_mean-DO_cg_std, alpha=0.1, color="C4")
 #
-plt.plot(X, PRD_cg_mean, color="C2", label='PRD w. combined game')
-plt.fill_between(X, PRD_cg_mean+PRD_cg_std, PRD_cg_mean-PRD_cg_std, alpha=0.1, color="C2")
+plt.plot(X, PRD_cg_mean, color="C9", label='PRD w. combined game')
+plt.fill_between(X, PRD_cg_mean+PRD_cg_std, PRD_cg_mean-PRD_cg_std, alpha=0.1, color="C9")
 #
-plt.plot(X, FIC_cg_mean, color="C3", label='FP w. combined game')
-plt.fill_between(X, FIC_cg_mean+FIC_cg_std, FIC_cg_mean-FIC_cg_std, alpha=0.1, color="C3")
+plt.plot(X, FIC_cg_mean, color="C1", label='FP w. combined game')
+plt.fill_between(X, FIC_cg_mean+FIC_cg_std, FIC_cg_mean-FIC_cg_std, alpha=0.1, color="C1")
 
 
 

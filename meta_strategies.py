@@ -8,7 +8,7 @@ from MRCP.minimum_regret_profile import minimum_regret_profile_calculator
 from utils import *
 import mpmath as mp
 
-def double_oracle(meta_games, empirical_games, checkpoint_dir, gambit=False, sample_dev=False):
+def double_oracle(meta_games, empirical_games, checkpoint_dir, gambit=True, sample_dev=False):
     """
     Double oracle method.
     :param meta_games:
@@ -246,7 +246,7 @@ def prd_solver(meta_games, empirical_games, checkpoint_dir=None):
     return dev_strs, nashconv
 
 
-def regret_controled_RD(meta_games, empirical_games, checkpoint_dir=None, regret_threshold=0.9):
+def regret_controled_RD(meta_games, empirical_games, checkpoint_dir=None, regret_threshold=0.5):
     num_players = len(meta_games)
     num_strategies, _ = np.shape(meta_games[0])
     subgames = []

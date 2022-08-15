@@ -43,8 +43,9 @@ def mixed_strategy_payoff(meta_games, probs):
     prob_slice = tuple([slice(prob_matrix.shape[i]) for i in range(len(meta_games))])
     meta_game_copy = [ele[prob_slice] for ele in meta_games]
     payoffs = []
+
     for i in range(len(meta_games)):
-        payoffs.append(np.sum(meta_game_copy[i]*prob_matrix))
+        payoffs.append(np.sum(meta_game_copy[i] * prob_matrix))
     return payoffs
 
 # This older version of function must be of two players

@@ -1,7 +1,13 @@
 import numpy as np
 from utils import set_random_seed
 from meta_strategies import double_oracle
+import functools
+print = functools.partial(print, flush=True)
 from MRCP.minimum_regret_profile import minimum_regret_profile_calculator
+
+""""
+MRCP closed temporally with flag #MRCP
+"""
 
 class PSRO_trainer(object):
     def __init__(self,
@@ -13,8 +19,8 @@ class PSRO_trainer(object):
                  num_iterations=20,
                  seed=None,
                  empricial_game_record=None,
-                 calculate_neconv=True,
-                 calculate_mrcpconv=True,
+                 calculate_neconv=False,
+                 calculate_mrcpconv=False,
                  init_strategies=None,
                  closed_method="alter"):
         """
@@ -33,7 +39,7 @@ class PSRO_trainer(object):
         self.meta_method = meta_method
         self.num_strategies = num_strategies
         self.checkpoint_dir = checkpoint_dir
-        self.mrcp_calculator = minimum_regret_profile_calculator(full_game=meta_games)
+        # self.mrcp_calculator = minimum_regret_profile_calculator(full_game=meta_games) # closed temporally.
         self.seed = seed
         self.calculate_neconv = calculate_neconv
         self.calculate_mrconv = calculate_mrcpconv
@@ -147,7 +153,7 @@ class PSRO_trainer(object):
                 set_random_seed(self.seed) 
 
             self.iteration()
-            self.mrcp_calculator.clear()
+            # self.mrcp_calculator.clear() #MRCP
 
     def get_empirical_game(self):
         return self.empirical_games

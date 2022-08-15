@@ -12,15 +12,18 @@ import numpy as np
 import pandas as pd
 import sys
 import functools
+
 print = functools.partial(print, flush=True)
 
 FLAGS = flags.FLAGS
 
 flags.DEFINE_integer("num_iterations", 15, "The number of rounds starting with different.")
-flags.DEFINE_string("game_type", "quoridor(board_size=4)", "Type of synthetic game.")
+flags.DEFINE_string("game_type", "att_graph", "Type of synthetic game.")
 flags.DEFINE_integer("seed", None, "The seed to control randomness.")
 flags.DEFINE_boolean("MRCP_deterministic", True, "mrcp should return a same value given the same empirical game")
 flags.DEFINE_string("closed_method", "dev", "Method for handling closeness of the MRCP")
+flags.DEFINE_float("threshold", 0.5, "Regret threshold for CRD.")
+
 
 def psro(meta_games,
          game_type,
@@ -29,39 +32,38 @@ def psro(meta_games,
          checkpoint_dir,
          num_iterations=20,
          closed_method="alter"):
-
     num_strategies = meta_games[0].shape[0]
 
     # Change the initial strategies here.
     # init_strategies = np.random.randint(0, num_strategies, num_rounds)
-    init_strategies = [0,1,2]
+    init_strategies = [0, 1, 2]
 
-    DO_trainer = PSRO_trainer(meta_games=meta_games,
-                           num_strategies=num_strategies,
-                           num_rounds=num_rounds,
-                           meta_method=double_oracle,
-                           checkpoint_dir=checkpoint_dir,
-                           num_iterations=num_iterations,
-                           seed=seed,
-                           init_strategies=init_strategies)
-    #
-    FP_trainer = PSRO_trainer(meta_games=meta_games,
-                           num_strategies=num_strategies,
-                           num_rounds=num_rounds,
-                           meta_method=fictitious_play,
-                           checkpoint_dir=checkpoint_dir,
-                           num_iterations=num_iterations,
-                           seed=seed,
-                           init_strategies=init_strategies)
-
-    # PRD_trainer = PSRO_trainer(meta_games=meta_games,
+    # DO_trainer = PSRO_trainer(meta_games=meta_games,
     #                           num_strategies=num_strategies,
     #                           num_rounds=num_rounds,
-    #                           meta_method=prd_solver,
+    #                           meta_method=double_oracle,
     #                           checkpoint_dir=checkpoint_dir,
     #                           num_iterations=num_iterations,
     #                           seed=seed,
     #                           init_strategies=init_strategies)
+    # #
+    FP_trainer = PSRO_trainer(meta_games=meta_games,
+                              num_strategies=num_strategies,
+                              num_rounds=num_rounds,
+                              meta_method=fictitious_play,
+                              checkpoint_dir=checkpoint_dir,
+                              num_iterations=num_iterations,
+                              seed=seed,
+                              init_strategies=init_strategies)
+    #
+    PRD_trainer = PSRO_trainer(meta_games=meta_games,
+                              num_strategies=num_strategies,
+                              num_rounds=num_rounds,
+                              meta_method=prd_solver,
+                              checkpoint_dir=checkpoint_dir,
+                              num_iterations=num_iterations,
+                              seed=seed,
+                              init_strategies=init_strategies)
 
     CRD_trainer = PSRO_trainer(meta_games=meta_games,
                                num_strategies=num_strategies,
@@ -72,34 +74,6 @@ def psro(meta_games,
                                seed=seed,
                                init_strategies=init_strategies)
 
-    # IDO_trainer = PSRO_trainer(meta_games=meta_games,
-    #                            num_strategies=num_strategies,
-    #                            num_rounds=num_rounds,
-    #                            meta_method=iterative_double_oracle,
-    #                            checkpoint_dir=checkpoint_dir,
-    #                            num_iterations=num_iterations,
-    #                            seed=seed,
-    #                            init_strategies=init_strategies)
-    # 
-    # IPRD_trainer = PSRO_trainer(meta_games=meta_games,
-    #                            num_strategies=num_strategies,
-    #                            num_rounds=num_rounds,
-    #                            meta_method=iterated_prd,
-    #                            checkpoint_dir=checkpoint_dir,
-    #                            num_iterations=num_iterations,
-    #                            seed=seed,
-    #                            init_strategies=init_strategies)
-    # 
-    # IDOS_trainer = PSRO_trainer(meta_games=meta_games,
-    #                             num_strategies=num_strategies,
-    #                             num_rounds=num_rounds,
-    #                             meta_method=iterative_double_oracle_player_selection,
-    #                             checkpoint_dir=checkpoint_dir,
-    #                             num_iterations=num_iterations,
-    #                             seed=seed,
-    #                             init_strategies=init_strategies)
-    # 
-    # 
     # MRCP_trainer = PSRO_trainer(meta_games=meta_games,
     #                        num_strategies=num_strategies,
     #                        num_rounds=num_rounds,
@@ -110,7 +84,6 @@ def psro(meta_games,
     #                        init_strategies=init_strategies,
     #                        closed_method=closed_method)
 
-
     if not os.path.exists(checkpoint_dir):
         os.makedirs(checkpoint_dir)
     # with open(checkpoint_dir + game_type + '_meta_games.pkl','wb') as f:
@@ -119,7 +92,7 @@ def psro(meta_games,
     # nashconv_names = ['nashconvs_'+str(t) for t in range(num_rounds)]
     # mrconv_names = ['mrcpcons_'+str(t) for t in range(num_rounds)]
     #
-    DO_trainer.loop()
+    # DO_trainer.loop()
     # print("#####################################")
     # print('DO looper finished looping')
     # print("#####################################")
@@ -139,7 +112,7 @@ def psro(meta_games,
     # with open(checkpoint_dir + game_type + '_mrprofile_FP.pkl','wb') as f:
     #     pickle.dump(FP_trainer.mrprofiles, f)
 
-    # PRD_trainer.loop()
+    PRD_trainer.loop()
     # print("#####################################")
     # print('PRD looper finished looping')
     # print("#####################################")
@@ -149,10 +122,10 @@ def psro(meta_games,
     # with open(checkpoint_dir + game_type + '_mrprofile_PRD0gamma.pkl', 'wb') as f:
     #     pickle.dump(PRD_trainer.mrprofiles, f)
     #
-    CRD_trainer.loop()
-    print("#####################################")
-    print('CRD looper finished looping')
-    print("#####################################")
+    # CRD_trainer.loop()
+    # print("#####################################")
+    # print('CRD looper finished looping')
+    # print("#####################################")
     # df = pd.DataFrame(np.transpose(CRD_trainer.neconvs + CRD_trainer.mrconvs), \
     #                   columns=nashconv_names + mrconv_names)
     # df = pd.DataFrame(np.transpose(CRD_trainer.neconvs), \
@@ -202,25 +175,24 @@ def psro(meta_games,
     #     pickle.dump(DO_trainer.mrprofiles, f)
 
     print("The current game type is ", game_type)
-    print("DO neco av:", np.mean(DO_trainer.neconvs, axis=0))
+    # print("DO neco av:", np.mean(DO_trainer.neconvs, axis=0))
     # print("DO mrcp av:", np.mean(DO_trainer.mrconvs, axis=0))
     print("FP fpco av:", np.mean(FP_trainer.nashconvs, axis=0))
-    print("FP neco av:", np.mean(FP_trainer.neconvs, axis=0))
+    print("FP fpco av std:", np.std(FP_trainer.nashconvs, axis=0))
+    # print("FP neco av:", np.mean(FP_trainer.neconvs, axis=0))
     # print("FP mrcp av:", np.mean(FP_trainer.mrconvs, axis=0))
-    # print("PRD prdco av:", np.mean(PRD_trainer.nashconvs, axis=0))
+    print("PRD prdco av:", np.mean(PRD_trainer.nashconvs, axis=0))
+    print("PRD prdco av std:", np.std(PRD_trainer.nashconvs, axis=0))
     # print("PRD neco av:", np.mean(PRD_trainer.neconvs, axis=0))
     # print("PRD mrcp av:", np.mean(PRD_trainer.mrconvs, axis=0))
-    print("CRD CRDco av:", np.mean(CRD_trainer.nashconvs, axis=0))
-    print("CRD neco av:", np.mean(CRD_trainer.neconvs, axis=0))
+    # print("CRD CRDco av:", np.mean(CRD_trainer.nashconvs, axis=0))
+    #print("CRD CRDco av std:", np.std(CRD_trainer.nashconvs, axis=0))
+    # print("CRD neco av:", np.mean(CRD_trainer.neconvs, axis=0))
     # print("CRD mrcp av:", np.mean(CRD_trainer.mrconvs, axis=0))
-    # print("IDO IDOco av:", np.mean(IDO_trainer.nashconvs, axis=0))
-    # print("IDO neco av:", np.mean(IDO_trainer.neconvs, axis=0))
-    # print("IDO mrcp av:", np.mean(IDO_trainer.mrconvs, axis=0))
-    # print("MR neco av:", np.mean(MRCP_trainer.neconvs, axis=0))
-    # print("MR mrcp av:", np.mean(MRCP_trainer.mrconvs, axis=0))
+
 
     print("====================================================")
-    
+
 
 def main(argv):
     if len(argv) > 1:
@@ -228,21 +200,22 @@ def main(argv):
 
     seed = set_random_seed(FLAGS.seed)
     if not FLAGS.MRCP_deterministic:
-        seed = None # invalidate the seed so it does not get passed into psro_trainer
+        seed = None  # invalidate the seed so it does not get passed into psro_trainer
 
     # root_path = './' + "real_world" + "_supplement_" + FLAGS.closed_method + '/'
-    root_path = './' + "real_world" + "_tuningCRD_" + FLAGS.closed_method + '/'
+    root_path = './' + "att_graph_" + FLAGS.game_type + '/'
 
     if not os.path.exists(root_path):
         os.makedirs(root_path)
 
-    real_world_meta_games = load_pkl('./real_world_games/real_world_meta_games.pkl')
+    # real_world_meta_game = load_pkl('./real_world_games/att_graph.pkl')
+    # real_world_meta_game = load_pkl('./real_world_games/combined_att_graph.pkl')
+    if FLAGS.game_type == 'noisy':
+        real_world_meta_game = load_pkl('./real_world_games/att_graph_noisy.pkl')
+    else:
+        real_world_meta_game = load_pkl('./real_world_games/combined_att_graph.pkl')
 
-    # game_types = ['10,4-Blotto', 'AlphaStar', 'Kuhn-poker', 'Random_game_of_skill', 'Transitive game',
-    #               'connect_four', 'quoridor(board_size=4)', 'misere(game=tic_tac_toe())', 'hex(board_size=3)',
-    #               'go(board_size=4,komi=6.5)']
-
-    checkpoint_dir = FLAGS.game_type + "_CRD0.5_" + str(seed)
+    checkpoint_dir = "att_graph_" + str(FLAGS.threshold) + "_" + str(seed)
     checkpoint_dir = os.path.join(os.getcwd(), root_path, checkpoint_dir) + '/'
 
     if not os.path.exists(checkpoint_dir):
@@ -253,19 +226,16 @@ def main(argv):
     print("======The current game is ", FLAGS.game_type, "=========")
     print("================================================")
 
-    if FLAGS.num_iterations > real_world_meta_games[FLAGS.game_type][0].shape[0]:
-        num_iterations = real_world_meta_games[FLAGS.game_type][0].shape[0]
-    else:
-        num_iterations = FLAGS.num_iterations
+    # 47 strategies in total.
 
-    psro(meta_games=real_world_meta_games[FLAGS.game_type],
+    psro(meta_games=real_world_meta_game,
          game_type=FLAGS.game_type,
          num_rounds=3,
          seed=seed,
          checkpoint_dir=checkpoint_dir,
-         num_iterations=num_iterations,
+         num_iterations=FLAGS.num_iterations,
          closed_method=FLAGS.closed_method)
 
 
 if __name__ == "__main__":
-  app.run(main)
+    app.run(main)
