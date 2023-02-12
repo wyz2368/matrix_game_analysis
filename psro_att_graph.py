@@ -191,8 +191,8 @@ def psro(meta_games,
     #     pickle.dump(DO_trainer.mrprofiles, f)
 
     print("The current game type is ", game_type)
-    print("DO neco av:", np.mean(DO_trainer.neconvs, axis=0))
-    print("DO neco av std:", np.std(DO_trainer.neconvs, axis=0))
+    print("DO neco av:", np.mean(DO_trainer.nashconvs, axis=0))
+    print("DO neco av std:", np.std(DO_trainer.nashconvs, axis=0))
     # print("DO mrcp av:", np.mean(DO_trainer.mrconvs, axis=0))
     print("DO_SWRO neco av:", np.mean(DO_SWRO_trainer.nashconvs, axis=0))
     print("DO_SWRO neco av std:", np.std(DO_SWRO_trainer.nashconvs, axis=0))
