@@ -107,8 +107,8 @@ def psro(meta_games,
     # mrconv_names = ['mrcpcons_'+str(t) for t in range(num_rounds)]
     #
     DO_trainer.loop()
-    # print("#####################################")
-    # print('DO looper finished looping')
+    print("#####################################")
+    print('DO looper finished looping')
     # print("#####################################")
     # df = pd.DataFrame(np.transpose(DO_trainer.neconvs+DO_trainer.mrconvs),\
     #         columns=nashconv_names+mrconv_names)
@@ -117,10 +117,12 @@ def psro(meta_games,
     #     pickle.dump(DO_trainer.mrprofiles, f)
     #
     DO_SWRO_trainer.loop()
+    print("#####################################")
+    print('DO_SWRO looper finished looping')
 
     FP_trainer.loop()
-    # print("#####################################")
-    # print('FP looper finished looping')
+    print("#####################################")
+    print('FP looper finished looping')
     # print("#####################################")
     # df = pd.DataFrame(np.transpose(FP_trainer.neconvs+FP_trainer.mrconvs),\
     #         columns=nashconv_names+mrconv_names)
