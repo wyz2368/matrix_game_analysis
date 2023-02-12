@@ -90,7 +90,7 @@ def DO_SWRO(meta_games, empirical_games, checkpoint_dir, gambit=True, balance_fa
     # nash = gambit_solve(subgames, mode="one", checkpoint_dir=checkpoint_dir[:-1])
 
     nash_payoffs = mixed_strategy_payoff(subgames, nash)
-    print("Nash payoff is ", nash_payoffs)
+    print("DO_SWRO Nash payoff is ", nash_payoffs)
 
     meta_game_nash = []
     for i, idx in enumerate([idx0, idx1]):
