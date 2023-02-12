@@ -1,5 +1,5 @@
 """
-A python scripts for generating all batch files for parameter tuning
+A python scripts_matrix for generating all batch files for parameter tuning
 """
 import shutil
 import os

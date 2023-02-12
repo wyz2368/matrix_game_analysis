@@ -1,5 +1,5 @@
 """
-A python scripts for generating all batch files for parameter tuning
+A python scripts_matrix for generating all batch files for parameter tuning
 """
 import shutil
 import os
@@ -10,7 +10,7 @@ import copy
 
 
 ORIGIN = './base_slurm.sh'
-BASE = 'python psro_real_world.py --num_iterations=15 --closed_method=dev --game_type=noisy'
+BASE = 'python psro_att_graph.py --num_iterations=15 --closed_method=dev --game_type=noisy'
 BALANCE = '--balance_factor='
 MINUS = '--minus='
 
@@ -39,7 +39,7 @@ def bash_factory():
 
     for i, param in enumerate(params):
         f, m = param
-        target = './scripts/z_' + str(i) + '.sh'
+        target = './scripts_matrix/z_' + str(i) + '.sh'
         copy_file(ORIGIN, target)
 
         with open(target, 'a') as file:

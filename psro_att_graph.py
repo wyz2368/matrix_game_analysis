@@ -40,14 +40,14 @@ def psro(meta_games,
     # init_strategies = np.random.randint(0, num_strategies, num_rounds)
     init_strategies = [0, 1, 2]
 
-    # DO_trainer = PSRO_trainer(meta_games=meta_games,
-    #                           num_strategies=num_strategies,
-    #                           num_rounds=num_rounds,
-    #                           meta_method=double_oracle,
-    #                           checkpoint_dir=checkpoint_dir,
-    #                           num_iterations=num_iterations,
-    #                           seed=seed,
-    #                           init_strategies=init_strategies)
+    DO_trainer = PSRO_trainer(meta_games=meta_games,
+                              num_strategies=num_strategies,
+                              num_rounds=num_rounds,
+                              meta_method=double_oracle,
+                              checkpoint_dir=checkpoint_dir,
+                              num_iterations=num_iterations,
+                              seed=seed,
+                              init_strategies=init_strategies)
 
     DO_SWRO_trainer = PSRO_trainer(meta_games=meta_games,
                               num_strategies=num_strategies,
@@ -61,14 +61,14 @@ def psro(meta_games,
                               minus=FLAGS.minus)
 
     # #
-    # FP_trainer = PSRO_trainer(meta_games=meta_games,
-    #                           num_strategies=num_strategies,
-    #                           num_rounds=num_rounds,
-    #                           meta_method=fictitious_play,
-    #                           checkpoint_dir=checkpoint_dir,
-    #                           num_iterations=num_iterations,
-    #                           seed=seed,
-    #                           init_strategies=init_strategies)
+    FP_trainer = PSRO_trainer(meta_games=meta_games,
+                              num_strategies=num_strategies,
+                              num_rounds=num_rounds,
+                              meta_method=fictitious_play,
+                              checkpoint_dir=checkpoint_dir,
+                              num_iterations=num_iterations,
+                              seed=seed,
+                              init_strategies=init_strategies)
     # #
     # PRD_trainer = PSRO_trainer(meta_games=meta_games,
     #                           num_strategies=num_strategies,
@@ -106,7 +106,7 @@ def psro(meta_games,
     # nashconv_names = ['nashconvs_'+str(t) for t in range(num_rounds)]
     # mrconv_names = ['mrcpcons_'+str(t) for t in range(num_rounds)]
     #
-    # DO_trainer.loop()
+    DO_trainer.loop()
     # print("#####################################")
     # print('DO looper finished looping')
     # print("#####################################")
@@ -118,7 +118,7 @@ def psro(meta_games,
     #
     DO_SWRO_trainer.loop()
 
-    # FP_trainer.loop()
+    FP_trainer.loop()
     # print("#####################################")
     # print('FP looper finished looping')
     # print("#####################################")
@@ -191,12 +191,13 @@ def psro(meta_games,
     #     pickle.dump(DO_trainer.mrprofiles, f)
 
     print("The current game type is ", game_type)
-    # print("DO neco av:", np.mean(DO_trainer.neconvs, axis=0))
+    print("DO neco av:", np.mean(DO_trainer.neconvs, axis=0))
+    print("DO neco av std:", np.std(DO_trainer.neconvs, axis=0))
     # print("DO mrcp av:", np.mean(DO_trainer.mrconvs, axis=0))
-    print("DO_SWRO neco av:", np.mean(DO_SWRO_trainer.neconvs, axis=0))
-    print("DO_SWRO neco av std:", np.std(DO_SWRO_trainer.neconvs, axis=0))
-    # print("FP fpco av:", np.mean(FP_trainer.nashconvs, axis=0))
-    # print("FP fpco av std:", np.std(FP_trainer.nashconvs, axis=0))
+    print("DO_SWRO neco av:", np.mean(DO_SWRO_trainer.nashconvs, axis=0))
+    print("DO_SWRO neco av std:", np.std(DO_SWRO_trainer.nashconvs, axis=0))
+    print("FP fpco av:", np.mean(FP_trainer.nashconvs, axis=0))
+    print("FP fpco av std:", np.std(FP_trainer.nashconvs, axis=0))
     # print("FP neco av:", np.mean(FP_trainer.neconvs, axis=0))
     # print("FP mrcp av:", np.mean(FP_trainer.mrconvs, axis=0))
     # print("PRD prdco av:", np.mean(PRD_trainer.nashconvs, axis=0))
@@ -221,6 +222,7 @@ def main(argv):
         seed = None  # invalidate the seed so it does not get passed into psro_trainer
 
     # root_path = './' + "real_world" + "_supplement_" + FLAGS.closed_method + '/'
+    # root_path = './' + "att_graph_" + FLAGS.game_type + "_DO_FP" + '/'
     root_path = './' + "att_graph_" + FLAGS.game_type + "_DO_SWRO" + '/'
 
     if not os.path.exists(root_path):
