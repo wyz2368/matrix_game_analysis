@@ -12,4 +12,4 @@
 
 module load python3.6-anaconda/5.2.0
 cd ${SLURM_SUBMIT_DIR}
-python psro_real_world.py --num_iterations=15 --closed_method=dev --game_type="noisy" --threshold=0.5
+python psro_real_world.py --num_iterations=15 --closed_method=dev --game_type="noisy" --balance_factor=1.0 --minus=False

@@ -39,6 +39,7 @@ def double_oracle(meta_games, empirical_games, checkpoint_dir, gambit=True, samp
     # nash = gambit_solve(subgames, mode="one", checkpoint_dir=checkpoint_dir[:-1])
 
     nash_payoffs = mixed_strategy_payoff(subgames, nash)
+    print("Nash payoff is ", nash_payoffs)
 
     meta_game_nash = []
     for i, idx in enumerate([idx0, idx1]):
@@ -51,6 +52,53 @@ def double_oracle(meta_games, empirical_games, checkpoint_dir, gambit=True, samp
         dev_strs, dev_payoff = sample_deviation_strategy(dev_strs, dev_payoff)
     else:
         dev_strs, dev_payoff = deviation_strategy(meta_games, meta_game_nash)
+
+    nashconv = 0
+    for player in range(num_players):
+        nashconv += np.maximum(dev_payoff[player] - nash_payoffs[player], 0)
+
+    return dev_strs, nashconv
+
+def DO_SWRO(meta_games, empirical_games, checkpoint_dir, gambit=True, balance_factor=1.0, minus=False):
+    """
+    Double oracle method.
+    :param meta_games:
+    :param empirical_games:
+    :param checkpoint_dir:
+    :param gambit: Whether using gambit as a Nash solver. False： lp solver
+    :param sample_dev: Whether sample a beneficial deviation or sample a argmax deviation
+    :return:
+    """
+    num_players = len(meta_games)
+    num_strategies, _ = np.shape(meta_games[0])
+    subgames = []
+
+    idx0 = sorted(list(set(empirical_games[0])))
+    idx1 = sorted(list(set(empirical_games[1])))
+    idx = np.ix_(idx0, idx1)
+    for meta_game in meta_games:
+        subgames.append(meta_game[idx])
+
+    if gambit:
+        # Gambit solver
+        nash = gambit_solve(subgames, mode="one", checkpoint_dir=checkpoint_dir[:-1])
+    else:
+        # LP solver
+        # nash = lp_solve(subgames)
+        pass
+
+    # nash = gambit_solve(subgames, mode="one", checkpoint_dir=checkpoint_dir[:-1])
+
+    nash_payoffs = mixed_strategy_payoff(subgames, nash)
+    print("Nash payoff is ", nash_payoffs)
+
+    meta_game_nash = []
+    for i, idx in enumerate([idx0, idx1]):
+        ne = np.zeros(num_strategies)
+        np.put(ne, idx, nash[i])
+        meta_game_nash.append(ne)
+
+    dev_strs, dev_payoff = deviation_strategy_with_objective(meta_games, meta_game_nash, balance_factor, minus)
 
     nashconv = 0
     for player in range(num_players):
@@ -102,7 +150,7 @@ def fictitious_play(meta_games, empirical_games, checkpoint_dir=None, sample_dev
     for player in range(len(meta_games)):
         nashconv += np.maximum(dev_payoff[player] - nash_payoffs[player], 0)
 
-    return dev_strs, nashconv
+    return dev_strs, nashconv, nash_payoffs
 
 def mrcp_solver(meta_games, empirical_games, checkpoint_dir=None, method="alter", recursive=False):
     """
@@ -441,6 +489,56 @@ def logistic_quantal_response(meta_games, strategies, beta):
   dev_strs.append(qr)
 
   return dev_strs
+
+
+def adaptive_play(meta_games, empirical_games, k=20, m=100, sample_dev=False):
+    #TODO: This does not work for PSRO trainer since strategies in empirical games will be sorted.
+    num_strategies, _ = np.shape(meta_games[0])
+    subgames = []
+
+    sampled_strategy_0 = np.random.choice(empirical_games[0][-m:], k)
+    sampled_strategy_1 = np.random.choice(empirical_games[1][-m:], k)
+
+    counter0 = collections.Counter(sampled_strategy_0)
+    counter1 = collections.Counter(sampled_strategy_1)
+
+    idx0 = sorted(list(set(empirical_games[0])))
+    idx1 = sorted(list(set(empirical_games[1])))
+    idx = np.ix_(idx0, idx1)
+    for meta_game in meta_games:
+        subgames.append(meta_game[idx])
+
+    nash0 = np.ones(len(idx0))
+    for i, item in enumerate(idx0):
+        nash0[i] = counter0[item]
+    nash0 /= np.sum(nash0)
+
+    nash1 = np.ones(len(idx1))
+    for i, item in enumerate(idx1):
+        nash1[i] = counter1[item]
+    nash1 /= np.sum(nash1)
+    nash = [nash0, nash1]
+
+    nash_payoffs = mixed_strategy_payoff(subgames, nash)
+
+    meta_game_nash = []
+    for i, idx in enumerate([idx0, idx1]):
+        ne = np.zeros(num_strategies)
+        np.put(ne, idx, nash[i])
+        meta_game_nash.append(ne)
+
+    # dev_strs, dev_payoff = deviation_strategy(meta_games, meta_game_nash)
+    if sample_dev:
+        dev_strs, dev_payoff = beneficial_deviation(meta_games, meta_game_nash, nash_payoffs)
+        dev_strs, dev_payoff = sample_deviation_strategy(dev_strs, dev_payoff)
+    else:
+        dev_strs, dev_payoff = deviation_strategy(meta_games, meta_game_nash)
+
+    nashconv = 0
+    for player in range(len(meta_games)):
+        nashconv += np.maximum(dev_payoff[player] - nash_payoffs[player], 0)
+
+    return dev_strs, nashconv, nash_payoffs
 
 
 

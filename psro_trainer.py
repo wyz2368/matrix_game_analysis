@@ -22,7 +22,9 @@ class PSRO_trainer(object):
                  calculate_neconv=False,
                  calculate_mrcpconv=False,
                  init_strategies=None,
-                 closed_method="alter"):
+                 closed_method="alter",
+                 balance_factor=1.0,
+                 minus=False):
         """
         Inputs:
             num_rounds      : repeat psro on matrix games from #num_rounds start points
@@ -65,6 +67,10 @@ class PSRO_trainer(object):
 
         self.closed_method = closed_method
 
+        # DO_SWRO
+        self.balance_factor = balance_factor
+        self.minus = minus
+
 
     def init_round(self, init_strategy):
         #init_strategy = np.random.randint(0, self.num_strategies)
@@ -93,6 +99,9 @@ class PSRO_trainer(object):
             print('################## Iteration {} ###################'.format(it))
             if self.meta_method.__name__ == 'mrcp_solver':
                 dev_strs, nashconv = self.meta_method(self.meta_games, self.empirical_games, self.checkpoint_dir, method=self.closed_method)
+            elif self.meta_method.__name__ == 'DO_SWRO':
+                print("I am DO_SWRO.")
+                dev_strs, nashconv = self.meta_method(self.meta_games, self.empirical_games, self.checkpoint_dir, balance_factor=self.balance_factor, minus=self.minus)
             else:
                 dev_strs, nashconv = self.meta_method(self.meta_games, self.empirical_games, self.checkpoint_dir)
 
@@ -129,6 +138,9 @@ class PSRO_trainer(object):
         # NE does not add its last own value after its last update
         if self.meta_method.__name__ == 'mrcp_solver':
             _, nashconv = self.meta_method(self.meta_games, self.empirical_games, self.checkpoint_dir, method=self.closed_method)
+        elif self.meta_method.__name__ == 'DO_SWRO':
+            dev_strs, nashconv = self.meta_method(self.meta_games, self.empirical_games, self.checkpoint_dir,
+                                                  balance_factor=self.balance_factor, minus=self.minus)
         else:
             _, nashconv = self.meta_method(self.meta_games, self.empirical_games, self.checkpoint_dir)
         nashconv_list.append(nashconv)

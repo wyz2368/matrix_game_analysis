@@ -261,6 +261,43 @@ def deviation_strategy(meta_games, probs):
 
     return dev_strs, dev_payoff
 
+def deviation_strategy_with_objective(meta_games, probs, alpha=1.0, minus=False):
+    """
+    This is for different response oracle.
+    :param meta_games:
+    :param probs:
+    :return:
+    """
+    print("Deviation_strategy_with_objective is working in the model minus = ", minus, " with alpha = ", alpha)
+    dev_strs = []
+    dev_payoff = []
+    prob1 = probs[0]
+    prob1 = np.reshape(prob1, newshape=(len(prob1), 1))
+    prob2 = probs[1]
+
+    payoff_vec_self = np.sum(meta_games[0] * prob2, axis=1)
+    payoff_vec_other_player = np.sum(meta_games[1] * prob2, axis=1)
+    if minus:
+        payoff_vec = alpha * np.reshape(payoff_vec_self, -1) - (1 - alpha) * np.reshape(payoff_vec_other_player, -1)
+    else:
+        payoff_vec = alpha * np.reshape(payoff_vec_self, -1) + (1 - alpha) * np.reshape(payoff_vec_other_player, -1)
+    idx = np.argmax(payoff_vec)
+    dev_strs.append(idx)
+    dev_payoff.append(payoff_vec_self[idx])
+
+    payoff_vec_self = np.sum(prob1 * meta_games[1], axis=0)
+    payoff_vec_other_player = np.sum(prob1 * meta_games[0], axis=0)
+    if minus:
+        payoff_vec = alpha * np.reshape(payoff_vec_self, -1) - (1 - alpha) * np.reshape(payoff_vec_other_player, -1)
+    else:
+        payoff_vec = alpha * np.reshape(payoff_vec_self, -1) + (1 - alpha) * np.reshape(payoff_vec_other_player, -1)
+
+    idx = np.argmax(payoff_vec)
+    dev_strs.append(idx)
+    dev_payoff.append(payoff_vec_self[idx])
+
+    return dev_strs, dev_payoff
+
 # Functions for 3-player games.
 def dev_regret_general(meta_games, probs):
     """

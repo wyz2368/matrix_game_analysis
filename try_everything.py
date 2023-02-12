@@ -24,8 +24,9 @@ from real_world_games.nash_clustering import nash_clustering
 #                         [4,5,6],
 #                         [7,8,9]])]
 
-# root_path = './MRCP/data/'
-# meta_games = load_pkl(root_path + "meta_games.pkl")
+root_path = './data/'
+meta_games = load_pkl(root_path + "meta_game.pkl")
+print(meta_games)
 #
 #
 # exact_calculator = minimum_regret_profile_calculator(full_game=meta_games)
@@ -48,10 +49,10 @@ from real_world_games.nash_clustering import nash_clustering
 #     h = np.array([np.float(t)])
 #     print(h, type(h))
 
-a = np.array([27.586487898445515, 27.655829697611992, 24.41443100567962, 27.65316836315581, 25.765739985212146])
-b = np.array([0.66666667, 0.11111111, 0.11111111, 0.11111111, 0.        ])
-print(np.sum(a * b))
-print(np.max(a) - np.sum(a * b))
+# a = np.array([27.586487898445515, 27.655829697611992, 24.41443100567962, 27.65316836315581, 25.765739985212146])
+# b = np.array([0.66666667, 0.11111111, 0.11111111, 0.11111111, 0.        ])
+# print(np.sum(a * b))
+# print(np.max(a) - np.sum(a * b))
 
 
 

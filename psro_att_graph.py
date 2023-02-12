@@ -1,4 +1,4 @@
-from meta_strategies import double_oracle, fictitious_play, mrcp_solver, prd_solver, iterative_double_oracle
+from meta_strategies import double_oracle, fictitious_play, mrcp_solver, prd_solver, iterative_double_oracle, DO_SWRO
 from meta_strategies import iterated_prd, iterative_double_oracle_player_selection, regret_controled_RD
 from psro_trainer import PSRO_trainer
 from utils import set_random_seed
@@ -18,11 +18,13 @@ print = functools.partial(print, flush=True)
 FLAGS = flags.FLAGS
 
 flags.DEFINE_integer("num_iterations", 15, "The number of rounds starting with different.")
-flags.DEFINE_string("game_type", "att_graph", "Type of synthetic game.")
+flags.DEFINE_string("game_type", "noisy", "Type of synthetic game.")
 flags.DEFINE_integer("seed", None, "The seed to control randomness.")
 flags.DEFINE_boolean("MRCP_deterministic", True, "mrcp should return a same value given the same empirical game")
 flags.DEFINE_string("closed_method", "dev", "Method for handling closeness of the MRCP")
-flags.DEFINE_float("threshold", 0.5, "Regret threshold for CRD.")
+flags.DEFINE_float("threshold", 5, "Regret threshold for CRD.")
+flags.DEFINE_float("balance_factor", 0.9, "For DO_SWRO.")
+flags.DEFINE_boolean("minus", False, "minimizing other player's payoff")
 
 
 def psro(meta_games,
@@ -46,33 +48,45 @@ def psro(meta_games,
     #                           num_iterations=num_iterations,
     #                           seed=seed,
     #                           init_strategies=init_strategies)
-    # #
-    FP_trainer = PSRO_trainer(meta_games=meta_games,
-                              num_strategies=num_strategies,
-                              num_rounds=num_rounds,
-                              meta_method=fictitious_play,
-                              checkpoint_dir=checkpoint_dir,
-                              num_iterations=num_iterations,
-                              seed=seed,
-                              init_strategies=init_strategies)
-    #
-    PRD_trainer = PSRO_trainer(meta_games=meta_games,
-                              num_strategies=num_strategies,
-                              num_rounds=num_rounds,
-                              meta_method=prd_solver,
-                              checkpoint_dir=checkpoint_dir,
-                              num_iterations=num_iterations,
-                              seed=seed,
-                              init_strategies=init_strategies)
 
-    CRD_trainer = PSRO_trainer(meta_games=meta_games,
-                               num_strategies=num_strategies,
-                               num_rounds=num_rounds,
-                               meta_method=regret_controled_RD,
-                               checkpoint_dir=checkpoint_dir,
-                               num_iterations=num_iterations,
-                               seed=seed,
-                               init_strategies=init_strategies)
+    DO_SWRO_trainer = PSRO_trainer(meta_games=meta_games,
+                              num_strategies=num_strategies,
+                              num_rounds=num_rounds,
+                              meta_method=DO_SWRO,
+                              checkpoint_dir=checkpoint_dir,
+                              num_iterations=num_iterations,
+                              seed=seed,
+                              init_strategies=init_strategies,
+                              balance_factor=FLAGS.balance_factor,
+                              minus=FLAGS.minus)
+
+    # #
+    # FP_trainer = PSRO_trainer(meta_games=meta_games,
+    #                           num_strategies=num_strategies,
+    #                           num_rounds=num_rounds,
+    #                           meta_method=fictitious_play,
+    #                           checkpoint_dir=checkpoint_dir,
+    #                           num_iterations=num_iterations,
+    #                           seed=seed,
+    #                           init_strategies=init_strategies)
+    # #
+    # PRD_trainer = PSRO_trainer(meta_games=meta_games,
+    #                           num_strategies=num_strategies,
+    #                           num_rounds=num_rounds,
+    #                           meta_method=prd_solver,
+    #                           checkpoint_dir=checkpoint_dir,
+    #                           num_iterations=num_iterations,
+    #                           seed=seed,
+    #                           init_strategies=init_strategies)
+
+    # CRD_trainer = PSRO_trainer(meta_games=meta_games,
+    #                            num_strategies=num_strategies,
+    #                            num_rounds=num_rounds,
+    #                            meta_method=regret_controled_RD,
+    #                            checkpoint_dir=checkpoint_dir,
+    #                            num_iterations=num_iterations,
+    #                            seed=seed,
+    #                            init_strategies=init_strategies)
 
     # MRCP_trainer = PSRO_trainer(meta_games=meta_games,
     #                        num_strategies=num_strategies,
@@ -102,7 +116,9 @@ def psro(meta_games,
     # with open(checkpoint_dir + game_type + '_mrprofile_DO.pkl','wb') as f:
     #     pickle.dump(DO_trainer.mrprofiles, f)
     #
-    FP_trainer.loop()
+    DO_SWRO_trainer.loop()
+
+    # FP_trainer.loop()
     # print("#####################################")
     # print('FP looper finished looping')
     # print("#####################################")
@@ -112,7 +128,7 @@ def psro(meta_games,
     # with open(checkpoint_dir + game_type + '_mrprofile_FP.pkl','wb') as f:
     #     pickle.dump(FP_trainer.mrprofiles, f)
 
-    PRD_trainer.loop()
+    # PRD_trainer.loop()
     # print("#####################################")
     # print('PRD looper finished looping')
     # print("#####################################")
@@ -177,16 +193,18 @@ def psro(meta_games,
     print("The current game type is ", game_type)
     # print("DO neco av:", np.mean(DO_trainer.neconvs, axis=0))
     # print("DO mrcp av:", np.mean(DO_trainer.mrconvs, axis=0))
-    print("FP fpco av:", np.mean(FP_trainer.nashconvs, axis=0))
-    print("FP fpco av std:", np.std(FP_trainer.nashconvs, axis=0))
+    print("DO_SWRO neco av:", np.mean(DO_SWRO_trainer.neconvs, axis=0))
+    print("DO_SWRO neco av std:", np.std(DO_SWRO_trainer.neconvs, axis=0))
+    # print("FP fpco av:", np.mean(FP_trainer.nashconvs, axis=0))
+    # print("FP fpco av std:", np.std(FP_trainer.nashconvs, axis=0))
     # print("FP neco av:", np.mean(FP_trainer.neconvs, axis=0))
     # print("FP mrcp av:", np.mean(FP_trainer.mrconvs, axis=0))
-    print("PRD prdco av:", np.mean(PRD_trainer.nashconvs, axis=0))
-    print("PRD prdco av std:", np.std(PRD_trainer.nashconvs, axis=0))
+    # print("PRD prdco av:", np.mean(PRD_trainer.nashconvs, axis=0))
+    # print("PRD prdco av std:", np.std(PRD_trainer.nashconvs, axis=0))
     # print("PRD neco av:", np.mean(PRD_trainer.neconvs, axis=0))
     # print("PRD mrcp av:", np.mean(PRD_trainer.mrconvs, axis=0))
     # print("CRD CRDco av:", np.mean(CRD_trainer.nashconvs, axis=0))
-    #print("CRD CRDco av std:", np.std(CRD_trainer.nashconvs, axis=0))
+    # print("CRD CRDco av std:", np.std(CRD_trainer.nashconvs, axis=0))
     # print("CRD neco av:", np.mean(CRD_trainer.neconvs, axis=0))
     # print("CRD mrcp av:", np.mean(CRD_trainer.mrconvs, axis=0))
 
@@ -203,7 +221,7 @@ def main(argv):
         seed = None  # invalidate the seed so it does not get passed into psro_trainer
 
     # root_path = './' + "real_world" + "_supplement_" + FLAGS.closed_method + '/'
-    root_path = './' + "att_graph_" + FLAGS.game_type + '/'
+    root_path = './' + "att_graph_" + FLAGS.game_type + "_DO_SWRO" + '/'
 
     if not os.path.exists(root_path):
         os.makedirs(root_path)
@@ -215,7 +233,7 @@ def main(argv):
     else:
         real_world_meta_game = load_pkl('./real_world_games/combined_att_graph.pkl')
 
-    checkpoint_dir = "att_graph_" + str(FLAGS.threshold) + "_" + str(seed)
+    checkpoint_dir = "att_graph_" + "DO_SWRO" + '_bf_' + str(FLAGS.balance_factor) + "_minus_" + str(FLAGS.minus) + "_" + str(seed)
     checkpoint_dir = os.path.join(os.getcwd(), root_path, checkpoint_dir) + '/'
 
     if not os.path.exists(checkpoint_dir):
