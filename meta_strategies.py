@@ -132,6 +132,7 @@ def fictitious_play(meta_games, empirical_games, checkpoint_dir=None, sample_dev
     nash = [nash0, nash1]
     
     nash_payoffs = mixed_strategy_payoff(subgames, nash)
+    print("FP nash payoffs:", nash_payoffs)
 
     meta_game_nash = []
     for i, idx in enumerate([idx0, idx1]):
@@ -150,7 +151,7 @@ def fictitious_play(meta_games, empirical_games, checkpoint_dir=None, sample_dev
     for player in range(len(meta_games)):
         nashconv += np.maximum(dev_payoff[player] - nash_payoffs[player], 0)
 
-    return dev_strs, nashconv, nash_payoffs
+    return dev_strs, nashconv #, nash_payoffs
 
 def mrcp_solver(meta_games, empirical_games, checkpoint_dir=None, method="alter", recursive=False):
     """
