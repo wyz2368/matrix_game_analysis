@@ -40,44 +40,44 @@ def psro(meta_games,
     # init_strategies = np.random.randint(0, num_strategies, num_rounds)
     init_strategies = [0, 1, 2]
 
-    DO_trainer = PSRO_trainer(meta_games=meta_games,
-                              num_strategies=num_strategies,
-                              num_rounds=num_rounds,
-                              meta_method=double_oracle,
-                              checkpoint_dir=checkpoint_dir,
-                              num_iterations=num_iterations,
-                              seed=seed,
-                              init_strategies=init_strategies)
-
-    DO_SWRO_trainer = PSRO_trainer(meta_games=meta_games,
-                              num_strategies=num_strategies,
-                              num_rounds=num_rounds,
-                              meta_method=DO_SWRO,
-                              checkpoint_dir=checkpoint_dir,
-                              num_iterations=num_iterations,
-                              seed=seed,
-                              init_strategies=init_strategies,
-                              balance_factor=FLAGS.balance_factor,
-                              minus=FLAGS.minus)
-
-    # #
-    FP_trainer = PSRO_trainer(meta_games=meta_games,
-                              num_strategies=num_strategies,
-                              num_rounds=num_rounds,
-                              meta_method=fictitious_play,
-                              checkpoint_dir=checkpoint_dir,
-                              num_iterations=num_iterations,
-                              seed=seed,
-                              init_strategies=init_strategies)
-    # #
-    # PRD_trainer = PSRO_trainer(meta_games=meta_games,
+    # DO_trainer = PSRO_trainer(meta_games=meta_games,
     #                           num_strategies=num_strategies,
     #                           num_rounds=num_rounds,
-    #                           meta_method=prd_solver,
+    #                           meta_method=double_oracle,
     #                           checkpoint_dir=checkpoint_dir,
     #                           num_iterations=num_iterations,
     #                           seed=seed,
     #                           init_strategies=init_strategies)
+
+    # DO_SWRO_trainer = PSRO_trainer(meta_games=meta_games,
+    #                           num_strategies=num_strategies,
+    #                           num_rounds=num_rounds,
+    #                           meta_method=DO_SWRO,
+    #                           checkpoint_dir=checkpoint_dir,
+    #                           num_iterations=num_iterations,
+    #                           seed=seed,
+    #                           init_strategies=init_strategies,
+    #                           balance_factor=FLAGS.balance_factor,
+    #                           minus=FLAGS.minus)
+
+    # #
+    # FP_trainer = PSRO_trainer(meta_games=meta_games,
+    #                           num_strategies=num_strategies,
+    #                           num_rounds=num_rounds,
+    #                           meta_method=fictitious_play,
+    #                           checkpoint_dir=checkpoint_dir,
+    #                           num_iterations=num_iterations,
+    #                           seed=seed,
+    #                           init_strategies=init_strategies)
+    # #
+    PRD_trainer = PSRO_trainer(meta_games=meta_games,
+                              num_strategies=num_strategies,
+                              num_rounds=num_rounds,
+                              meta_method=prd_solver,
+                              checkpoint_dir=checkpoint_dir,
+                              num_iterations=num_iterations,
+                              seed=seed,
+                              init_strategies=init_strategies)
 
     # CRD_trainer = PSRO_trainer(meta_games=meta_games,
     #                            num_strategies=num_strategies,
@@ -106,9 +106,9 @@ def psro(meta_games,
     # nashconv_names = ['nashconvs_'+str(t) for t in range(num_rounds)]
     # mrconv_names = ['mrcpcons_'+str(t) for t in range(num_rounds)]
     #
-    DO_trainer.loop()
-    print("#####################################")
-    print('DO looper finished looping')
+    # DO_trainer.loop()
+    # print("#####################################")
+    # print('DO looper finished looping')
     # print("#####################################")
     # df = pd.DataFrame(np.transpose(DO_trainer.neconvs+DO_trainer.mrconvs),\
     #         columns=nashconv_names+mrconv_names)
@@ -116,13 +116,13 @@ def psro(meta_games,
     # with open(checkpoint_dir + game_type + '_mrprofile_DO.pkl','wb') as f:
     #     pickle.dump(DO_trainer.mrprofiles, f)
     #
-    DO_SWRO_trainer.loop()
-    print("#####################################")
-    print('DO_SWRO looper finished looping')
+    # DO_SWRO_trainer.loop()
+    # print("#####################################")
+    # print('DO_SWRO looper finished looping')
 
-    FP_trainer.loop()
-    print("#####################################")
-    print('FP looper finished looping')
+    # FP_trainer.loop()
+    # print("#####################################")
+    # print('FP looper finished looping')
     # print("#####################################")
     # df = pd.DataFrame(np.transpose(FP_trainer.neconvs+FP_trainer.mrconvs),\
     #         columns=nashconv_names+mrconv_names)
@@ -130,10 +130,10 @@ def psro(meta_games,
     # with open(checkpoint_dir + game_type + '_mrprofile_FP.pkl','wb') as f:
     #     pickle.dump(FP_trainer.mrprofiles, f)
 
-    # PRD_trainer.loop()
-    # print("#####################################")
-    # print('PRD looper finished looping')
-    # print("#####################################")
+    PRD_trainer.loop()
+    print("#####################################")
+    print('PRD looper finished looping')
+    print("#####################################")
     # df = pd.DataFrame(np.transpose(PRD_trainer.neconvs + PRD_trainer.mrconvs), \
     #                   columns=nashconv_names + mrconv_names)
     # df.to_csv(checkpoint_dir + game_type + '_PRD0gamma.csv', index=False)
@@ -192,18 +192,18 @@ def psro(meta_games,
     # with open(checkpoint_dir + game_type + '_mrprofile_MRCP.pkl','wb') as f:
     #     pickle.dump(DO_trainer.mrprofiles, f)
 
-    print("The current game type is ", game_type)
-    print("DO neco av:", np.mean(DO_trainer.nashconvs, axis=0))
-    print("DO neco av std:", np.std(DO_trainer.nashconvs, axis=0))
+    # print("The current game type is ", game_type)
+    # print("DO neco av:", np.mean(DO_trainer.nashconvs, axis=0))
+    # print("DO neco av std:", np.std(DO_trainer.nashconvs, axis=0))
     # print("DO mrcp av:", np.mean(DO_trainer.mrconvs, axis=0))
-    print("DO_SWRO neco av:", np.mean(DO_SWRO_trainer.nashconvs, axis=0))
-    print("DO_SWRO neco av std:", np.std(DO_SWRO_trainer.nashconvs, axis=0))
-    print("FP fpco av:", np.mean(FP_trainer.nashconvs, axis=0))
-    print("FP fpco av std:", np.std(FP_trainer.nashconvs, axis=0))
+    # print("DO_SWRO neco av:", np.mean(DO_SWRO_trainer.nashconvs, axis=0))
+    # print("DO_SWRO neco av std:", np.std(DO_SWRO_trainer.nashconvs, axis=0))
+    # print("FP fpco av:", np.mean(FP_trainer.nashconvs, axis=0))
+    # print("FP fpco av std:", np.std(FP_trainer.nashconvs, axis=0))
     # print("FP neco av:", np.mean(FP_trainer.neconvs, axis=0))
     # print("FP mrcp av:", np.mean(FP_trainer.mrconvs, axis=0))
-    # print("PRD prdco av:", np.mean(PRD_trainer.nashconvs, axis=0))
-    # print("PRD prdco av std:", np.std(PRD_trainer.nashconvs, axis=0))
+    print("PRD prdco av:", np.mean(PRD_trainer.nashconvs, axis=0))
+    print("PRD prdco av std:", np.std(PRD_trainer.nashconvs, axis=0))
     # print("PRD neco av:", np.mean(PRD_trainer.neconvs, axis=0))
     # print("PRD mrcp av:", np.mean(PRD_trainer.mrconvs, axis=0))
     # print("CRD CRDco av:", np.mean(CRD_trainer.nashconvs, axis=0))
@@ -225,7 +225,8 @@ def main(argv):
 
     # root_path = './' + "real_world" + "_supplement_" + FLAGS.closed_method + '/'
     # root_path = './' + "att_graph_" + FLAGS.game_type + "_DO_FP" + '/'
-    root_path = './' + "att_graph_" + FLAGS.game_type + "_DO_SWRO" + '/'
+    root_path = './' + "att_graph_" + FLAGS.game_type + "_PRD" + '/'
+    # root_path = './' + "att_graph_" + FLAGS.game_type + "_DO_SWRO" + '/'
 
     if not os.path.exists(root_path):
         os.makedirs(root_path)
@@ -237,7 +238,8 @@ def main(argv):
     else:
         real_world_meta_game = load_pkl('./real_world_games/combined_att_graph.pkl')
 
-    checkpoint_dir = "att_graph_" + "DO_SWRO" + '_bf_' + str(FLAGS.balance_factor) + "_minus_" + str(FLAGS.minus) + "_" + str(seed)
+    # checkpoint_dir = "att_graph_" + "DO_SWRO" + '_bf_' + str(FLAGS.balance_factor) + "_minus_" + str(FLAGS.minus) + "_" + str(seed)
+    checkpoint_dir = "att_graph_" + "PRD" + "_" + str(seed)
     checkpoint_dir = os.path.join(os.getcwd(), root_path, checkpoint_dir) + '/'
 
     if not os.path.exists(checkpoint_dir):

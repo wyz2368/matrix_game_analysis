@@ -19,7 +19,7 @@ class PSRO_trainer(object):
                  num_iterations=20,
                  seed=None,
                  empricial_game_record=None,
-                 calculate_neconv=False,
+                 calculate_neconv=True,
                  calculate_mrcpconv=False,
                  init_strategies=None,
                  closed_method="alter",

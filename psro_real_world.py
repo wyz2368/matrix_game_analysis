@@ -17,7 +17,7 @@ print = functools.partial(print, flush=True)
 FLAGS = flags.FLAGS
 
 flags.DEFINE_integer("num_iterations", 15, "The number of rounds starting with different.")
-flags.DEFINE_string("game_type", "quoridor(board_size=4)", "Type of synthetic game.")
+flags.DEFINE_string("game_type", "hex(board_size=3)", "Type of synthetic game.")
 flags.DEFINE_integer("seed", None, "The seed to control randomness.")
 flags.DEFINE_boolean("MRCP_deterministic", True, "mrcp should return a same value given the same empirical game")
 flags.DEFINE_string("closed_method", "dev", "Method for handling closeness of the MRCP")
@@ -34,7 +34,7 @@ def psro(meta_games,
 
     # Change the initial strategies here.
     # init_strategies = np.random.randint(0, num_strategies, num_rounds)
-    init_strategies = [0,1,2]
+    init_strategies = [0,1,2,3,4]
 
     DO_trainer = PSRO_trainer(meta_games=meta_games,
                            num_strategies=num_strategies,
@@ -54,14 +54,14 @@ def psro(meta_games,
                            seed=seed,
                            init_strategies=init_strategies)
 
-    # PRD_trainer = PSRO_trainer(meta_games=meta_games,
-    #                           num_strategies=num_strategies,
-    #                           num_rounds=num_rounds,
-    #                           meta_method=prd_solver,
-    #                           checkpoint_dir=checkpoint_dir,
-    #                           num_iterations=num_iterations,
-    #                           seed=seed,
-    #                           init_strategies=init_strategies)
+    PRD_trainer = PSRO_trainer(meta_games=meta_games,
+                              num_strategies=num_strategies,
+                              num_rounds=num_rounds,
+                              meta_method=prd_solver,
+                              checkpoint_dir=checkpoint_dir,
+                              num_iterations=num_iterations,
+                              seed=seed,
+                              init_strategies=init_strategies)
 
     CRD_trainer = PSRO_trainer(meta_games=meta_games,
                                num_strategies=num_strategies,
@@ -120,9 +120,9 @@ def psro(meta_games,
     # mrconv_names = ['mrcpcons_'+str(t) for t in range(num_rounds)]
     #
     DO_trainer.loop()
-    # print("#####################################")
-    # print('DO looper finished looping')
-    # print("#####################################")
+    print("#####################################")
+    print('DO looper finished looping')
+    print("#####################################")
     # df = pd.DataFrame(np.transpose(DO_trainer.neconvs+DO_trainer.mrconvs),\
     #         columns=nashconv_names+mrconv_names)
     # df.to_csv(checkpoint_dir + game_type +'_DO.csv',index=False)
@@ -130,19 +130,19 @@ def psro(meta_games,
     #     pickle.dump(DO_trainer.mrprofiles, f)
     #
     FP_trainer.loop()
-    # print("#####################################")
-    # print('FP looper finished looping')
-    # print("#####################################")
+    print("#####################################")
+    print('FP looper finished looping')
+    print("#####################################")
     # df = pd.DataFrame(np.transpose(FP_trainer.neconvs+FP_trainer.mrconvs),\
     #         columns=nashconv_names+mrconv_names)
     # df.to_csv(checkpoint_dir+game_type+'_FP.csv',index=False)
     # with open(checkpoint_dir + game_type + '_mrprofile_FP.pkl','wb') as f:
     #     pickle.dump(FP_trainer.mrprofiles, f)
 
-    # PRD_trainer.loop()
-    # print("#####################################")
-    # print('PRD looper finished looping')
-    # print("#####################################")
+    PRD_trainer.loop()
+    print("#####################################")
+    print('PRD looper finished looping')
+    print("#####################################")
     # df = pd.DataFrame(np.transpose(PRD_trainer.neconvs + PRD_trainer.mrconvs), \
     #                   columns=nashconv_names + mrconv_names)
     # df.to_csv(checkpoint_dir + game_type + '_PRD0gamma.csv', index=False)
@@ -207,8 +207,8 @@ def psro(meta_games,
     print("FP fpco av:", np.mean(FP_trainer.nashconvs, axis=0))
     print("FP neco av:", np.mean(FP_trainer.neconvs, axis=0))
     # print("FP mrcp av:", np.mean(FP_trainer.mrconvs, axis=0))
-    # print("PRD prdco av:", np.mean(PRD_trainer.nashconvs, axis=0))
-    # print("PRD neco av:", np.mean(PRD_trainer.neconvs, axis=0))
+    print("PRD prdco av:", np.mean(PRD_trainer.nashconvs, axis=0))
+    print("PRD neco av:", np.mean(PRD_trainer.neconvs, axis=0))
     # print("PRD mrcp av:", np.mean(PRD_trainer.mrconvs, axis=0))
     print("CRD CRDco av:", np.mean(CRD_trainer.nashconvs, axis=0))
     print("CRD neco av:", np.mean(CRD_trainer.neconvs, axis=0))
@@ -231,18 +231,21 @@ def main(argv):
         seed = None # invalidate the seed so it does not get passed into psro_trainer
 
     # root_path = './' + "real_world" + "_supplement_" + FLAGS.closed_method + '/'
-    root_path = './' + "real_world" + "_tuningCRD_" + FLAGS.closed_method + '/'
+    root_path = './' + "real_world" + "_all_experiments_" + FLAGS.closed_method + '/'
 
     if not os.path.exists(root_path):
         os.makedirs(root_path)
 
     real_world_meta_games = load_pkl('./real_world_games/real_world_meta_games.pkl')
 
-    # game_types = ['10,4-Blotto', 'AlphaStar', 'Kuhn-poker', 'Random_game_of_skill', 'Transitive game',
+    # game_types = ['10,4-Blotto', 'AlphaStar', 'Random_game_of_skill', 'Transitive game',
     #               'connect_four', 'quoridor(board_size=4)', 'misere(game=tic_tac_toe())', 'hex(board_size=3)',
     #               'go(board_size=4,komi=6.5)']
 
-    checkpoint_dir = FLAGS.game_type + "_CRD0.5_" + str(seed)
+    # for game_type in game_types:
+
+    checkpoint_dir = FLAGS.game_type + "_all_experiments_" + str(seed)
+    # checkpoint_dir = game_type + "_all_experiments_" + str(seed)
     checkpoint_dir = os.path.join(os.getcwd(), root_path, checkpoint_dir) + '/'
 
     if not os.path.exists(checkpoint_dir):
@@ -260,7 +263,8 @@ def main(argv):
 
     psro(meta_games=real_world_meta_games[FLAGS.game_type],
          game_type=FLAGS.game_type,
-         num_rounds=3,
+         # game_type=game_type,
+         num_rounds=5,
          seed=seed,
          checkpoint_dir=checkpoint_dir,
          num_iterations=num_iterations,

@@ -24,18 +24,18 @@ game = 'hex'
 # DO_mean = genfromtxt('./data/crd_tuning/'+ game + '/DO_mean.csv', delimiter=',')[8:21]
 # CRD_mean = genfromtxt('./data/crd_tuning/'+ game + '/CRD_mean.csv', delimiter=',')[8:21]
 
-# fic_mean = genfromtxt('./data/real_world/hex_fic.csv', delimiter=',')
-# DO_mean = genfromtxt('./data/real_world/hex_DO.csv', delimiter=',')
-# CRD_mean = genfromtxt('./data/real_world/hex_crd.csv', delimiter=',')
+fic_mean = genfromtxt('./data/real_world/hex_fic.csv', delimiter=',')
+DO_mean = genfromtxt('./data/real_world/hex_DO.csv', delimiter=',')
+CRD_mean = genfromtxt('./data/real_world/hex_crd.csv', delimiter=',')
 
 
-DO_mean = np.array([2, 2, 2,2, 1.77777778, 1.77777778, 1.41927625, 1.24072417,
- 1.03423594, 0.99277195, 0.89325864, 0.5020604])
-fic_mean = np.array([ 2, 1.66666667, 1.99999999, 1.33225865, 1.05697859 ,1.05697859, 1.05697859, 0.94433695,
- 0.78710142, 0.6187167 , 0.6187167 , 0.6187167])
-CRD_mean = np.array([ 2.  ,1.66666667,
- 1.845, 1.11381065, 1.33333334, 0.80093104, 0.88492352 ,0.63295092,
- 0.43962214 ,0.47935835 ,0.46732767, 0.14947377])
+# DO_mean = np.array([2, 2, 2,2, 1.77777778, 1.77777778, 1.41927625, 1.24072417,
+#  1.03423594, 0.99277195, 0.89325864, 0.5020604])
+# fic_mean = np.array([ 2, 1.66666667, 1.99999999, 1.33225865, 1.05697859 ,1.05697859, 1.05697859, 0.94433695,
+#  0.78710142, 0.6187167 , 0.6187167 , 0.6187167])
+# CRD_mean = np.array([ 2.  ,1.66666667,
+#  1.845, 1.11381065, 1.33333334, 0.80093104, 0.88492352 ,0.63295092,
+#  0.43962214 ,0.47935835 ,0.46732767, 0.14947377])
 
 
 # fic_std = genfromtxt('./data/crd_tuning/'+ game + '/FP_std.csv', delimiter=',')
