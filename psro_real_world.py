@@ -255,6 +255,7 @@ def main(argv):
     print("================================================")
     print("======The current game is ", FLAGS.game_type, "=========")
     print("================================================")
+    print("CRD regret threshold 0.35.")
 
     if FLAGS.num_iterations > real_world_meta_games[FLAGS.game_type][0].shape[0]:
         num_iterations = real_world_meta_games[FLAGS.game_type][0].shape[0]
@@ -269,6 +270,7 @@ def main(argv):
          checkpoint_dir=checkpoint_dir,
          num_iterations=num_iterations,
          closed_method=FLAGS.closed_method)
+
 
 
 if __name__ == "__main__":
