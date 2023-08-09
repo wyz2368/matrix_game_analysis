@@ -34,7 +34,8 @@ def psro(meta_games,
 
     # Change the initial strategies here.
     # init_strategies = np.random.randint(0, num_strategies, num_rounds)
-    init_strategies = [0,1,2,3,4]
+    # init_strategies = [0,1,2,3,4]
+    init_strategies = [5, 6, 7, 8, 9]
 
     DO_trainer = PSRO_trainer(meta_games=meta_games,
                            num_strategies=num_strategies,
@@ -231,7 +232,7 @@ def main(argv):
         seed = None # invalidate the seed so it does not get passed into psro_trainer
 
     # root_path = './' + "real_world" + "_supplement_" + FLAGS.closed_method + '/'
-    root_path = './' + "real_world" + "_all_experiments_" + FLAGS.closed_method + '/'
+    root_path = './' + "real_world" + "_all_experiments2_" + FLAGS.closed_method + '/'
 
     if not os.path.exists(root_path):
         os.makedirs(root_path)
@@ -255,7 +256,7 @@ def main(argv):
     print("================================================")
     print("======The current game is ", FLAGS.game_type, "=========")
     print("================================================")
-    print("CRD regret threshold 0.35.")
+    print("CRD regret threshold 0.35. [5,6,7,8,9] starting strategies.")
 
     if FLAGS.num_iterations > real_world_meta_games[FLAGS.game_type][0].shape[0]:
         num_iterations = real_world_meta_games[FLAGS.game_type][0].shape[0]
