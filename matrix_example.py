@@ -13,11 +13,11 @@ meta_game = np.array([[0, -0.1, -3],
                       [0.1, 0, 2],
                       [3, -2, 0]])
 
-meta_game2 = np.array([[0, 2, -3],
-                      [-3, 0, 0],
-                      [-4, 1, 5]])
+# meta_game2 = np.array([[0, 2, -3],
+#                       [-3, 0, 0],
+#                       [-4, 1, 5]])
 
-meta_games = [meta_game, -meta_game2]
+meta_games = [meta_game, -meta_game]
 
 empirical_games = [[0], [0]]
 

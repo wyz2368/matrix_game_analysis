@@ -10,7 +10,6 @@
 #SBATCH --account=wellman1
 #SBATCH --partition=standard
 
-module load python3.6-anaconda/5.2.0
 cd ${SLURM_SUBMIT_DIR}
 python psro_real_world.py --num_iterations=30 --closed_method=dev --game_type=connect_four
 
