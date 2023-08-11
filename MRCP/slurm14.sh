@@ -7,7 +7,7 @@
 #SBATCH --ntasks-per-node=1
 #SBATCH --mem-per-cpu=14g
 #SBATCH --time=5-00:00:00
-#SBATCH --account=wellman1
+#SBATCH --account=wellman98
 #SBATCH --partition=standard
 
 module load python3.6-anaconda/5.2.0
