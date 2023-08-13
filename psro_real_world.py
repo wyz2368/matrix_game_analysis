@@ -117,50 +117,50 @@ def psro(meta_games,
     # with open(checkpoint_dir + game_type + '_meta_games.pkl','wb') as f:
     #     pickle.dump(meta_games, f)
 
-    nashconv_names = ['nashconvs_'+str(t) for t in range(num_rounds)]
-    mrconv_names = ['mrcpcons_'+str(t) for t in range(num_rounds)]
+    # nashconv_names = ['nashconvs_'+str(t) for t in range(num_rounds)]
+    # mrconv_names = ['mrcpcons_'+str(t) for t in range(num_rounds)]
     #
     DO_trainer.loop()
     print("#####################################")
     print('DO looper finished looping')
     print("#####################################")
-    df = pd.DataFrame(np.transpose(DO_trainer.neconvs+DO_trainer.mrconvs),\
-            columns=nashconv_names+mrconv_names)
-    df.to_csv(checkpoint_dir + game_type +'_DO.csv',index=False)
-    with open(checkpoint_dir + game_type + '_mrprofile_DO.pkl','wb') as f:
-        pickle.dump(DO_trainer.mrprofiles, f)
+    # df = pd.DataFrame(np.transpose(DO_trainer.neconvs+DO_trainer.mrconvs),\
+    #         columns=nashconv_names+mrconv_names)
+    # df.to_csv(checkpoint_dir + game_type +'_DO.csv',index=False)
+    # with open(checkpoint_dir + game_type + '_mrprofile_DO.pkl','wb') as f:
+    #     pickle.dump(DO_trainer.mrprofiles, f)
     #
     FP_trainer.loop()
     print("#####################################")
     print('FP looper finished looping')
     print("#####################################")
-    df = pd.DataFrame(np.transpose(FP_trainer.neconvs+FP_trainer.mrconvs),\
-            columns=nashconv_names+mrconv_names)
-    df.to_csv(checkpoint_dir+game_type+'_FP.csv',index=False)
-    with open(checkpoint_dir + game_type + '_mrprofile_FP.pkl','wb') as f:
-        pickle.dump(FP_trainer.mrprofiles, f)
+    # df = pd.DataFrame(np.transpose(FP_trainer.neconvs+FP_trainer.mrconvs),\
+    #         columns=nashconv_names+mrconv_names)
+    # df.to_csv(checkpoint_dir+game_type+'_FP.csv',index=False)
+    # with open(checkpoint_dir + game_type + '_mrprofile_FP.pkl','wb') as f:
+    #     pickle.dump(FP_trainer.mrprofiles, f)
 
     PRD_trainer.loop()
     print("#####################################")
     print('PRD looper finished looping')
     print("#####################################")
-    df = pd.DataFrame(np.transpose(PRD_trainer.neconvs + PRD_trainer.mrconvs), \
-                      columns=nashconv_names + mrconv_names)
-    df.to_csv(checkpoint_dir + game_type + '_PRD0gamma.csv', index=False)
-    with open(checkpoint_dir + game_type + '_mrprofile_PRD0gamma.pkl', 'wb') as f:
-        pickle.dump(PRD_trainer.mrprofiles, f)
+    # df = pd.DataFrame(np.transpose(PRD_trainer.neconvs + PRD_trainer.mrconvs), \
+    #                   columns=nashconv_names + mrconv_names)
+    # df.to_csv(checkpoint_dir + game_type + '_PRD0gamma.csv', index=False)
+    # with open(checkpoint_dir + game_type + '_mrprofile_PRD0gamma.pkl', 'wb') as f:
+    #     pickle.dump(PRD_trainer.mrprofiles, f)
     #
     CRD_trainer.loop()
     print("#####################################")
     print('CRD looper finished looping')
     print("#####################################")
-    df = pd.DataFrame(np.transpose(CRD_trainer.neconvs + CRD_trainer.mrconvs), \
-                      columns=nashconv_names + mrconv_names)
-    df = pd.DataFrame(np.transpose(CRD_trainer.neconvs), \
-                      columns=nashconv_names)
-    df.to_csv(checkpoint_dir + game_type + '_CRD.csv', index=False)
-    with open(checkpoint_dir + game_type + '_mrprofile_CRD.pkl', 'wb') as f:
-        pickle.dump(CRD_trainer.mrprofiles, f)
+    # df = pd.DataFrame(np.transpose(CRD_trainer.neconvs + CRD_trainer.mrconvs), \
+    #                   columns=nashconv_names + mrconv_names)
+    # df = pd.DataFrame(np.transpose(CRD_trainer.neconvs), \
+    #                   columns=nashconv_names)
+    # df.to_csv(checkpoint_dir + game_type + '_CRD.csv', index=False)
+    # with open(checkpoint_dir + game_type + '_mrprofile_CRD.pkl', 'wb') as f:
+    #     pickle.dump(CRD_trainer.mrprofiles, f)
     #
     # IDO_trainer.loop()
     # print("#####################################")
