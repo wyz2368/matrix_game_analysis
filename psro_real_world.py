@@ -204,21 +204,33 @@ def psro(meta_games,
 
     print("The current game type is ", game_type)
     print("DO neco av:", np.mean(DO_trainer.neconvs, axis=0))
-    print("DO mrcp av:", np.mean(DO_trainer.mrconvs, axis=0))
+    # print("DO mrcp av:", np.mean(DO_trainer.mrconvs, axis=0))
     print("FP fpco av:", np.mean(FP_trainer.nashconvs, axis=0))
     print("FP neco av:", np.mean(FP_trainer.neconvs, axis=0))
-    print("FP mrcp av:", np.mean(FP_trainer.mrconvs, axis=0))
+    # print("FP mrcp av:", np.mean(FP_trainer.mrconvs, axis=0))
     print("PRD prdco av:", np.mean(PRD_trainer.nashconvs, axis=0))
     print("PRD neco av:", np.mean(PRD_trainer.neconvs, axis=0))
-    print("PRD mrcp av:", np.mean(PRD_trainer.mrconvs, axis=0))
+    # print("PRD mrcp av:", np.mean(PRD_trainer.mrconvs, axis=0))
     print("CRD CRDco av:", np.mean(CRD_trainer.nashconvs, axis=0))
     print("CRD neco av:", np.mean(CRD_trainer.neconvs, axis=0))
-    print("CRD mrcp av:", np.mean(CRD_trainer.mrconvs, axis=0))
+    # print("CRD mrcp av:", np.mean(CRD_trainer.mrconvs, axis=0))
     # print("IDO IDOco av:", np.mean(IDO_trainer.nashconvs, axis=0))
     # print("IDO neco av:", np.mean(IDO_trainer.neconvs, axis=0))
     # print("IDO mrcp av:", np.mean(IDO_trainer.mrconvs, axis=0))
     # print("MR neco av:", np.mean(MRCP_trainer.neconvs, axis=0))
     # print("MR mrcp av:", np.mean(MRCP_trainer.mrconvs, axis=0))
+    print("===================== STD ===============================")
+    print("DO neco STD:", np.std(DO_trainer.neconvs, axis=0))
+    # print("DO mrcp av:", np.mean(DO_trainer.mrconvs, axis=0))
+    print("FP fpco STD:", np.std(FP_trainer.nashconvs, axis=0))
+    print("FP neco STD:", np.std(FP_trainer.neconvs, axis=0))
+    # print("FP mrcp av:", np.mean(FP_trainer.mrconvs, axis=0))
+    print("PRD prdco STD:", np.std(PRD_trainer.nashconvs, axis=0))
+    print("PRD neco STD:", np.std(PRD_trainer.neconvs, axis=0))
+    # print("PRD mrcp av:", np.mean(PRD_trainer.mrconvs, axis=0))
+    print("CRD CRDco STD:", np.std(CRD_trainer.nashconvs, axis=0))
+    print("CRD neco STD:", np.std(CRD_trainer.neconvs, axis=0))
+
 
     print("====================================================")
     
@@ -232,7 +244,7 @@ def main(argv):
         seed = None # invalidate the seed so it does not get passed into psro_trainer
 
     # root_path = './' + "real_world" + "_supplement_" + FLAGS.closed_method + '/'
-    root_path = './' + "real_world" + "_all_experiments_mrcp_" + FLAGS.closed_method + '/'
+    root_path = './' + "real_world" + "_all_experiments_std_" + FLAGS.closed_method + '/'
 
     if not os.path.exists(root_path):
         os.makedirs(root_path)

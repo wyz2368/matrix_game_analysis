@@ -20,7 +20,7 @@ class PSRO_trainer(object):
                  seed=None,
                  empricial_game_record=None,
                  calculate_neconv=True,
-                 calculate_mrcpconv=True,
+                 calculate_mrcpconv=False,
                  init_strategies=None,
                  closed_method="alter",
                  balance_factor=1.0,
@@ -41,7 +41,7 @@ class PSRO_trainer(object):
         self.meta_method = meta_method
         self.num_strategies = num_strategies
         self.checkpoint_dir = checkpoint_dir
-        self.mrcp_calculator = minimum_regret_profile_calculator(full_game=meta_games) # closed temporally.
+        # self.mrcp_calculator = minimum_regret_profile_calculator(full_game=meta_games) # closed temporally.
         self.seed = seed
         self.calculate_neconv = calculate_neconv
         self.calculate_mrconv = calculate_mrcpconv
@@ -165,7 +165,7 @@ class PSRO_trainer(object):
                 set_random_seed(self.seed) 
 
             self.iteration()
-            self.mrcp_calculator.clear() #MRCP
+            # self.mrcp_calculator.clear() #MRCP
 
     def get_empirical_game(self):
         return self.empirical_games
