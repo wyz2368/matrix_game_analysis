@@ -33,7 +33,8 @@ def write_line(file, line):
 
 def bash_factory():
     factors = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-    mode = [True, False]
+    # mode = [True, False]
+    mode = [False]
 
     params = list(itertools.product(factors, mode)) #TODO: change is_max_other_util
 
